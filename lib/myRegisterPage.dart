@@ -1,5 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:ffi';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import './services/http_service.dart';
+import './utils/models.dart';
 import './myLoginPage.dart';
 
 class MyRegisterPage extends StatefulWidget {
@@ -11,6 +17,8 @@ class MyRegisterPage extends StatefulWidget {
 }
 
 class _MyRegisterPageState extends State<MyRegisterPage> {
+  // var _client = http.Client();
+  late final HttpService _httpService = HttpService();
   final GlobalKey _formKey = GlobalKey<FormState>();
   late String _username = "";
   late String _password = "";
@@ -88,12 +96,36 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                   side: BorderSide(style: BorderStyle.none)))),
           child: Text('Sign up',
               style: Theme.of(context).primaryTextTheme.headline5),
-          onPressed: () {
+          onPressed: () async {
             if ((_formKey.currentState as FormState).validate()) {
               (_formKey.currentState as FormState).save();
               print(
                   'username: $_username, password: $_password, passwordconfirmation: $_passwordconfirmation');
               (_formKey.currentState as FormState).reset();
+              // List vinfav = [] as List<dynamic>;
+              // var userVinFav = VinFav(value: vinfav);
+              // var userData = Document(
+              //     username: _username,
+              //     password: _password,
+              //     vinFav: userVinFav,
+              //     role: "user");
+              // var newUser = User(document: userData);
+              var newUser = {
+                "database": "urbanisation",
+                "collection": "User",
+                "Document": {
+                  "username": _username,
+                  "password": _password,
+                  "vinFav": {
+                    "value": [0, 1, 2]
+                  },
+                  "role": "user"
+                }
+              };
+              print("okk????????");
+              print(newUser);
+              print("okk!!!!!!!!!");
+              _httpService.register(newUser);
             }
           },
         ),
@@ -110,7 +142,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
           return 'Please confirme your password!';
         } else if (_password.isNotEmpty) {
           if (v != _password) {
-            print(v);
+            // print(v);
             print(_password);
             return 'The password are not same!';
           }
@@ -138,6 +170,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
 
   Widget buildPasswordTextField(BuildContext context) {
     return TextFormField(
+      onChanged: (v) => _password = v,
       obscureText: _isObscure, // s'il affiche des text
       onSaved: (v) => _password = v!,
       validator: (v) {
