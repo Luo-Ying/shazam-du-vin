@@ -18,13 +18,9 @@ class HttpService {
     print(json.encode(body));
     var res = await http.post(
       Uri.parse("$BASE_URL/User"),
-      // url,
       headers: {"Content-Type": "application/json"},
       body: body,
-      // encoding: Utf8Codec() //注：Utf8Codec()需要 import 'dart:convert';
     );
-    // print(jsonDecode(res.body)["Status"]);
-    // print("response???????????? " + res.body);
     if (res.statusCode == 200) {
       VarGlobal.TOASTMESSAGE = "register successfully!";
     } else {
@@ -33,18 +29,23 @@ class HttpService {
     return res;
   }
 
-  Future<void> connexion(String username, String password) async {
-    // print("$baseUrl$UPLOGIN?pseudo=$pseudo&password=$password&ajaupmo=ajaupmo");
-    final response = await http.get(
-      Uri.parse("$BASE_URL/User"),
-      headers: {
-        HttpHeaders.authorizationHeader: 'Basic your_api_token_here',
-      },
+  Future<void> connexion(Map<String, dynamic> request) async {
+    var body = json.encode(request);
+    final response = await http.post(
+      Uri.parse("$BASE_URL/getUser"),
+      headers: {"Content-Type": "application/json"},
+      body: body,
     );
-    // final responseJson = jsonDecode(response.body);
     print(response.statusCode);
     print(response.body);
-    print(response.body.runtimeType);
+    if (response.statusCode == 200) {
+      final responseJson = jsonDecode(response.body);
+      print(responseJson[0]);
+      late VinFav user_vinFav = VinFav(responseJson[0]["vinFav"]["value"]);
+      VarGlobal.USERCURRENT = User(
+          responseJson[0]["username"], responseJson[0]["role"], user_vinFav);
+    }
+    // print(response.body.runtimeType);
     // print(responseJson);
     // return profil.fromJson(responseJson);
   }

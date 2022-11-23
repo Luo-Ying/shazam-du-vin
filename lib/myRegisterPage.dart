@@ -6,8 +6,9 @@ import 'package:http/src/response.dart';
 import './utils/models.dart';
 import './services/var_global.dart';
 import './services/http_service.dart';
-import './myLoginPage.dart';
+
 // import './components/fluttertoast.dart';
+import './myLoginPage.dart';
 
 class MyRegisterPage extends StatefulWidget {
   const MyRegisterPage({Key? key, required this.title}) : super(key: key);

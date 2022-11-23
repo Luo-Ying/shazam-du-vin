@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shazam_du_vin/services/var_global.dart';
+
+import './services/http_service.dart';
 
 import './myRegisterPage.dart';
 
@@ -17,7 +20,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
   bool _isObscure = true;
   Color _eyeColor = Colors.grey;
 
-  // late final HttpService _httpService = HttpService();
+  late final HttpService _httpService = HttpService();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +95,13 @@ class _MyLoginPageState extends State<MyLoginPage> {
               (_formKey.currentState as FormState).save();
               print('username: $_username, password: $_password');
               // TODO: fonction pour user connecter
-
+              var requeste = {
+                "database": "urbanisation",
+                "collection": "User",
+                "Filter": {"username": _username, "password": _password}
+              };
+              _httpService.connexion(requeste);
+              print("name of usercurrent: ${VarGlobal.USERCURRENT.username}");
             }
           },
         ),
