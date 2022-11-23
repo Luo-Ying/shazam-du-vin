@@ -1,12 +1,13 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/src/response.dart';
 
-import './services/http_service.dart';
 import './utils/models.dart';
+import './services/var_global.dart';
+import './services/http_service.dart';
 import './myLoginPage.dart';
+// import './components/fluttertoast.dart';
 
 class MyRegisterPage extends StatefulWidget {
   const MyRegisterPage({Key? key, required this.title}) : super(key: key);
@@ -17,14 +18,14 @@ class MyRegisterPage extends StatefulWidget {
 }
 
 class _MyRegisterPageState extends State<MyRegisterPage> {
-  // var _client = http.Client();
-  late final HttpService _httpService = HttpService();
   final GlobalKey _formKey = GlobalKey<FormState>();
   late String _username = "";
   late String _password = "";
   late String _passwordconfirmation = "";
   bool _isObscure = true;
   Color _eyeColor = Colors.grey;
+
+  late final HttpService _httpService = HttpService();
 
   @override
   Widget build(BuildContext context) {
@@ -102,14 +103,6 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               print(
                   'username: $_username, password: $_password, passwordconfirmation: $_passwordconfirmation');
               (_formKey.currentState as FormState).reset();
-              // List vinfav = [] as List<dynamic>;
-              // var userVinFav = VinFav(value: vinfav);
-              // var userData = Document(
-              //     username: _username,
-              //     password: _password,
-              //     vinFav: userVinFav,
-              //     role: "user");
-              // var newUser = User(document: userData);
               var newUser = {
                 "database": "urbanisation",
                 "collection": "User",
@@ -122,10 +115,17 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                   "role": "user"
                 }
               };
-              print("okk????????");
               print(newUser);
-              print("okk!!!!!!!!!");
               _httpService.register(newUser);
+              Fluttertoast.showToast(
+                msg: VarGlobal.TOASTMESSAGE,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 2,
+                backgroundColor: Colors.black45,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
             }
           },
         ),

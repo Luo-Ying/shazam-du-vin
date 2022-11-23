@@ -2,6 +2,13 @@ import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 
+class HttpResponse {
+  late String message;
+  late int status;
+
+  HttpResponse(this.message, this.status);
+}
+
 class User {
   final String database = "urbanisation";
   final String collection = "User";

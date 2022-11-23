@@ -17,6 +17,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
   bool _isObscure = true;
   Color _eyeColor = Colors.grey;
 
+  // late final HttpService _httpService = HttpService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +92,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
               (_formKey.currentState as FormState).save();
               print('username: $_username, password: $_password');
               // TODO: fonction pour user connecter
+
             }
           },
         ),
