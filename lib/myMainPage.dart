@@ -6,6 +6,7 @@ import 'package:shazam_du_vin/myLoginPage.dart';
 
 import './services/http_service.dart';
 import './services/localStorage.dart';
+import './utils/myMainMenuFunction.dart';
 
 class MyMainPage extends StatefulWidget {
   const MyMainPage({Key? key, required this.title}) : super(key: key);
@@ -35,7 +36,7 @@ class _MyMainPageState extends State<MyMainPage> {
 
   PreferredSize buildApBar(BuildContext context) {
     return PreferredSize(
-      preferredSize: Size.fromHeight(100.0),
+      preferredSize: const Size.fromHeight(100.0),
       child: Column(
         children: [
           const SizedBox(
@@ -78,68 +79,5 @@ class _MyMainPageState extends State<MyMainPage> {
     );
   }
 
-  Widget buildFloatingMenuButton(BuildContext context) {
-    return Positioned(
-      // right: 33,
-      // bottom: 33,
-      //悬浮按钮
-      child: RoteFlowButtonMenu(
-        //菜单图标组
-        iconList: const [
-          Icon(
-            Icons.logout, // index = 0
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.photo_camera, // index = 1
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.list, // index = 2
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.home, // index = 3
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.menu,
-            color: Colors.white,
-          )
-        ],
-        // iconSize: 56,
-        iconBackgroundColorList: const [
-          Colors.black,
-          Colors.black,
-          Colors.black,
-          Colors.black,
-          Colors.black,
-        ],
-        //点击事件回调
-        clickCallBack: (int index) async {
-          print("????????????????????????????????????????????????$index");
-          if (index == 0) {
-            String result = await readDataString("currentUser");
-            print("result: " + result);
-            deleteData("currentUser");
-            String result1 = await readDataString("currentUser");
-            print("result apprès suprimé: " + result1);
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const MyLoginPage(title: "login"),
-            ));
-          } else if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const MyImagePickerWidget(),
-            ));
-          } else if (index == 2) {
-            _httpService.geAllWines();
-          } else if (index == 3) {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const MyMainPage(title: "main"),
-            ));
-          }
-        },
-      ),
-    );
-  }
+  // Future<void>
 }

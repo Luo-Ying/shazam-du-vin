@@ -42,7 +42,7 @@ class HttpService {
     if (res.statusCode == 200) {
       final responseJson = jsonDecode(res.body);
       print(responseJson[0]);
-      late VinFav user_vinFav = VinFav(responseJson[0]["vinFav"]["value"]);
+      // late VinFav user_vinFav = VinFav(responseJson[0]["vinFav"]["value"]);
       // VarGlobal.USERCURRENT = User(
       //     responseJson[0]["username"], responseJson[0]["role"], user_vinFav);
       print(res.body.runtimeType);
@@ -57,6 +57,15 @@ class HttpService {
   Future<http.Response> geAllWines() async {
     final res = await http.get(
       Uri.parse("$BASE_URL/Vin"),
+      headers: {"Content-Type": "application/json"},
+    );
+    print(res.body);
+    return res;
+  }
+
+  Future<http.Response> getTopWines() async {
+    final res = await http.get(
+      Uri.parse("$BASE_URL/top"),
       headers: {"Content-Type": "application/json"},
     );
     print(res.body);
