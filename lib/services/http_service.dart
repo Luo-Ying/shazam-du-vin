@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 
 import '../utils/models.dart';
 import '../services/var_global.dart';
+import './localStorage.dart';
 
 class HttpService {
-  static const BASE_URL = "http://10.0.2.2:5000";
+  static const BASE_URL = "http://10.0.2.2:5000"; // for emulator
 
   Future<http.Response> register(Map<String, dynamic> newUser) async {
     // Map<String, String> headersMap = {
@@ -29,24 +30,36 @@ class HttpService {
     return res;
   }
 
-  Future<void> connexion(Map<String, dynamic> request) async {
-    var body = json.encode(request);
-    final response = await http.post(
-      Uri.parse("$BASE_URL/getUser"),
+  Future<http.Response> connexion(String username, String password) async {
+    // var body = json.encode(request);
+    final res = await http.get(
+      Uri.parse("$BASE_URL/User?username=$username&password=$password"),
       headers: {"Content-Type": "application/json"},
-      body: body,
+      // body: body,
     );
-    print(response.statusCode);
-    print(response.body);
-    if (response.statusCode == 200) {
-      final responseJson = jsonDecode(response.body);
+    print(res.statusCode);
+    print(res.body);
+    if (res.statusCode == 200) {
+      final responseJson = jsonDecode(res.body);
       print(responseJson[0]);
       late VinFav user_vinFav = VinFav(responseJson[0]["vinFav"]["value"]);
-      VarGlobal.USERCURRENT = User(
-          responseJson[0]["username"], responseJson[0]["role"], user_vinFav);
+      // VarGlobal.USERCURRENT = User(
+      //     responseJson[0]["username"], responseJson[0]["role"], user_vinFav);
+      print(res.body.runtimeType);
+      saveDataString("currentUser", res.body);
     }
     // print(response.body.runtimeType);
     // print(responseJson);
     // return profil.fromJson(responseJson);
+    return res;
+  }
+
+  Future<http.Response> geAllWines() async {
+    final res = await http.get(
+      Uri.parse("$BASE_URL/Vin"),
+      headers: {"Content-Type": "application/json"},
+    );
+    print(res.body);
+    return res;
   }
 }

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shazam_du_vin/myMainPage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 
 import './services/http_service.dart';
+import './services/localStorage.dart';
 
 import './myRegisterPage.dart';
 
@@ -90,18 +94,29 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   side: BorderSide(style: BorderStyle.none)))),
           child: Text('Sign in',
               style: Theme.of(context).primaryTextTheme.headline5),
-          onPressed: () {
+          onPressed: () async {
             if ((_formKey.currentState as FormState).validate()) {
               (_formKey.currentState as FormState).save();
               print('username: $_username, password: $_password');
               // TODO: fonction pour user connecter
-              var requeste = {
-                "database": "urbanisation",
-                "collection": "User",
-                "Filter": {"username": _username, "password": _password}
-              };
-              _httpService.connexion(requeste);
-              print("name of usercurrent: ${VarGlobal.USERCURRENT.username}");
+              //   const String database = "urbanisation";
+              //   const String collectio = "User";
+              var res = await _httpService.connexion(_username, _password);
+              print(res.statusCode);
+              if (res.statusCode == 200) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const MyMainPage(
+                    title: 'Main page',
+                  ),
+                ));
+              }
+
+              // print(json.decode(res[0]));
+              // if ()
+              // TODO: les cas d'érreurs quand utilisateur entre les mauvais username ou password
+              // String result = await readDataString("test1");
+              // print("result: " + result);
+              // print(getKeys());
             }
           },
         ),

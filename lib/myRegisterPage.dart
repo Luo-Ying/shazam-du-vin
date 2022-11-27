@@ -103,7 +103,6 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               (_formKey.currentState as FormState).save();
               print(
                   'username: $_username, password: $_password, passwordconfirmation: $_passwordconfirmation');
-              (_formKey.currentState as FormState).reset();
               var newUser = {
                 "database": "urbanisation",
                 "collection": "User",
@@ -118,6 +117,8 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               };
               print(newUser);
               _httpService.register(newUser);
+              (_formKey.currentState as FormState).reset();
+              // TODO: ajouter une condition : reset le form que quand tout va bien!
               Fluttertoast.showToast(
                 msg: VarGlobal.TOASTMESSAGE,
                 toastLength: Toast.LENGTH_SHORT,

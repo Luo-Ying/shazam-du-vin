@@ -41,6 +41,11 @@ dependencies:
 
   fluttertoast: ^8.1.1
 
+  shared_preferences: ^2.0.15
+  shake_animation_widget: ^3.0.3
+  image_picker: ^0.8.6
+  localstorage: ^4.0.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
