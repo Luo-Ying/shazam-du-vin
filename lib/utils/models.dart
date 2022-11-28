@@ -31,21 +31,21 @@ class VinFav {
   List<dynamic> get value => _value;
 }
 
-class Document {
-  final String username;
-  final String password;
-  final VinFav vinFav;
-  final String role;
+class DocumentUser {
+  late String username;
+  late String password;
+  late VinFav vinFav;
+  late String role;
 
-  Document({
+  DocumentUser({
     required this.username,
     required this.password,
     required this.vinFav,
     required this.role,
   });
 
-  factory Document.fromJson(Map<String, dynamic> json) {
-    return Document(
+  factory DocumentUser.fromJson(Map<String, dynamic> json) {
+    return DocumentUser(
       username: json["username"] as String,
       password: json["password"] as String,
       vinFav: json["vinFav"] as VinFav,
@@ -53,3 +53,114 @@ class Document {
     );
   }
 }
+
+class Commentaire {
+  late String _userId;
+  late String _text;
+  late double _note;
+  late String _date;
+
+  Commentaire(this._userId, this._text, this._note, this._date);
+
+  double get note => _note;
+
+  String get text => _text;
+
+  String get userId => _userId;
+
+  String get date => _date;
+
+  set note(double value) {
+    _note = value;
+  }
+
+  set text(String value) {
+    _text = value;
+  }
+
+  set userId(String value) {
+    _userId = value;
+  }
+
+  set date(String value) {
+    _date = value;
+  }
+}
+
+class Wine {
+  late String _nom;
+  late String _vignoble;
+  late String _type;
+  late String _annee;
+  late String _image;
+  late String _description;
+  late List<Commentaire> _listCommentaire;
+
+  Wine(this._nom, this._vignoble, this._type, this._annee, this._image,
+      this._description, this._listCommentaire);
+
+  List<Commentaire> get listCommentaire => _listCommentaire;
+
+  String get image => _image;
+
+  String get annee => _annee;
+
+  String get type => _type;
+
+  String get vignoble => _vignoble;
+
+  String get nom => _nom;
+
+  String get description => _description;
+
+  set listCommentaire(List<Commentaire> value) {
+    _listCommentaire = value;
+  }
+
+  set image(String value) {
+    _image = value;
+  }
+
+  set annee(String value) {
+    _annee = value;
+  }
+
+  set type(String value) {
+    _type = value;
+  }
+
+  set vignoble(String value) {
+    _vignoble = value;
+  }
+
+  set nom(String value) {
+    _nom = value;
+  }
+
+  set description(String value) {
+    _description = value;
+  }
+}
+
+// class DocumentWine {
+//   final String nom;
+//   final String vignoble;
+//   final String type;
+//   final String annee;
+//   final String image;
+//   final List<Commentaire> listCommentaire;
+//
+//   DocumentWine(this.nom, this.vignoble, this.type, this.annee, this.image,
+//       this.listCommentaire);
+//
+//   factory DocumentWine.fromJson(Map<String, dynamic> json) {
+//     return DocumentWine(
+//       nom: json["nom"] as String,
+//       vignoble: json["vignoble"] as String,
+//       type: json["type"] as String,
+//       annee: json["annee"] as String,
+//       image: json['image'] as String,
+//       listCommentaire: json['commentaire'] as List<Commentaire>,
+//     );
+//   }
+// }

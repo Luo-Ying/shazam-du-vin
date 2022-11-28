@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
+import 'package:shazam_du_vin/myListVinPage.dart';
 
 import '../myImagePickerWidget.dart';
 import '../myLoginPage.dart';
@@ -55,7 +56,7 @@ Widget buildFloatingMenuButton(BuildContext context) {
         } else if (index == 1) {
           photo_camera(context);
         } else if (index == 2) {
-          _httpService.geAllWines();
+          goListVinPage(context);
         } else if (index == 3) {
           goHome(context);
         }
@@ -78,6 +79,12 @@ Future<void> logout(BuildContext context) async {
 Future<void> photo_camera(BuildContext context) async {
   Navigator.of(context).push(MaterialPageRoute(
     builder: (context) => const MyImagePickerWidget(),
+  ));
+}
+
+Future<void> goListVinPage(BuildContext context) async {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => const MyListVinPage(),
   ));
 }
 

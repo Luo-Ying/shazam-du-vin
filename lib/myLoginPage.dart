@@ -8,6 +8,7 @@ import './services/http_service.dart';
 import './services/localStorage.dart';
 
 import './myRegisterPage.dart';
+import 'components/fluttertoast.dart';
 
 class MyLoginPage extends StatefulWidget {
   const MyLoginPage({Key? key, required this.title}) : super(key: key);
@@ -109,6 +110,16 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     title: 'Main page',
                   ),
                 ));
+              } else {
+                Fluttertoast.showToast(
+                  msg: VarGlobal.TOASTMESSAGE,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2,
+                  backgroundColor: Colors.black45,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
               }
 
               // print(json.decode(res[0]));

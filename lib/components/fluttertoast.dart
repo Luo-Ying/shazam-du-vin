@@ -350,3 +350,5 @@ class ToastStateFulState extends State<_ToastStateFul>
     );
   }
 }
+
+// TODO: change le position du toast vers haut milieu!

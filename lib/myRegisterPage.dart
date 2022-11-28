@@ -104,9 +104,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               print(
                   'username: $_username, password: $_password, passwordconfirmation: $_passwordconfirmation');
               var newUser = {
-                "database": "urbanisation",
-                "collection": "User",
-                "Document": {
+                "data": {
                   "username": _username,
                   "password": _password,
                   "vinFav": {
