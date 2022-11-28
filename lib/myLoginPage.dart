@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shazam_du_vin/myMainPage.dart';
-import 'package:shazam_du_vin/services/var_global.dart';
 
+import './services/var_global.dart';
 import './services/http_service.dart';
 import './services/localStorage.dart';
 
@@ -100,26 +100,28 @@ class _MyLoginPageState extends State<MyLoginPage> {
               (_formKey.currentState as FormState).save();
               print('username: $_username, password: $_password');
               // TODO: fonction pour user connecter
-              //   const String database = "urbanisation";
-              //   const String collectio = "User";
               var res = await _httpService.connexion(_username, _password);
               print(res.statusCode);
               if (res.statusCode == 200) {
+                String currentUser = await readDataString("currentUser");
+                VarGlobal.CURRENTUSERROLE = jsonDecode(currentUser)[0]["role"];
+                // TODO: verifier initialisation du CURRENTUSERROLE du VarGlobal en récupérant role du currentuser stoké dans le fichier
+                // VarGlobal.CURRENTUSERROLE = "admin";
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const MyMainPage(
                     title: 'Main page',
                   ),
                 ));
               } else {
-                Fluttertoast.showToast(
-                  msg: VarGlobal.TOASTMESSAGE,
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 2,
-                  backgroundColor: Colors.black45,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
+                // Fluttertoast.showToast(
+                //   msg: VarGlobal.TOASTMESSAGE,
+                //   toastLength: Toast.LENGTH_SHORT,
+                //   gravity: ToastGravity.BOTTOM,
+                //   timeInSecForIosWeb: 2,
+                //   backgroundColor: Colors.black45,
+                //   textColor: Colors.white,
+                //   fontSize: 16.0,
+                // );
               }
 
               // print(json.decode(res[0]));

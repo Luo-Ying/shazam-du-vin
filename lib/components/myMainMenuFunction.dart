@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
 import 'package:shazam_du_vin/myListVinPage.dart';
@@ -83,9 +85,17 @@ Future<void> photo_camera(BuildContext context) async {
 }
 
 Future<void> goListVinPage(BuildContext context) async {
+  // String currentUser = await readDataString("currentUser");
+  // String userRole = jsonDecode(currentUser)[0]["role"];
+  // if (userRole == "admin") {
   Navigator.of(context).push(MaterialPageRoute(
     builder: (context) => const MyListVinPage(),
   ));
+  // } else {
+  //   Navigator.of(context).push(MaterialPageRoute(
+  //     builder: (context) => const MyListVinPage(role: "user"),
+  //   ));
+  // }
 }
 
 Future<void> goHome(BuildContext context) async {

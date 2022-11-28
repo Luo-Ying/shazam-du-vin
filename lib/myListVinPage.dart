@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shazam_du_vin/services/var_global.dart';
 
 import './services/http_service.dart';
+import '../services/localStorage.dart';
+import './services/var_global.dart';
 import 'components/myMainMenuFunction.dart';
 
 class MyListVinPage extends StatefulWidget {
@@ -13,11 +18,29 @@ class MyListVinPage extends StatefulWidget {
 
 class _MyListVinPageState extends State<MyListVinPage> {
   late final HttpService _httpService = HttpService();
+  // String _role = "";
 
-  // @override
-  // void initState() {
-  //   _httpService.geAllWines();
-  // }
+  @override
+  void initState() {
+    // print(_role);
+    // _httpService.geAllWines();
+    initFunction();
+    // print(visible);
+    super.initState();
+  }
+
+  Future<void> initFunction() async {
+    String result = await readDataString("currentUser");
+    print(jsonDecode(result)[0]["role"]);
+    // visible = jsonDecode(result)[0]["role"] == "admin" ? true : false;
+    // print(jsonDecode(result)[0]["role"] == "admin");
+    // role = jsonDecode(result)[0]["role"];
+    // if (jsonDecode(result)[0]["role"] == "admin") {
+    //   visible = false;
+    // } else {
+    //   visible = true;
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +81,14 @@ class _MyListVinPageState extends State<MyListVinPage> {
                         fontSize: 30.0,
                       ),
                     ),
-                    buildAddWineButtonAdmin(context)
+                    Expanded(
+                        child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Offstage(
+                        offstage: VarGlobal.CURRENTUSERROLE == "user",
+                        child: buildAddWineButtonAdmin(context),
+                      ),
+                    ))
                   ],
                 )
               ],
@@ -70,37 +100,33 @@ class _MyListVinPageState extends State<MyListVinPage> {
   }
 
   Widget buildAddWineButtonAdmin(BuildContext context) {
-    return Expanded(
-        child: Align(
-      alignment: Alignment.centerRight,
-      child: SizedBox(
-        height: 28,
-        width: 150,
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-          ),
-          child: Stack(
-            children: [
-              Row(
-                children: const [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      child: Icon(Icons.add),
-                    ),
+    return SizedBox(
+      height: 28,
+      width: 150,
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.black,
+        ),
+        child: Stack(
+          children: [
+            Row(
+              children: const [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    child: Icon(Icons.add),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text("add new wine"),
-                  )
-                ],
-              ),
-            ],
-          ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text("add new wine"),
+                )
+              ],
+            ),
+          ],
         ),
       ),
-    ));
+    );
   }
 }

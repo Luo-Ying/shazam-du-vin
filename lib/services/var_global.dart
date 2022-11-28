@@ -7,4 +7,6 @@ class VarGlobal {
   static String TOASTMESSAGE = "";
 
   static User USERCURRENT = {} as User;
+
+  static String CURRENTUSERROLE = "";
 }

@@ -7,8 +7,8 @@ import '../services/var_global.dart';
 import './localStorage.dart';
 
 class HttpService {
-  // static const BASE_URL = "http://10.0.2.2:5000"; // for emulator
-  static const BASE_URL = "http://92.222.180.41:5000";
+  static const BASE_URL = "http://10.0.2.2:5000"; // for emulator
+  // static const BASE_URL = "http://92.222.180.41:5000";
 
   Future<http.Response> register(Map<String, dynamic> newUser) async {
     // Map<String, String> headersMap = {
@@ -49,12 +49,13 @@ class HttpService {
       print(res.body.runtimeType);
       saveDataString("currentUser", res.body);
     } else {
-      VarGlobal.TOASTMESSAGE = "username or password not correctly!";
+      // VarGlobal.TOASTMESSAGE = "username or password not correctly!";
     }
     // print(response.body.runtimeType);
     // print(responseJson);
     // return profil.fromJson(responseJson);
     return res;
+    // TODO: les cas d'érreurs quand utilisateur entre les mauvais username ou password
   }
 
   Future<http.Response> geAllWines() async {
