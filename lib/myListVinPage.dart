@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shazam_du_vin/myAddNewWineFormPage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 
 import './services/http_service.dart';
@@ -18,28 +19,17 @@ class MyListVinPage extends StatefulWidget {
 
 class _MyListVinPageState extends State<MyListVinPage> {
   late final HttpService _httpService = HttpService();
-  // String _role = "";
 
   @override
   void initState() {
-    // print(_role);
-    // _httpService.geAllWines();
     initFunction();
-    // print(visible);
     super.initState();
   }
 
   Future<void> initFunction() async {
     String result = await readDataString("currentUser");
     print(jsonDecode(result)[0]["role"]);
-    // visible = jsonDecode(result)[0]["role"] == "admin" ? true : false;
-    // print(jsonDecode(result)[0]["role"] == "admin");
-    // role = jsonDecode(result)[0]["role"];
-    // if (jsonDecode(result)[0]["role"] == "admin") {
-    //   visible = false;
-    // } else {
-    //   visible = true;
-    // }
+    // _httpService.geAllWines();
   }
 
   @override
@@ -104,7 +94,11 @@ class _MyListVinPageState extends State<MyListVinPage> {
       height: 28,
       width: 150,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const MyAddNewWineFormPage(),
+          ));
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black,
         ),

@@ -85,17 +85,9 @@ Future<void> photo_camera(BuildContext context) async {
 }
 
 Future<void> goListVinPage(BuildContext context) async {
-  // String currentUser = await readDataString("currentUser");
-  // String userRole = jsonDecode(currentUser)[0]["role"];
-  // if (userRole == "admin") {
   Navigator.of(context).push(MaterialPageRoute(
     builder: (context) => const MyListVinPage(),
   ));
-  // } else {
-  //   Navigator.of(context).push(MaterialPageRoute(
-  //     builder: (context) => const MyListVinPage(role: "user"),
-  //   ));
-  // }
 }
 
 Future<void> goHome(BuildContext context) async {
