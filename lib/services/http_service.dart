@@ -7,8 +7,9 @@ import '../services/var_global.dart';
 import './localStorage.dart';
 
 class HttpService {
-  static const BASE_URL = "http://10.0.2.2:5000"; // for emulator
-  // static const BASE_URL = "http://92.222.180.41:5000";
+  // static const BASE_URL = "http://10.0.2.2:5000"; // for emulator
+  static const BASE_URL =
+      "https://flask-service.v5jn6j0vmbe7s.eu-west-3.cs.amazonlightsail.com/";
 
   Future<http.Response> register(Map<String, dynamic> newUser) async {
     // Map<String, String> headersMap = {

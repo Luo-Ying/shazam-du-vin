@@ -45,6 +45,7 @@ dependencies:
   shake_animation_widget: ^3.0.3
   image_picker: ^0.8.6
   localstorage: ^4.0.0+1
+  cross_file_image: ^1.0.0
 
 dev_dependencies:
   flutter_test:
