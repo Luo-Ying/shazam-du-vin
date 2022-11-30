@@ -10,6 +10,8 @@ import '../services/localStorage.dart';
 import './services/var_global.dart';
 import 'components/myMainMenuFunction.dart';
 
+import 'utils/models.dart';
+
 class MyListVinPage extends StatefulWidget {
   const MyListVinPage({Key? key}) : super(key: key);
 
@@ -20,6 +22,8 @@ class MyListVinPage extends StatefulWidget {
 class _MyListVinPageState extends State<MyListVinPage> {
   late final HttpService _httpService = HttpService();
 
+  late List<Wine> _listAllWine = [];
+
   @override
   void initState() {
     initFunction();
@@ -27,9 +31,35 @@ class _MyListVinPageState extends State<MyListVinPage> {
   }
 
   Future<void> initFunction() async {
-    String result = await readDataString("currentUser");
-    print(jsonDecode(result)[0]["role"]);
-    // _httpService.geAllWines();
+    var res = await _httpService.geAllWines();
+    print(jsonDecode(res.body));
+    print(jsonDecode(res.body).length);
+    for (var item in jsonDecode(res.body)) {
+      print(item);
+      String nom = item["nom"];
+      String vignoble = item["vignoble"];
+      String type = item["type"];
+      String annee = item["annee"];
+      String image = item["image"];
+      String description = item["description"];
+      // print(data[i]["commentaire"][0]["userID"]);
+      late List<Commentaire> listCommentaire = [];
+      if (item["commentaire"].length > 0) {
+        for (int j = 0; j < item["commentaire"].length; j++) {
+          String userId = item["commentaire"][j]["userID"];
+          print(userId);
+          String text = item["commentaire"][j]["text"];
+          double note = item["commentaire"][j]["note"];
+          String date = item["commentaire"][j]["date"];
+          Commentaire commentaire = Commentaire(userId, text, note, date);
+          listCommentaire.add(commentaire);
+        }
+      }
+      Wine wine =
+          Wine(nom, vignoble, type, annee, image, description, listCommentaire);
+      _listAllWine.add(wine);
+    }
+    // print(_listAllWine[0].description);
   }
 
   @override
@@ -46,6 +76,18 @@ class _MyListVinPageState extends State<MyListVinPage> {
       ),
     );
   }
+
+  // Widget buildListView(BuildContext context) {
+  //   return ListView.builder(
+  //     itemBuilder: (BuildContext context, int index) {
+  //       return SizedBox(
+  //         height: 50,
+  //         child: ,
+  //       );
+  //     },
+  //     itemCount: options.length,
+  //   );
+  // }
 
   PreferredSize buildApBar(BuildContext context) {
     return PreferredSize(

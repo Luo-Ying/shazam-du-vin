@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
-import 'package:shazam_du_vin/myListVinPage.dart';
+import 'package:shazam_du_vin/myListWinePage.dart';
 
 import '../myImagePickerWidget.dart';
 import '../myLoginPage.dart';

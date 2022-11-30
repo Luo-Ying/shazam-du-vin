@@ -25,11 +25,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
 
   var uuid = const Uuid();
 
-  // late bool _isSetImgFront = false;
-  // late bool _isSetImgBack = false;
-
   final ValueNotifier<bool> _isHaveImgFront = ValueNotifier(false);
-  // final ValueNotifier<bool> _isHaveImgBack = ValueNotifier(false);
 
   var _selectedImage;
   // var _imgBackPath;
@@ -231,21 +227,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
     );
   }
 
-  // Widget buildBoxAdd2Images(BuildContext context) {
-  //   return Column(
-  //     children: [
-  //       const SizedBox(height: 25.0),
-  //       Row(
-  //         children: [
-  //           buildBoxImagePickerFront(context),
-  //           const SizedBox(width: 20.0),
-  //           // buildBoxImagePickerBack(context),
-  //         ],
-  //       )
-  //     ],
-  //   );
-  // }
-
   Widget buildBoxImagePickerFront(BuildContext context) {
     return Stack(
       children: [
@@ -342,92 +323,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         ));
   }
 
-  // Widget buildBoxImagePickerBack(BuildContext context) {
-  //   return Stack(
-  //     children: [
-  //       Container(
-  //         width: 150.0,
-  //         height: 200.0,
-  //         // color: const Color.fromRGBO(220, 220, 220, 1),
-  //         decoration: BoxDecoration(
-  //           border: Border.all(color: const Color.fromRGBO(196, 196, 196, 1)),
-  //           color: const Color.fromRGBO(220, 220, 220, 1),
-  //         ),
-  //         child: Align(
-  //           alignment: Alignment.center,
-  //           child: ValueListenableBuilder(
-  //               valueListenable: _isHaveImgBack,
-  //               builder: (BuildContext context, bool value, Widget? child) {
-  //                 return Container(
-  //                   child: _imgBackPath == null
-  //                       ? buildButtonToAddImgBack(context)
-  //                       : buildShowImageBackReview(context),
-  //                 );
-  //               }),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget buildShowImageBackReview(BuildContext context) {
-  //   return Stack(
-  //     children: [
-  //       Align(
-  //         alignment: Alignment.center,
-  //         child: Image(image: XFileImage(_imgBackPath)),
-  //       ),
-  //       Align(
-  //         alignment: const Alignment(0, 0.9),
-  //         child: SizedBox(
-  //           height: 25.0,
-  //           child: ElevatedButton(
-  //             onPressed: () {
-  //               _imgBackPath = null;
-  //               _isHaveImgBack.value = false;
-  //               print(_imgBackPath);
-  //             },
-  //             style: ButtonStyle(
-  //                 backgroundColor: MaterialStateProperty.all(
-  //                     const Color.fromRGBO(135, 135, 135, 1)),
-  //                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-  //                     RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(35.0),
-  //                 ))),
-  //             child: const Icon(Icons.delete),
-  //           ),
-  //         ),
-  //       )
-  //     ],
-  //   );
-  // }
-
-  // Widget buildButtonToAddImgBack(BuildContext context) {
-  //   return SizedBox(
-  //     width: 115.0,
-  //     height: 35.0,
-  //     child: ElevatedButton(
-  //       onPressed: () {
-  //         // _isSetImgBack = true;
-  //         // _isSetImgFront = false;
-  //         _showBasicModalBottomSheet(context);
-  //       },
-  //       style: ElevatedButton.styleFrom(
-  //         backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
-  //       ),
-  //       child: const Text(
-  //         "Add a image back",
-  //         textAlign: TextAlign.center,
-  //         style: TextStyle(
-  //           fontSize: 10.0,
-  //           color: Color.fromRGBO(111, 111, 111, 1),
-  //           fontWeight: FontWeight.w700,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Future<Future<int?>> _showBasicModalBottomSheet(context) async {
     late List<String> options = ["take a photo", "select a photo from album"];
     return showModalBottomSheet<int>(
@@ -443,11 +338,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                 child: ElevatedButton(
                   onPressed: () async {
                     print(index);
-                    // print("set back $_isSetImgBack");
-                    // print("set front $_isSetImgFront");
-                    // print("back a une image $_isHaveImgBack");
-                    // print("front a une image $_isHaveImgBack");
-                    // print(_imgBackPath);
                     if (index == 0) {
                       _selectedImage = await ImagePicker()
                           .pickImage(source: ImageSource.camera);
@@ -457,20 +347,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                           .pickImage(source: ImageSource.gallery);
                       _isHaveImgFront.value = true;
                     }
-                    // if (_isSetImgFront) {
-                    // }
-                    // else if (_isSetImgBack) {
-                    //   if (index == 0) {
-                    //     _imgBackPath = await ImagePicker()
-                    //         .pickImage(source: ImageSource.camera);
-                    //     _isHaveImgBack.value = true;
-                    //   } else if (index == 1) {
-                    //     _imgBackPath = await ImagePicker()
-                    //         .pickImage(source: ImageSource.gallery);
-                    //     _isHaveImgBack.value = true;
-                    //   }
-                    // }
-                    // print(_imgBackPath);
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(

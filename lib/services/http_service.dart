@@ -53,7 +53,7 @@ class HttpService {
       Uri.parse("$BASE_URL/Vin"),
       headers: {"Content-Type": "application/json"},
     );
-    print(res.body);
+    // print(res.body);
     return res;
   }
 
