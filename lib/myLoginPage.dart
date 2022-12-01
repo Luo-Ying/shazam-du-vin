@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shazam_du_vin/myMainPage.dart';
 
-import './services/var_global.dart';
-import './services/http_service.dart';
-import './services/localStorage.dart';
+import 'services/var_global.dart';
+import 'services/http_service.dart';
+import 'services/localStorage.dart';
+import 'utils/models.dart';
 
-import './myRegisterPage.dart';
+import 'myRegisterPage.dart';
 import 'components/fluttertoast.dart';
 
 class MyLoginPage extends StatefulWidget {
@@ -26,6 +27,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
   Color _eyeColor = Colors.grey;
 
   late final HttpService _httpService = HttpService();
+
+  List<Wine> _listTopWines = [];
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +114,20 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     jsonDecode(jsonDecode(currentUser))[0]["role"];
                 // TODO: verifier initialisation du CURRENTUSERROLE du VarGlobal en récupérant role du currentuser stoké dans le fichier
                 // VarGlobal.CURRENTUSERROLE = "admin";
+                // Navigator.of(context).push(MaterialPageRoute(
+                //   builder: (context) => const MyMainPage(
+                //     title: 'Main page',
+                //   ),
+                // ));
+                await getWines();
+                print("coucou! $_listTopWines");
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const MyMainPage(
-                    title: 'Main page',
-                  ),
+                  builder: (context) {
+                    return MyMainPage(
+                      title: 'main',
+                      listTopWines: _listTopWines,
+                    );
+                  },
                 ));
               } else {
                 // Fluttertoast.showToast(
@@ -221,5 +234,38 @@ class _MyLoginPageState extends State<MyLoginPage> {
         style: TextStyle(fontSize: 42),
       ),
     );
+  }
+
+  Future<void> getWines() async {
+    _listTopWines = [];
+    var res = await _httpService.getTopWines();
+    var data = jsonDecode(res.body);
+    print(data);
+    // print(data[0]["commentaire"].length);
+    // print(data.length);
+    for (int i = 0; i < data.length; i++) {
+      String nom = data[i]["nom"];
+      String vignoble = data[i]["vignoble"];
+      String type = data[i]["type"];
+      String annee = data[i]["annee"];
+      String image = data[i]["image"];
+      String description = data[i]["description"];
+      // print(data[i]["commentaire"][0]["userID"]);
+      late List<Commentaire> listCommentaire = [];
+      if (data[i]["commentaire"].length > 0) {
+        for (int j = 0; j < data[i]["commentaire"].length; j++) {
+          String userId = data[i]["commentaire"][j]["userID"];
+          print(userId);
+          String text = data[i]["commentaire"][j]["text"];
+          double note = data[i]["commentaire"][j]["note"];
+          String date = data[i]["commentaire"][j]["date"];
+          Commentaire commentaire = Commentaire(userId, text, note, date);
+          listCommentaire.add(commentaire);
+        }
+      }
+      Wine wine =
+          Wine(nom, vignoble, type, annee, image, description, listCommentaire);
+      _listTopWines.add(wine);
+    }
   }
 }

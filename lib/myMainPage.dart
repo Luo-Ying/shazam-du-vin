@@ -10,59 +10,34 @@ import 'package:shazam_du_vin/myLoginPage.dart';
 import './services/http_service.dart';
 import './services/localStorage.dart';
 import 'components/flutingActionButionMenu.dart';
+import 'components/wineCard.dart';
 import './utils/models.dart';
 
 class MyMainPage extends StatefulWidget {
-  const MyMainPage({Key? key, required this.title}) : super(key: key);
+  const MyMainPage({Key? key, required this.title, required this.listTopWines})
+      : super(key: key);
   final String title;
 
+  final List<Wine> listTopWines;
+
   @override
-  State<MyMainPage> createState() => _MyMainPageState();
+  _MyMainPageState createState() {
+    return _MyMainPageState(listTopWines);
+  }
 }
 
 class _MyMainPageState extends State<MyMainPage> {
-  late final HttpService _httpService = HttpService();
+  List<Wine> listTopWines;
 
-  late List<Wine> listTopWines = [];
+  _MyMainPageState(this.listTopWines);
+
+  late final HttpService _httpService = HttpService();
 
   @override
   void initState() {
-    getWines();
-    print(listTopWines);
+    print("list top wines:  $listTopWines");
     print(listTopWines.length);
     super.initState();
-  }
-
-  Future<void> getWines() async {
-    var res = await _httpService.getTopWines();
-    var data = jsonDecode(res.body);
-    // print(data);
-    // print(data[0]["commentaire"].length);
-    // print(data.length);
-    for (int i = 0; i < data.length; i++) {
-      String nom = data[i]["nom"];
-      String vignoble = data[i]["vignoble"];
-      String type = data[i]["type"];
-      String annee = data[i]["annee"];
-      String image = data[i]["image"];
-      String description = data[i]["description"];
-      // print(data[i]["commentaire"][0]["userID"]);
-      late List<Commentaire> listCommentaire = [];
-      if (data[i]["commentaire"].length > 0) {
-        for (int j = 0; j < data[i]["commentaire"].length; j++) {
-          String userId = data[i]["commentaire"][j]["userID"];
-          print(userId);
-          String text = data[i]["commentaire"][j]["text"];
-          double note = data[i]["commentaire"][j]["note"];
-          String date = data[i]["commentaire"][j]["date"];
-          Commentaire commentaire = Commentaire(userId, text, note, date);
-          listCommentaire.add(commentaire);
-          Wine wine = Wine(
-              nom, vignoble, type, annee, image, description, listCommentaire);
-          listTopWines.add(wine);
-        }
-      }
-    }
   }
 
   @override
@@ -70,14 +45,21 @@ class _MyMainPageState extends State<MyMainPage> {
     return Scaffold(
       appBar: buildApBar(context),
       body: Container(
-        // constraints: const BoxConstraints.expand(),
-        child: Stack(
-          children: [
-            // buildFloatingMenuButton(context),
-          ],
-        ),
+        child: builListViewOfListAllWine(context),
       ),
       floatingActionButton: buildMainMenu(context),
+    );
+  }
+
+  Widget builListViewOfListAllWine(BuildContext context) {
+    print("list alla wines: $listTopWines");
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) {
+        return SizedBox(
+          child: buildWineCard(context, listTopWines[index], index),
+        );
+      },
+      itemCount: listTopWines.length,
     );
   }
 

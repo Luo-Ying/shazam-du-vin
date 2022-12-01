@@ -31,7 +31,7 @@ class _MyListVinPageState extends State<MyListVinPage> {
 
   _MyListVinPageState(this.listAllWines);
 
-  late final HttpService _httpService = HttpService();
+  // late final HttpService _httpService = HttpService();
 
   Uint8List targetlUinit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
   Uint8List originalUnit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
@@ -46,28 +46,6 @@ class _MyListVinPageState extends State<MyListVinPage> {
       floatingActionButton: buildMainMenu(context),
     );
   }
-
-  // void _resizeImage() async {
-  //   String imageUrl = 'https://picsum.photos/250?image=9';
-  //   var response = _httpService.getImg(imageUrl);
-  //   originalUnit8List = response.bodyBytes;
-  //
-  //   ui.Image originalUiImage = await decodeImageFromList(originalUnit8List);
-  //   ByteData originalByteData = await originalUiImage.toByteData();
-  //   print('original image ByteData size is ${originalByteData.lengthInBytes}');
-  //
-  //   var codec = await ui.instantiateImageCodec(originalUnit8List,
-  //       targetHeight: 50, targetWidth: 50);
-  //   var frameInfo = await codec.getNextFrame();
-  //   ui.Image targetUiImage = frameInfo.image;
-  //
-  //   ByteData targetByteData =
-  //       await targetUiImage.toByteData(format: ui.ImageByteFormat.png);
-  //   print('target image ByteData size is ${targetByteData.lengthInBytes}');
-  //   targetlUinit8List = targetByteData.buffer.asUint8List();
-  //
-  //   setState(() {});
-  // }
 
   Widget buildWineCard(BuildContext context, int index) {
     return Card(
@@ -165,7 +143,8 @@ class _MyListVinPageState extends State<MyListVinPage> {
                       ),
                     ))
                   ],
-                )
+                ),
+                buildTitleLine(),
               ],
             ),
           )
@@ -204,6 +183,20 @@ class _MyListVinPageState extends State<MyListVinPage> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Padding buildTitleLine() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 22.0, top: 49.0),
+      child: Align(
+        alignment: Alignment.bottomLeft,
+        child: Container(
+          color: Colors.black,
+          width: 40,
+          height: 2,
         ),
       ),
     );
