@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shazam_du_vin/myAddNewWineFormPage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 
@@ -9,6 +10,7 @@ import './services/http_service.dart';
 import '../services/localStorage.dart';
 import './services/var_global.dart';
 import 'components/myMainMenuFunction.dart';
+import 'components/flutingActionButionMenu.dart';
 
 import 'utils/models.dart';
 
@@ -67,27 +69,61 @@ class _MyListVinPageState extends State<MyListVinPage> {
     return Scaffold(
       appBar: buildApBar(context),
       body: Container(
-        // constraints: const BoxConstraints.expand(),
-        child: Stack(
-          children: [
-            buildFloatingMenuButton(context),
-          ],
-        ),
+        child: builListViewOfListAllWine(context),
       ),
+      floatingActionButton: buildMainMenu(context),
     );
   }
 
-  // Widget buildListView(BuildContext context) {
-  //   return ListView.builder(
-  //     itemBuilder: (BuildContext context, int index) {
-  //       return SizedBox(
-  //         height: 50,
-  //         child: ,
-  //       );
-  //     },
-  //     itemCount: options.length,
-  //   );
-  // }
+  Widget buildWineCard(BuildContext context, int index) {
+    return Row(
+      children: [
+        Column(
+          children: [
+            Text(_listAllWine[index].nom),
+            Text(_listAllWine[index].annee)
+          ],
+        ),
+        Column(
+          children: [
+            Image.network(_listAllWine[index].image),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget builListViewOfListAllWine(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) {
+        return SizedBox(
+          // height: 50,
+          child: Card(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            shadowColor: Colors.grey,
+            elevation: 5,
+            child: Row(
+              children: [
+                Column(
+                  children: [
+                    Text(_listAllWine[index].nom),
+                    Text(_listAllWine[index].annee)
+                  ],
+                ),
+                Column(
+                  children: [
+                    Image.network(_listAllWine[index].image),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+      itemCount: _listAllWine.length,
+    );
+  }
 
   PreferredSize buildApBar(BuildContext context) {
     return PreferredSize(
