@@ -136,6 +136,7 @@ Future<void> setListAllWine() async {
   // print(jsonDecode(res.body).length);
   for (var item in jsonDecode(res.body)) {
     // print(item);
+    String id = item["id"];
     String nom = item["nom"];
     String vignoble = item["vignoble"];
     String type = item["type"];
@@ -155,8 +156,8 @@ Future<void> setListAllWine() async {
         listCommentaire.add(commentaire);
       }
     }
-    Wine wine =
-        Wine(nom, vignoble, type, annee, image, description, listCommentaire);
+    Wine wine = Wine(
+        id, nom, vignoble, type, annee, image, description, listCommentaire);
     _listAllWines.add(wine);
     VarGlobal.LISTALLWINES.add(wine);
   }
@@ -171,6 +172,7 @@ Future<void> getTopWines() async {
   // print(data[0]["commentaire"].length);
   // print(data.length);
   for (int i = 0; i < data.length; i++) {
+    String id = data[i]["id"];
     String nom = data[i]["nom"];
     String vignoble = data[i]["vignoble"];
     String type = data[i]["type"];
@@ -190,8 +192,8 @@ Future<void> getTopWines() async {
         listCommentaire.add(commentaire);
       }
     }
-    Wine wine =
-        Wine(nom, vignoble, type, annee, image, description, listCommentaire);
+    Wine wine = Wine(
+        id, nom, vignoble, type, annee, image, description, listCommentaire);
     _listTopWines.add(wine);
   }
 }

@@ -95,6 +95,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
     // print(jsonDecode(res.body).length);
     for (var item in jsonDecode(res.body)) {
       // print(item);
+      String id = item["id"];
       String nom = item["nom"];
       String vignoble = item["vignoble"];
       String type = item["type"];
@@ -114,8 +115,8 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
           listCommentaire.add(commentaire);
         }
       }
-      Wine wine =
-          Wine(nom, vignoble, type, annee, image, description, listCommentaire);
+      Wine wine = Wine(
+          id, nom, vignoble, type, annee, image, description, listCommentaire);
       _listAllWines.add(wine);
       VarGlobal.LISTALLWINES.add(wine);
     }
@@ -145,19 +146,20 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
               print("Annee : $_annee");
               print("Description : $_description");
               print("Image : $_selectedImage");
-              var id = uuid.v4();
-              print(id);
               // Image imgFile = Image.file(File(_selectedImage!.path));
               print(_selectedImage.path.runtimeType);
               File imgFile = File(_selectedImage.path);
               var res = await _httpService.insertImage(imgFile);
               if (res.statusCode == 200) {
+                var id = uuid.v4();
+                print(id);
                 res.stream.transform(utf8.decoder).listen((value) {
                   print(value);
                   var newWine = {
                     "database": "urbanisation",
                     "collection": "Vin",
                     "data": {
+                      "id": id,
                       "nom": _nom,
                       "vignoble": _vignoble,
                       "cepage": _cepage,
