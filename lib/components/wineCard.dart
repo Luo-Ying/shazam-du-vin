@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../myWinePage.dart';
 import '../utils/models.dart';
 
 Widget buildWineCard(
@@ -12,7 +13,9 @@ Widget buildWineCard(
     shadowColor: Colors.grey,
     elevation: 5,
     child: InkWell(
-      onTap: () {},
+      onTap: () {
+        goWinePage(context, wine);
+      },
       child: Row(
         children: [
           isTopWine
@@ -69,4 +72,14 @@ Widget buildWineCard(
       ),
     ),
   );
+}
+
+void goWinePage(BuildContext context, Wine wine) {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) {
+      return MyWinePage(
+        wine: wine,
+      );
+    },
+  ));
 }
