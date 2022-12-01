@@ -66,6 +66,11 @@ class HttpService {
     return res;
   }
 
+  Future<http.Response> getImg(String imageUrl) async {
+    var response = await http.get(Uri.parse(imageUrl));
+    return response;
+  }
+
   Future<http.StreamedResponse> insertImage(File imgFile) async {
     print("coucou?");
     print(imgFile);

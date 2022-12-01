@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,60 +10,31 @@ import 'package:shazam_du_vin/services/var_global.dart';
 import './services/http_service.dart';
 import '../services/localStorage.dart';
 import './services/var_global.dart';
-import 'components/myMainMenuFunction.dart';
 import 'components/flutingActionButionMenu.dart';
 
 import 'utils/models.dart';
 
 class MyListVinPage extends StatefulWidget {
-  const MyListVinPage({Key? key}) : super(key: key);
+  const MyListVinPage({Key? key, required this.listAllWines}) : super(key: key);
+
+  final List<Wine> listAllWines;
 
   @override
-  State<MyListVinPage> createState() => _MyListVinPageState();
+  _MyListVinPageState createState() {
+    // print(' createState $arguments');
+    return _MyListVinPageState(listAllWines);
+  }
 }
 
 class _MyListVinPageState extends State<MyListVinPage> {
+  List<Wine> listAllWines;
+
+  _MyListVinPageState(this.listAllWines);
+
   late final HttpService _httpService = HttpService();
 
-  late List<Wine> _listAllWine = [];
-
-  @override
-  void initState() {
-    initFunction();
-    super.initState();
-  }
-
-  Future<void> initFunction() async {
-    var res = await _httpService.geAllWines();
-    print(jsonDecode(res.body));
-    print(jsonDecode(res.body).length);
-    for (var item in jsonDecode(res.body)) {
-      print(item);
-      String nom = item["nom"];
-      String vignoble = item["vignoble"];
-      String type = item["type"];
-      String annee = item["annee"];
-      String image = item["image"];
-      String description = item["description"];
-      // print(data[i]["commentaire"][0]["userID"]);
-      late List<Commentaire> listCommentaire = [];
-      if (item["commentaire"].length > 0) {
-        for (int j = 0; j < item["commentaire"].length; j++) {
-          String userId = item["commentaire"][j]["userID"];
-          print(userId);
-          String text = item["commentaire"][j]["text"];
-          double note = item["commentaire"][j]["note"];
-          String date = item["commentaire"][j]["date"];
-          Commentaire commentaire = Commentaire(userId, text, note, date);
-          listCommentaire.add(commentaire);
-        }
-      }
-      Wine wine =
-          Wine(nom, vignoble, type, annee, image, description, listCommentaire);
-      _listAllWine.add(wine);
-    }
-    // print(_listAllWine[0].description);
-  }
+  Uint8List targetlUinit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
+  Uint8List originalUnit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
 
   @override
   Widget build(BuildContext context) {
@@ -75,53 +47,88 @@ class _MyListVinPageState extends State<MyListVinPage> {
     );
   }
 
+  // void _resizeImage() async {
+  //   String imageUrl = 'https://picsum.photos/250?image=9';
+  //   var response = _httpService.getImg(imageUrl);
+  //   originalUnit8List = response.bodyBytes;
+  //
+  //   ui.Image originalUiImage = await decodeImageFromList(originalUnit8List);
+  //   ByteData originalByteData = await originalUiImage.toByteData();
+  //   print('original image ByteData size is ${originalByteData.lengthInBytes}');
+  //
+  //   var codec = await ui.instantiateImageCodec(originalUnit8List,
+  //       targetHeight: 50, targetWidth: 50);
+  //   var frameInfo = await codec.getNextFrame();
+  //   ui.Image targetUiImage = frameInfo.image;
+  //
+  //   ByteData targetByteData =
+  //       await targetUiImage.toByteData(format: ui.ImageByteFormat.png);
+  //   print('target image ByteData size is ${targetByteData.lengthInBytes}');
+  //   targetlUinit8List = targetByteData.buffer.asUint8List();
+  //
+  //   setState(() {});
+  // }
+
   Widget buildWineCard(BuildContext context, int index) {
-    return Row(
-      children: [
-        Column(
-          children: [
-            Text(_listAllWine[index].nom),
-            Text(_listAllWine[index].annee)
-          ],
-        ),
-        Column(
-          children: [
-            Image.network(_listAllWine[index].image),
-          ],
-        )
-      ],
+    return Card(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      shadowColor: Colors.grey,
+      elevation: 5,
+      child: Row(
+        children: [
+          Column(
+            children: [
+              // Text(listAllWines[index].nom),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0, top: 5.0),
+                child: Container(
+                  width: 258.0,
+                  child: Text(
+                    listAllWines[index].nom,
+                    style: const TextStyle(
+                        fontSize: 22.0, fontWeight: FontWeight.w900),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0, top: 5.0),
+                child: Container(
+                  width: 258.0,
+                  child: Text(
+                    listAllWines[index].annee,
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+              child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Image.network(
+                    listAllWines[index].image,
+                    width: 80.0,
+                    height: 200.0,
+                    fit: BoxFit.cover,
+                  )))
+        ],
+      ),
     );
   }
 
   Widget builListViewOfListAllWine(BuildContext context) {
+    print("list alla wines: $listAllWines");
+    print("var global list:  $VarGlobal.LISTALLWINES");
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         return SizedBox(
           // height: 50,
-          child: Card(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            shadowColor: Colors.grey,
-            elevation: 5,
-            child: Row(
-              children: [
-                Column(
-                  children: [
-                    Text(_listAllWine[index].nom),
-                    Text(_listAllWine[index].annee)
-                  ],
-                ),
-                Column(
-                  children: [
-                    Image.network(_listAllWine[index].image),
-                  ],
-                )
-              ],
-            ),
-          ),
+          child: buildWineCard(context, index),
         );
       },
-      itemCount: _listAllWine.length,
+      itemCount: listAllWines.length,
     );
   }
 
