@@ -102,9 +102,9 @@ class HttpService {
     print(res.statusCode);
     print(res.body);
     if (res.statusCode == 200) {
-      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Status"];
+      VarGlobal.TOASTMESSAGE = jsonDecode(jsonDecode(res.body))["Status"];
     } else {
-      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Error"];
+      VarGlobal.TOASTMESSAGE = jsonDecode(jsonDecode(res.body))["Error"];
     }
     return res;
   }

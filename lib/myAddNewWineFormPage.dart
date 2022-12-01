@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 
 import './services/http_service.dart';
 import 'components/fluttertoast.dart';
+import '../utils/models.dart';
 
 import 'services/var_global.dart';
 
@@ -36,6 +37,8 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
   late String _annee;
   late String _noteGlobal;
   late String _description;
+
+  List<Wine> _listAllWines = [];
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +86,40 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         ),
       ),
     );
+  }
+
+  Future<void> setListAllWine() async {
+    _listAllWines = [];
+    var res = await _httpService.geAllWines();
+    // print(jsonDecode(res.body));
+    // print(jsonDecode(res.body).length);
+    for (var item in jsonDecode(res.body)) {
+      // print(item);
+      String nom = item["nom"];
+      String vignoble = item["vignoble"];
+      String type = item["type"];
+      String annee = item["annee"];
+      String image = item["image"];
+      String description = item["description"];
+      // print(data[i]["commentaire"][0]["userID"]);
+      late List<Commentaire> listCommentaire = [];
+      if (item["commentaire"].length > 0) {
+        for (int j = 0; j < item["commentaire"].length; j++) {
+          String userId = item["commentaire"][j]["userID"];
+          // print(userId);
+          String text = item["commentaire"][j]["text"];
+          double note = item["commentaire"][j]["note"];
+          String date = item["commentaire"][j]["date"];
+          Commentaire commentaire = Commentaire(userId, text, note, date);
+          listCommentaire.add(commentaire);
+        }
+      }
+      Wine wine =
+          Wine(nom, vignoble, type, annee, image, description, listCommentaire);
+      _listAllWines.add(wine);
+      VarGlobal.LISTALLWINES.add(wine);
+    }
+    // print(_listAllWine[0].description);
   }
 
   Widget buildAddWineButton(BuildContext context) {
@@ -143,7 +180,8 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                     textColor: Colors.white,
                     fontSize: 16.0,
                   );
-                  Navigator.pop(context);
+
+                  Navigator.pop(context, _listAllWines);
                 });
               }
             }
