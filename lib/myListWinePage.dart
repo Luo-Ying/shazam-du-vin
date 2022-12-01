@@ -11,6 +11,7 @@ import './services/http_service.dart';
 import '../services/localStorage.dart';
 import './services/var_global.dart';
 import 'components/flutingActionButionMenu.dart';
+import 'components/wineCard.dart';
 
 import 'utils/models.dart';
 
@@ -21,7 +22,6 @@ class MyListVinPage extends StatefulWidget {
 
   @override
   _MyListVinPageState createState() {
-    // print(' createState $arguments');
     return _MyListVinPageState(listAllWines);
   }
 }
@@ -30,8 +30,6 @@ class _MyListVinPageState extends State<MyListVinPage> {
   List<Wine> listAllWines;
 
   _MyListVinPageState(this.listAllWines);
-
-  // late final HttpService _httpService = HttpService();
 
   Uint8List targetlUinit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
   Uint8List originalUnit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
@@ -47,55 +45,6 @@ class _MyListVinPageState extends State<MyListVinPage> {
     );
   }
 
-  Widget buildWineCard(BuildContext context, int index) {
-    return Card(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      shadowColor: Colors.grey,
-      elevation: 5,
-      child: Row(
-        children: [
-          Column(
-            children: [
-              // Text(listAllWines[index].nom),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0, top: 5.0),
-                child: Container(
-                  width: 258.0,
-                  child: Text(
-                    listAllWines[index].nom,
-                    style: const TextStyle(
-                        fontSize: 22.0, fontWeight: FontWeight.w900),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0, top: 5.0),
-                child: Container(
-                  width: 258.0,
-                  child: Text(
-                    listAllWines[index].annee,
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-              child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Image.network(
-                    listAllWines[index].image,
-                    width: 80.0,
-                    height: 200.0,
-                    fit: BoxFit.cover,
-                  )))
-        ],
-      ),
-    );
-  }
-
   Widget builListViewOfListAllWine(BuildContext context) {
     print("list alla wines: $listAllWines");
     print("var global list:  $VarGlobal.LISTALLWINES");
@@ -103,7 +52,7 @@ class _MyListVinPageState extends State<MyListVinPage> {
       itemBuilder: (BuildContext context, int index) {
         return SizedBox(
           // height: 50,
-          child: buildWineCard(context, index),
+          child: buildWineCard(context, listAllWines[index], index, false),
         );
       },
       itemCount: listAllWines.length,
