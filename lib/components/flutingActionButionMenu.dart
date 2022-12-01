@@ -139,6 +139,7 @@ Future<void> setListAllWine() async {
     String id = item["id"];
     String nom = item["nom"];
     String vignoble = item["vignoble"];
+    String cepage = item["cepage"];
     String type = item["type"];
     String annee = item["annee"];
     String image = item["image"];
@@ -156,8 +157,8 @@ Future<void> setListAllWine() async {
         listCommentaire.add(commentaire);
       }
     }
-    Wine wine = Wine(
-        id, nom, vignoble, type, annee, image, description, listCommentaire);
+    Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
+        listCommentaire);
     _listAllWines.add(wine);
     VarGlobal.LISTALLWINES.add(wine);
   }
@@ -175,6 +176,7 @@ Future<void> getTopWines() async {
     String id = data[i]["id"];
     String nom = data[i]["nom"];
     String vignoble = data[i]["vignoble"];
+    String cepage = data[i]["cepage"];
     String type = data[i]["type"];
     String annee = data[i]["annee"];
     String image = data[i]["image"];
@@ -192,8 +194,8 @@ Future<void> getTopWines() async {
         listCommentaire.add(commentaire);
       }
     }
-    Wine wine = Wine(
-        id, nom, vignoble, type, annee, image, description, listCommentaire);
+    Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
+        listCommentaire);
     _listTopWines.add(wine);
   }
 }

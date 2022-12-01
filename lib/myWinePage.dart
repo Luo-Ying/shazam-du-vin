@@ -35,13 +35,47 @@ class _MyWinePageState extends State<MyWinePage> {
 
   Widget buildFormWineInfos(BuildContext context) {
     return Column(
-      children: [buildWineNameText(context)],
+      children: [
+        buildWineInfoText(context, "name : ", wine.nom),
+        buildWineInfoText(context, "vineyard : ", wine.vignoble),
+        buildWineInfoText(context, "vineyard : ", wine.cepage),
+      ],
     );
   }
 
-  Widget buildWineNameText(BuildContext context) {
+  TextStyle textStyleLabel() {
+    return const TextStyle(fontSize: 18.0);
+  }
+
+  TextStyle textStyleValue() {
+    return const TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w800,
+    );
+  }
+
+  Widget buildWineInfoText(
+      BuildContext context, String labelName, String value) {
     return Row(
-      children: [Text("name: ")],
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0, top: 20.0),
+          child: Text(
+            labelName,
+            style: textStyleLabel(),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 20.0, right: 8.0),
+          child: SizedBox(
+            width: 235,
+            child: Text(
+              value,
+              style: textStyleValue(),
+            ),
+          ),
+        )
+      ],
     );
   }
 

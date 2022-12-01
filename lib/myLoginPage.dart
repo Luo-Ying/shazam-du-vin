@@ -247,6 +247,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       String id = data[i]["id"];
       String nom = data[i]["nom"];
       String vignoble = data[i]["vignoble"];
+      String cepage = data[i]["cepage"];
       String type = data[i]["type"];
       String annee = data[i]["annee"];
       String image = data[i]["image"];
@@ -264,8 +265,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
           listCommentaire.add(commentaire);
         }
       }
-      Wine wine = Wine(
-          id, nom, vignoble, type, annee, image, description, listCommentaire);
+      Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
+          description, listCommentaire);
       _listTopWines.add(wine);
     }
   }

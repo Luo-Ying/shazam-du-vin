@@ -98,6 +98,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
       String id = item["id"];
       String nom = item["nom"];
       String vignoble = item["vignoble"];
+      String cepage = item["cepage"];
       String type = item["type"];
       String annee = item["annee"];
       String image = item["image"];
@@ -115,8 +116,8 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
           listCommentaire.add(commentaire);
         }
       }
-      Wine wine = Wine(
-          id, nom, vignoble, type, annee, image, description, listCommentaire);
+      Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
+          description, listCommentaire);
       _listAllWines.add(wine);
       VarGlobal.LISTALLWINES.add(wine);
     }

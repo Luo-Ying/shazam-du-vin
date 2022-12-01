@@ -91,14 +91,15 @@ class Wine {
   late String _id;
   late String _nom;
   late String _vignoble;
+  late String _cepage;
   late String _type;
   late String _annee;
   late String _image;
   late String _description;
   late List<Commentaire> _listCommentaire;
 
-  Wine(this._id, this._nom, this._vignoble, this._type, this._annee,
-      this._image, this._description, this._listCommentaire);
+  Wine(this._id, this._nom, this._vignoble, this._cepage, this._type,
+      this._annee, this._image, this._description, this._listCommentaire);
 
   List<Commentaire> get listCommentaire => _listCommentaire;
 
@@ -115,6 +116,8 @@ class Wine {
   String get description => _description;
 
   String get id => _id;
+
+  String get cepage => _cepage;
 
   set listCommentaire(List<Commentaire> value) {
     _listCommentaire = value;
@@ -134,6 +137,10 @@ class Wine {
 
   set vignoble(String value) {
     _vignoble = value;
+  }
+
+  set cepage(String value) {
+    _cepage = value;
   }
 
   set nom(String value) {
