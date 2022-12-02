@@ -38,6 +38,7 @@ class _MyWinePageState extends State<MyWinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        // resizeToAvoidBottomInset: true,
         appBar: buildAppppBar(context),
         body: ListView(
           children: [
@@ -61,10 +62,38 @@ class _MyWinePageState extends State<MyWinePage> {
         const SizedBox(height: 5.0),
         buildLineSeparate(context),
         const SizedBox(height: 20.0),
-        // buildAddCommentField(context),
-        buildButtonAddComment(context)
+        buildButtonAddComment(context),
+        buildTextNoComment(context),
+        wine.listCommentaire.isNotEmpty
+            ? buildListUserComment(context)
+            : Container(),
       ],
     );
+  }
+
+  Widget buildTextNoComment(BuildContext context) {
+    int nbComment = wine.listCommentaire.length;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+      child: SizedBox(child: Text("Have $nbComment comment")),
+    );
+  }
+
+  Widget buildListUserComment(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        return SizedBox(
+          // height: 50,
+          child: buildUserCommentCard(context, wine.listCommentaire[index]),
+        );
+      },
+      itemCount: wine.listCommentaire.length,
+    );
+  }
+
+  Widget buildUserCommentCard(BuildContext context, Commentaire commentaire) {
+    return Card();
   }
 
   Widget buildAddCommentField(BuildContext context) {
@@ -80,19 +109,6 @@ class _MyWinePageState extends State<MyWinePage> {
                     buildCommentForm(context),
                   ],
                 )),
-            // Padding(
-            //   padding: const EdgeInsets.only(
-            //       top: 24.0,
-            //       left: 16.0,
-            //       right: 16.0,
-            //       bottom: 30.0),
-            //   child: Row(
-            //     children: [
-            //       buildButtonAnnuler(context),
-            //       buildButtonSuivant(context),
-            //     ],
-            //   ),
-            // )
           ],
         ));
   }
@@ -174,6 +190,9 @@ class _MyWinePageState extends State<MyWinePage> {
               var res = await _httpService.addComment(newWineFormated);
               print(res.statusCode);
               print(res.body);
+              if (res.statusCode == 200) {
+                // TODO: ajouter fonction pour afficher qqch quand utilisateur réussis de ajouter un commentaire.
+              }
             } catch (e) {
               print("Exception Happened: ${e.toString()}");
             }
@@ -275,14 +294,14 @@ class _MyWinePageState extends State<MyWinePage> {
         ));
   }
 
-  Future<Future<int?>> _showBasicModalBottomSheet(context) async {
-    // late List<String> options = ["take a photo", "select a photo from album"];
+  Future<int?> _showBasicModalBottomSheet(context) {
+    // TODO: améliorer: monter le champ de form add comment quand utilisateur active le clavier
     return showModalBottomSheet<int>(
-      isScrollControlled: false,
+      // isScrollControlled: false,
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
-          height: 600,
+          height: 500,
           child: buildCommentForm(context),
         );
       },
@@ -315,19 +334,6 @@ class _MyWinePageState extends State<MyWinePage> {
       color: const Color.fromRGBO(234, 224, 218, 1),
     );
   }
-
-  // Widget buildFormWineInfoValues(BuildContext context) {
-  //   return Column(
-  //     children: [
-  //       buildWineInfoText(context, "name : ", wine.nom),
-  //       buildWineInfoText(context, "vineyard : ", wine.vignoble),
-  //       buildWineInfoText(context, "grape variety : ", wine.cepage),
-  //       buildWineInfoText(context, "type : ", wine.type),
-  //       buildWineInfoText(context, "year : ", wine.annee),
-  //       buildWineInfoText(context, "description : ", wine.description),
-  //     ],
-  //   );
-  // }
 
   Widget buildFormWineInfo(BuildContext context) {
     return Column(
