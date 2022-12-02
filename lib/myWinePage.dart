@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'utils/models.dart';
 
@@ -21,7 +22,8 @@ class _MyWinePageState extends State<MyWinePage> {
 
   final GlobalKey _formKey = GlobalKey<FormState>();
 
-  String _comment = "";
+  String _commentText = "";
+  double _saveRating = 0;
 
   ValueNotifier<bool> _isValid = ValueNotifier(false);
 
@@ -103,7 +105,7 @@ class _MyWinePageState extends State<MyWinePage> {
             ),
           ),
         ),
-        onSaved: (v) => _comment = v!,
+        onSaved: (v) => _commentText = v!,
         validator: (v) {
           if (v!.isEmpty) {
             _isValid.value = false;
@@ -116,34 +118,110 @@ class _MyWinePageState extends State<MyWinePage> {
     );
   }
 
-  Widget buildIconSend(BuildContext context) {
+  Widget buildButtonSendActive(BuildContext context) {
     return SizedBox(
       width: 350,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          if ((_formKey.currentState as FormState).validate()) {
+            (_formKey.currentState as FormState).save();
+            print(_commentText);
+            print(_saveRating);
+          }
+        },
         style: const ButtonStyle(
             backgroundColor: MaterialStatePropertyAll<Color>(Colors.black)),
         child: const Text(
-          "send",
+          "Send",
           style: TextStyle(fontSize: 20.0),
         ),
       ),
     );
   }
 
-  Widget buildCommentForm(BuildContext context) {
-    return Column(
+  Widget buildButtonSendDisabled(BuildContext context) {
+    return const SizedBox(
+      width: 350,
+      child: ElevatedButton(
+        onPressed: null,
+        style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll<Color>(
+                Color.fromRGBO(123, 123, 123, 1))),
+        child: Text(
+          "Send",
+          style: TextStyle(
+              fontSize: 20.0, color: Color.fromRGBO(172, 172, 173, 1)),
+        ),
+      ),
+    );
+  }
+
+  Widget buildButtonSend(BuildContext context) {
+    return Row(
       children: [
-        const SizedBox(height: 16.0),
-        Column(
-          children: [
-            // const SizedBox(width: 16.0),
-            buildCommentTextField(context),
-            buildIconSend(context)
-          ],
-        )
+        Expanded(
+            child: Align(
+          alignment: Alignment.center,
+          child: ValueListenableBuilder(
+              valueListenable: _isValid,
+              builder: (BuildContext context, bool value, Widget? child) {
+                return _isValid.value
+                    ? buildButtonSendActive(context)
+                    : buildButtonSendDisabled(context);
+              }),
+        ))
       ],
     );
+  }
+
+  Widget buildStarRating(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
+      child: RatingBar(
+        maxRating: 5,
+        initialRating: 0.5,
+        allowHalfRating: true,
+        ratingWidget: RatingWidget(
+          full: const Icon(
+            Icons.star,
+            color: Colors.amber,
+          ),
+          half: const Icon(
+            Icons.star_half,
+            color: Colors.amber,
+          ),
+          empty: const Icon(
+            Icons.star_border,
+            color: Colors.grey,
+          ),
+        ),
+        onRatingUpdate: (double value) {
+          setState(() {
+            _saveRating = value;
+          });
+          print(_saveRating);
+        },
+      ),
+    );
+  }
+
+  Widget buildCommentForm(BuildContext context) {
+    return Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+          children: [
+            const SizedBox(height: 16.0),
+            Column(
+              children: [
+                // const SizedBox(width: 16.0),
+                buildCommentTextField(context),
+                buildStarRating(context),
+                buildButtonSend(context)
+              ],
+            )
+          ],
+        ));
   }
 
   Future<Future<int?>> _showBasicModalBottomSheet(context) async {

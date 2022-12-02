@@ -169,7 +169,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                       "annee": _annee,
                       "image": value,
                       "description": _description,
-                      "noteGlobale": _noteGlobal,
+                      "noteGlobale": -1,
                       "commentaire": [],
                     }
                   };

@@ -251,16 +251,16 @@ class _MyLoginPageState extends State<MyLoginPage> {
       String type = data[i]["type"];
       String annee = data[i]["annee"];
       String image = data[i]["image"];
-      double noteGlobale = data[i]["noteGlobale"];
+      num noteGlobale = data[i]["noteGlobale"];
       String description = data[i]["description"];
       // print(data[i]["commentaire"][0]["userID"]);
       late List<Commentaire> listCommentaire = [];
       if (data[i]["commentaire"].length > 0) {
         for (int j = 0; j < data[i]["commentaire"].length; j++) {
-          String userId = data[i]["commentaire"][j]["userID"];
+          String userId = data[i]["commentaire"][j]["username"];
           print(userId);
           String text = data[i]["commentaire"][j]["text"];
-          double note = data[i]["commentaire"][j]["note"];
+          num note = data[i]["commentaire"][j]["note"];
           int date = data[i]["commentaire"][j]["date"];
           Commentaire commentaire = Commentaire(userId, text, note, date);
           listCommentaire.add(commentaire);
