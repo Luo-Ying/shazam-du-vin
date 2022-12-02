@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../myWinePage.dart';
+import '../services/localStorage.dart';
 import '../utils/models.dart';
 
 Widget buildWineCard(
@@ -16,9 +19,12 @@ Widget buildWineCard(
       onTap: () {
         goWinePage(context, wine);
       },
-      onLongPress: () {
-        print("coucou?");
-        showCustomDialog(context, wine);
+      onLongPress: () async {
+        // print("coucou?");
+        String dataCurrentUser = await readDataString("currentUser");
+        String roleOfCurrentUser =
+            jsonDecode(jsonDecode(dataCurrentUser))[0]['role'];
+        if (roleOfCurrentUser == "admin") showCustomDialog(context, wine);
       },
       child: Row(
         children: [
