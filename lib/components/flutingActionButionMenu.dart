@@ -135,7 +135,7 @@ Future<void> setListAllWine() async {
   // print(jsonDecode(res.body));
   // print(jsonDecode(res.body).length);
   for (var item in jsonDecode(res.body)) {
-    // print(item);
+    print(item);
     String id = item["id"];
     String nom = item["nom"];
     String vignoble = item["vignoble"];
@@ -144,6 +144,8 @@ Future<void> setListAllWine() async {
     String annee = item["annee"];
     String image = item["image"];
     String description = item["description"];
+    print(item["noteGlobale"]);
+    double noteGlobale = item["noteGlobale"];
     // print(data[i]["commentaire"][0]["userID"]);
     late List<Commentaire> listCommentaire = [];
     if (item["commentaire"].length > 0) {
@@ -152,13 +154,13 @@ Future<void> setListAllWine() async {
         // print(userId);
         String text = item["commentaire"][j]["text"];
         double note = item["commentaire"][j]["note"];
-        String date = item["commentaire"][j]["date"];
+        int date = item["commentaire"][j]["date"];
         Commentaire commentaire = Commentaire(userId, text, note, date);
         listCommentaire.add(commentaire);
       }
     }
     Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
-        listCommentaire);
+        noteGlobale, listCommentaire);
     _listAllWines.add(wine);
     VarGlobal.LISTALLWINES.add(wine);
   }
@@ -181,21 +183,23 @@ Future<void> getTopWines() async {
     String annee = data[i]["annee"];
     String image = data[i]["image"];
     String description = data[i]["description"];
-    // print(data[i]["commentaire"][0]["userID"]);
+    print(data[i]["noteGlobale"]);
+    num noteGlobale = data[i]["noteGlobale"];
+    print(data[i]["commentaire"]);
     late List<Commentaire> listCommentaire = [];
     if (data[i]["commentaire"].length > 0) {
       for (int j = 0; j < data[i]["commentaire"].length; j++) {
-        String userId = data[i]["commentaire"][j]["userID"];
+        String userId = data[i]["commentaire"][j]["username"];
         print(userId);
         String text = data[i]["commentaire"][j]["text"];
-        double note = data[i]["commentaire"][j]["note"];
-        String date = data[i]["commentaire"][j]["date"];
+        num note = data[i]["commentaire"][j]["note"];
+        int date = data[i]["commentaire"][j]["date"];
         Commentaire commentaire = Commentaire(userId, text, note, date);
         listCommentaire.add(commentaire);
       }
     }
     Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
-        listCommentaire);
+        noteGlobale, listCommentaire);
     _listTopWines.add(wine);
   }
 }

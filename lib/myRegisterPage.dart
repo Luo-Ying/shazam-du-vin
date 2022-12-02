@@ -107,9 +107,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                 "data": {
                   "username": _username,
                   "password": _password,
-                  "vinFav": {
-                    "value": [0, 1, 2]
-                  },
+                  "vinFav": {"value": []},
                   "role": "user"
                 }
               };

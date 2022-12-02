@@ -251,6 +251,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       String type = data[i]["type"];
       String annee = data[i]["annee"];
       String image = data[i]["image"];
+      double noteGlobale = data[i]["noteGlobale"];
       String description = data[i]["description"];
       // print(data[i]["commentaire"][0]["userID"]);
       late List<Commentaire> listCommentaire = [];
@@ -260,13 +261,13 @@ class _MyLoginPageState extends State<MyLoginPage> {
           print(userId);
           String text = data[i]["commentaire"][j]["text"];
           double note = data[i]["commentaire"][j]["note"];
-          String date = data[i]["commentaire"][j]["date"];
+          int date = data[i]["commentaire"][j]["date"];
           Commentaire commentaire = Commentaire(userId, text, note, date);
           listCommentaire.add(commentaire);
         }
       }
       Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
-          description, listCommentaire);
+          description, noteGlobale, listCommentaire);
       _listTopWines.add(wine);
     }
   }

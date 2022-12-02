@@ -102,6 +102,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
       String type = item["type"];
       String annee = item["annee"];
       String image = item["image"];
+      double noteGlobal = item["noteGlobal"];
       String description = item["description"];
       // print(data[i]["commentaire"][0]["userID"]);
       late List<Commentaire> listCommentaire = [];
@@ -111,13 +112,13 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
           // print(userId);
           String text = item["commentaire"][j]["text"];
           double note = item["commentaire"][j]["note"];
-          String date = item["commentaire"][j]["date"];
+          int date = item["commentaire"][j]["date"];
           Commentaire commentaire = Commentaire(userId, text, note, date);
           listCommentaire.add(commentaire);
         }
       }
       Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
-          description, listCommentaire);
+          description, noteGlobal, listCommentaire);
       _listAllWines.add(wine);
       VarGlobal.LISTALLWINES.add(wine);
     }
@@ -167,8 +168,9 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                       "type": _type,
                       "annee": _annee,
                       "image": value,
+                      "description": _description,
+                      "noteGlobale": _noteGlobal,
                       "commentaire": [],
-                      "description": _description
                     }
                   };
                   _httpService.addNewWine(newWine);

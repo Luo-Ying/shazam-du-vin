@@ -57,20 +57,20 @@ class DocumentUser {
 class Commentaire {
   late String _userId;
   late String _text;
-  late double _note;
-  late String _date;
+  late num _note;
+  late int _date;
 
   Commentaire(this._userId, this._text, this._note, this._date);
 
-  double get note => _note;
+  num get note => _note;
 
   String get text => _text;
 
   String get userId => _userId;
 
-  String get date => _date;
+  int get date => _date;
 
-  set note(double value) {
+  set note(num value) {
     _note = value;
   }
 
@@ -82,7 +82,7 @@ class Commentaire {
     _userId = value;
   }
 
-  set date(String value) {
+  set date(int value) {
     _date = value;
   }
 }
@@ -96,10 +96,20 @@ class Wine {
   late String _annee;
   late String _image;
   late String _description;
+  late num _noteGlobale;
   late List<Commentaire> _listCommentaire;
 
-  Wine(this._id, this._nom, this._vignoble, this._cepage, this._type,
-      this._annee, this._image, this._description, this._listCommentaire);
+  Wine(
+      this._id,
+      this._nom,
+      this._vignoble,
+      this._cepage,
+      this._type,
+      this._annee,
+      this._image,
+      this._description,
+      this._noteGlobale,
+      this._listCommentaire);
 
   List<Commentaire> get listCommentaire => _listCommentaire;
 
@@ -118,6 +128,8 @@ class Wine {
   String get id => _id;
 
   String get cepage => _cepage;
+
+  num get noteGlobale => _noteGlobale;
 
   set listCommentaire(List<Commentaire> value) {
     _listCommentaire = value;
@@ -153,6 +165,10 @@ class Wine {
 
   set id(String value) {
     _id = value;
+  }
+
+  set noteGlobale(num value) {
+    _noteGlobale = value;
   }
 }
 
