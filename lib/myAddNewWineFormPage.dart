@@ -155,7 +155,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
               if (res.statusCode == 200) {
                 var id = uuid.v4();
                 print(id);
-                res.stream.transform(utf8.decoder).listen((value) {
+                res.stream.transform(utf8.decoder).listen((value) async {
                   print(value);
                   var newWine = {
                     "database": "urbanisation",
@@ -173,20 +173,22 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                       "commentaire": [],
                     }
                   };
-                  _httpService.addNewWine(newWine);
-                  (_formKey.currentState as FormState).reset();
-                  _isHaveImgFront.value = false;
-                  Fluttertoast.showToast(
-                    msg: VarGlobal.TOASTMESSAGE,
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 2,
-                    backgroundColor: Colors.black45,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
+                  var res = await _httpService.addNewWine(newWine);
+                  if (res.statusCode == 200) {
+                    (_formKey.currentState as FormState).reset();
+                    _isHaveImgFront.value = false;
+                    Fluttertoast.showToast(
+                      msg: VarGlobal.TOASTMESSAGE,
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 2,
+                      backgroundColor: Colors.black45,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
 
-                  Navigator.pop(context, _listAllWines);
+                    Navigator.pop(context, _listAllWines);
+                  }
                 });
               }
             }

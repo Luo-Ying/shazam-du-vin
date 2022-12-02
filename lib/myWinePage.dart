@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shazam_du_vin/services/localStorage.dart';
 
+import 'services/http_service.dart';
 import 'utils/algorithme.dart';
+
 import 'utils/models.dart';
 
 class MyWinePage extends StatefulWidget {
@@ -22,6 +27,8 @@ class _MyWinePageState extends State<MyWinePage> {
   _MyWinePageState(this.wine);
 
   final GlobalKey _formKey = GlobalKey<FormState>();
+
+  late final HttpService _httpService = HttpService();
 
   String _commentText = "";
   double _saveRating = 0;
@@ -129,9 +136,53 @@ class _MyWinePageState extends State<MyWinePage> {
             print(_commentText);
             print(_saveRating);
             print(wine);
-            Wine newWine =
-                await addNewCommentInWine(wine, _commentText, _saveRating);
-            print(newWine.listCommentaire.length);
+            // Wine newWine =
+            //     await addNewCommentInWine(wine, _commentText, _saveRating);
+            // print(newWine.listCommentaire.length);
+            String dataCurrentUser = await readDataString("currentUser");
+            // DateTime currentPhoneDate = DateTime.now();
+            // Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+            int myTimeStamp = DateTime.now().millisecondsSinceEpoch;
+            print(myTimeStamp);
+            var newWineFormated = {
+              "database": "urbanisation",
+              "collection": "Vin",
+              "data": {
+                "id": wine.id,
+                "nom": wine.nom,
+                "vignoble": wine.vignoble,
+                "cepage": wine.cepage,
+                "type": wine.type,
+                "annee": wine.annee,
+                "image": wine.image,
+                "description": wine.description,
+                "noteGlobale": -1,
+                "commentaire": [
+                  for (var item in wine.listCommentaire)
+                    {
+                      // "username": item.username,
+                      "text": item.text,
+                      "note": item.note,
+                      "date": item.date
+                    },
+                  {
+                    "username": jsonDecode(jsonDecode(dataCurrentUser))[0]
+                        ["username"],
+                    "text": _commentText,
+                    "note": _saveRating,
+                    "date": myTimeStamp
+                  }
+                ]
+              }
+            };
+            try {
+              var res = await _httpService.addComment(newWineFormated);
+              print(res.statusCode);
+              print(res.body);
+            } catch (e) {
+              print("Exception Happened: ${e.toString()}");
+            }
+            // print(jsonEncode(newWineFormated));
           }
         },
         style: const ButtonStyle(
@@ -230,7 +281,7 @@ class _MyWinePageState extends State<MyWinePage> {
   }
 
   Future<Future<int?>> _showBasicModalBottomSheet(context) async {
-    late List<String> options = ["take a photo", "select a photo from album"];
+    // late List<String> options = ["take a photo", "select a photo from album"];
     return showModalBottomSheet<int>(
       isScrollControlled: false,
       context: context,

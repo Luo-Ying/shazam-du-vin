@@ -150,12 +150,12 @@ Future<void> setListAllWine() async {
     late List<Commentaire> listCommentaire = [];
     if (item["commentaire"].length > 0) {
       for (int j = 0; j < item["commentaire"].length; j++) {
-        String userId = item["commentaire"][j]["userID"];
+        String username = item["commentaire"][j]["username"];
         // print(userId);
         String text = item["commentaire"][j]["text"];
-        double note = item["commentaire"][j]["note"];
+        num note = item["commentaire"][j]["note"];
         int date = item["commentaire"][j]["date"];
-        Commentaire commentaire = Commentaire(userId, text, note, date);
+        Commentaire commentaire = Commentaire(username, text, note, date);
         listCommentaire.add(commentaire);
       }
     }

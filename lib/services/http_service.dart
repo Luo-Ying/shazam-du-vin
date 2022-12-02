@@ -109,5 +109,16 @@ class HttpService {
     return res;
   }
 
-  // Future<http.Response> addComment(Wine wine) async {}
+  Future<http.Response> addComment(Map<String, dynamic> newWine) async {
+    var body = jsonEncode(newWine);
+    print(body);
+    var res = await http.put(
+      Uri.parse("$BASE_URL/Vin"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: body,
+    );
+    return res;
+  }
 }
