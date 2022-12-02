@@ -9,6 +9,7 @@ import 'services/http_service.dart';
 import 'utils/algorithme.dart';
 
 import 'utils/models.dart';
+import 'components/userCommentCard.dart';
 
 class MyWinePage extends StatefulWidget {
   const MyWinePage({Key? key, required this.wine}) : super(key: key);
@@ -67,6 +68,7 @@ class _MyWinePageState extends State<MyWinePage> {
         wine.listCommentaire.isNotEmpty
             ? buildListUserComment(context)
             : Container(),
+        const SizedBox(height: 20.0)
       ],
     );
   }
@@ -74,7 +76,7 @@ class _MyWinePageState extends State<MyWinePage> {
   Widget buildTextNoComment(BuildContext context) {
     int nbComment = wine.listCommentaire.length;
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+      padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: SizedBox(child: Text("Have $nbComment comment")),
     );
   }
@@ -90,10 +92,6 @@ class _MyWinePageState extends State<MyWinePage> {
       },
       itemCount: wine.listCommentaire.length,
     );
-  }
-
-  Widget buildUserCommentCard(BuildContext context, Commentaire commentaire) {
-    return Card();
   }
 
   Widget buildAddCommentField(BuildContext context) {
@@ -191,7 +189,8 @@ class _MyWinePageState extends State<MyWinePage> {
               print(res.statusCode);
               print(res.body);
               if (res.statusCode == 200) {
-                // TODO: ajouter fonction pour afficher qqch quand utilisateur réussis de ajouter un commentaire.
+                (_formKey.currentState as FormState).reset();
+                // TODO: ajouter fonction pour afficher directement sur page quand utilisateur réussis de ajouter un commentaire.
               }
             } catch (e) {
               print("Exception Happened: ${e.toString()}");
@@ -315,14 +314,17 @@ class _MyWinePageState extends State<MyWinePage> {
         },
         style: const ButtonStyle(
             backgroundColor: MaterialStatePropertyAll<Color>(Colors.black)),
-        child: Text("Add comment"));
+        child: const Text("Add comment"));
   }
 
   Widget buildCommentTitle(BuildContext context) {
     return const Align(
       child: Text(
         "Community reviews",
-        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+        style: TextStyle(
+            color: Color.fromRGBO(217, 192, 159, 1),
+            fontSize: 25,
+            fontWeight: FontWeight.w800),
       ),
     );
   }

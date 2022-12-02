@@ -78,7 +78,7 @@ class Commentaire {
     _text = value;
   }
 
-  set userId(String value) {
+  set userName(String value) {
     _username = value;
   }
 
