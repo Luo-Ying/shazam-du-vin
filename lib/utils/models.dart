@@ -55,18 +55,18 @@ class DocumentUser {
 }
 
 class Commentaire {
-  late String _userId;
+  late String _username;
   late String _text;
   late num _note;
   late int _date;
 
-  Commentaire(this._userId, this._text, this._note, this._date);
+  Commentaire(this._username, this._text, this._note, this._date);
 
   num get note => _note;
 
   String get text => _text;
 
-  String get userId => _userId;
+  String get userId => _username;
 
   int get date => _date;
 
@@ -79,7 +79,7 @@ class Commentaire {
   }
 
   set userId(String value) {
-    _userId = value;
+    _username = value;
   }
 
   set date(int value) {

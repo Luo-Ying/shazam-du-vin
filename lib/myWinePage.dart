@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import 'utils/algorithme.dart';
 import 'utils/models.dart';
 
 class MyWinePage extends StatefulWidget {
@@ -122,11 +123,15 @@ class _MyWinePageState extends State<MyWinePage> {
     return SizedBox(
       width: 350,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
           if ((_formKey.currentState as FormState).validate()) {
             (_formKey.currentState as FormState).save();
             print(_commentText);
             print(_saveRating);
+            print(wine);
+            Wine newWine =
+                await addNewCommentInWine(wine, _commentText, _saveRating);
+            print(newWine.listCommentaire.length);
           }
         },
         style: const ButtonStyle(

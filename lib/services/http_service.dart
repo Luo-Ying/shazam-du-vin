@@ -108,4 +108,6 @@ class HttpService {
     }
     return res;
   }
+
+  // Future<http.Response> addComment(Wine wine) async {}
 }
