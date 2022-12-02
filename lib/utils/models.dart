@@ -66,7 +66,7 @@ class Commentaire {
 
   String get text => _text;
 
-  String get userId => _username;
+  String get username => _username;
 
   int get date => _date;
 

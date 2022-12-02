@@ -145,35 +145,30 @@ class _MyWinePageState extends State<MyWinePage> {
             int myTimeStamp = DateTime.now().millisecondsSinceEpoch;
             print(myTimeStamp);
             var newWineFormated = {
-              "database": "urbanisation",
-              "collection": "Vin",
-              "data": {
-                "id": wine.id,
-                "nom": wine.nom,
-                "vignoble": wine.vignoble,
-                "cepage": wine.cepage,
-                "type": wine.type,
-                "annee": wine.annee,
-                "image": wine.image,
-                "description": wine.description,
-                "noteGlobale": -1,
-                "commentaire": [
-                  for (var item in wine.listCommentaire)
-                    {
-                      // "username": item.username,
-                      "text": item.text,
-                      "note": item.note,
-                      "date": item.date
-                    },
+              "id": wine.id,
+              "nom": wine.nom,
+              "vignoble": wine.vignoble,
+              "cepage": wine.cepage,
+              "type": wine.type,
+              "annee": wine.annee,
+              "image": wine.image,
+              "description": wine.description,
+              "commentaire": [
+                for (var item in wine.listCommentaire)
                   {
-                    "username": jsonDecode(jsonDecode(dataCurrentUser))[0]
-                        ["username"],
-                    "text": _commentText,
-                    "note": _saveRating,
-                    "date": myTimeStamp
-                  }
-                ]
-              }
+                    "username": item.username,
+                    "text": item.text,
+                    "note": item.note,
+                    "date": item.date
+                  },
+                {
+                  "username": jsonDecode(jsonDecode(dataCurrentUser))[0]
+                      ["username"],
+                  "text": _commentText,
+                  "note": _saveRating,
+                  "date": myTimeStamp
+                }
+              ]
             };
             try {
               var res = await _httpService.addComment(newWineFormated);

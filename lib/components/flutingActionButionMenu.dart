@@ -145,7 +145,7 @@ Future<void> setListAllWine() async {
     String image = item["image"];
     String description = item["description"];
     print(item["noteGlobale"]);
-    double noteGlobale = item["noteGlobale"];
+    num noteGlobale = item["noteGlobale"];
     // print(data[i]["commentaire"][0]["userID"]);
     late List<Commentaire> listCommentaire = [];
     if (item["commentaire"].length > 0) {

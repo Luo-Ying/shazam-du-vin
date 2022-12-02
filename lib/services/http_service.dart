@@ -13,7 +13,7 @@ import './localStorage.dart';
 class HttpService {
   // static const BASE_URL = "http://10.0.2.2:5000"; // for emulator
   static const BASE_URL =
-      "https://flask-service.v5jn6j0vmbe7s.eu-west-3.cs.amazonlightsail.com/";
+      "https://urba-backend.v5jn6j0vmbe7s.eu-west-3.cs.amazonlightsail.com/";
 
   Future<http.Response> register(Map<String, dynamic> newUser) async {
     var body = json.encode(newUser);
@@ -102,9 +102,9 @@ class HttpService {
     print(res.statusCode);
     print(res.body);
     if (res.statusCode == 200) {
-      VarGlobal.TOASTMESSAGE = jsonDecode(jsonDecode(res.body))["Status"];
+      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Status"];
     } else {
-      VarGlobal.TOASTMESSAGE = jsonDecode(jsonDecode(res.body))["Error"];
+      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Error"];
     }
     return res;
   }
