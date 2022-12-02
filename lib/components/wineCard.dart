@@ -16,6 +16,10 @@ Widget buildWineCard(
       onTap: () {
         goWinePage(context, wine);
       },
+      onLongPress: () {
+        print("coucou?");
+        showCustomDialog(context, wine);
+      },
       child: Row(
         children: [
           isTopWine
@@ -82,4 +86,41 @@ void goWinePage(BuildContext context, Wine wine) {
       );
     },
   ));
+}
+
+void showCustomDialog(BuildContext context, Wine wine) {
+  // print("position ---- >  " + position.toString());
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Do you want delete ?"),
+          content: SingleChildScrollView(
+              child: ListBody(children: [
+            Text(
+              wine.nom,
+              style:
+                  const TextStyle(fontSize: 25.0, fontWeight: FontWeight.w800),
+            )
+          ])),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll<Color>(
+                      Color.fromRGBO(121, 121, 121, 1))),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              style: const ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll<Color>(Colors.black)),
+              child: const Text("Confirm"),
+            ),
+          ],
+        );
+      });
 }
