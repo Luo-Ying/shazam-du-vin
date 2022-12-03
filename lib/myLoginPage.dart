@@ -110,6 +110,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 print(jsonDecode(currentUser));
                 print(jsonDecode(jsonDecode(currentUser)));
                 print(jsonDecode(jsonDecode(currentUser))[0]);
+                for (var item in jsonDecode(jsonDecode(currentUser))[0]
+                    ["vinFav"]["value"]) {
+                  VarGlobal.CURRENTUSER_VINFAV.add(item);
+                }
                 VarGlobal.CURRENTUSERROLE =
                     jsonDecode(jsonDecode(currentUser))[0]["role"];
                 // TODO: verifier initialisation du CURRENTUSERROLE du VarGlobal en récupérant role du currentuser stoké dans le fichier

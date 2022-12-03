@@ -8,6 +8,8 @@ class VarGlobal {
 
   static User USERCURRENT = {} as User;
 
+  static List<String> CURRENTUSER_VINFAV = [];
+
   static String CURRENTUSERROLE = "";
 
   static List<Wine> LISTALLWINES = [];

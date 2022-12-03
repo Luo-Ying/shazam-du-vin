@@ -24,11 +24,11 @@ class User {
 }
 
 class VinFav {
-  late List<dynamic> _value;
+  late List<String> _value;
 
   VinFav(this._value);
 
-  List<dynamic> get value => _value;
+  List<String> get value => _value;
 }
 
 class DocumentUser {

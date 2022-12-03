@@ -42,7 +42,7 @@ class _MyListWinesFavoritesState extends State<MyListWinesFavorites> {
         return SizedBox(
           // height: 50,
           child: buildWineCard(
-              context, listWinesFavorites[index], index, false, true),
+              context, listWinesFavorites[index], index, false, false, true),
         );
       },
       itemCount: listWinesFavorites.length,

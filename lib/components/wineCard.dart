@@ -2,17 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shazam_du_vin/services/var_global.dart';
 
 import '../myWinePage.dart';
 import '../services/http_service.dart';
 import '../services/localStorage.dart';
+import '../services/winesActions.dart';
 import '../utils/eventBus.dart';
 import '../utils/models.dart';
 
 late final HttpService _httpService = HttpService();
 
-Widget buildWineCard(BuildContext context, Wine wineSelected, int index,
-    bool isTopWine, bool isWineFavoris) {
+String user = "";
+
+Widget buildWineCard(BuildContext context, Wine wine, int index,
+    bool isListAllWine, bool isTopWine, bool isWineFavoris) {
   int numTop = index + 1;
   return Card(
     shape: const RoundedRectangleBorder(
@@ -21,7 +25,7 @@ Widget buildWineCard(BuildContext context, Wine wineSelected, int index,
     elevation: 5,
     child: InkWell(
       onTap: () {
-        goWinePage(context, wineSelected);
+        goWinePage(context, wine);
       },
       onLongPress: () async {
         // print("coucou?");
@@ -29,7 +33,7 @@ Widget buildWineCard(BuildContext context, Wine wineSelected, int index,
         String roleOfCurrentUser =
             jsonDecode(jsonDecode(dataCurrentUser))[0]['role'];
         if (roleOfCurrentUser == "admin") {
-          showCustomDialog(context, wineSelected);
+          showCustomDialog(context, wine);
         }
       },
       child: Stack(
@@ -37,29 +41,39 @@ Widget buildWineCard(BuildContext context, Wine wineSelected, int index,
           Row(
             children: [
               isTopWine ? buildWineTopNum(context, numTop) : Container(),
-              buildWineInfos(context, isTopWine, wineSelected),
-              buildWineImage(context, wineSelected)
+              buildWineInfos(context, isTopWine, wine, isListAllWine),
+              buildWineImage(context, wine, isListAllWine)
             ],
           ),
-          if (isWineFavoris) buildIconFavoris(context, wineSelected)
+          buildIconActions(context, wine, isWineFavoris)
         ],
       ),
     ),
   );
 }
 
-Widget buildIconFavoris(BuildContext context, Wine wineSelected) {
-  return Padding(
-    padding: const EdgeInsets.only(left: 2.0, top: 2.0),
-    child: IconButton(
-        onPressed: () {
-          removeWineFromFavoris(context, Wine, wineSelected);
-        },
-        icon: const Icon(
-          Icons.favorite,
-          size: 30.0,
-        )),
-  );
+void getUserData() async {
+  user = await readDataString("currentUser");
+}
+
+Widget buildIconActions(BuildContext context, Wine wine, bool isWineFavoris) {
+  bool isWineInListFav = VarGlobal.CURRENTUSER_VINFAV.contains(wine.id);
+  return IconButton(
+      onPressed: () {
+        isWineInListFav
+            ? removeWineFromFavoris(context, wine)
+            : addWineToFavoris(context, wine);
+      },
+      icon: isWineInListFav
+          ? const Icon(
+              Icons.favorite,
+              size: 30.0,
+            )
+          : const Icon(
+              Icons.favorite_border,
+              size: 30.0,
+              color: Colors.grey,
+            ));
 }
 
 Widget buildWineTopNum(BuildContext context, int numTop) {
@@ -69,46 +83,53 @@ Widget buildWineTopNum(BuildContext context, int numTop) {
         padding: const EdgeInsets.only(left: 20.0),
         child: Text(
           "$numTop",
-          style: const TextStyle(fontSize: 25.0, fontWeight: FontWeight.w800),
+          style: const TextStyle(
+              fontSize: 25.0,
+              fontWeight: FontWeight.w800,
+              fontStyle: FontStyle.italic,
+              color: Color.fromRGBO(217, 192, 159, 1)),
         ),
       )
     ],
   );
 }
 
-Widget buildWineImage(BuildContext context, Wine wineSelected) {
+Widget buildWineImage(BuildContext context, Wine wine, bool isListAllWine) {
   return Expanded(
       child: Align(
           alignment: Alignment.centerRight,
           child: Image.network(
-            wineSelected.image,
-            width: 80.0,
-            height: 200.0,
+            wine.image,
+            width: isListAllWine ? 40.0 : 80.0,
+            height: isListAllWine ? 100.0 : 200.0,
             fit: BoxFit.cover,
           )));
 }
 
-Widget buildWineInfos(BuildContext context, bool isTopWine, Wine wineSelected) {
+Widget buildWineInfos(
+    BuildContext context, bool isTopWine, Wine wine, bool isListAllWine) {
   return Column(
     children: [
       // Text(listAllWines[index].nom),
       Padding(
-        padding: const EdgeInsets.only(left: 15.0, top: 5.0),
+        padding: EdgeInsets.only(left: isListAllWine ? 55 : 25.0, top: 5.0),
         child: Container(
-          width: isTopWine ? 200.0 : 260,
+          width: isTopWine ? 200.0 : 230,
           child: Text(
-            wineSelected.nom,
-            style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+            wine.nom,
+            style: TextStyle(
+                fontSize: isListAllWine ? 18.0 : 22.0,
+                fontWeight: FontWeight.w600),
           ),
         ),
       ),
       const SizedBox(height: 20.0),
       Padding(
-        padding: const EdgeInsets.only(left: 30.0, top: 5.0),
+        padding: EdgeInsets.only(left: isListAllWine ? 75 : 35.0, top: 5.0),
         child: SizedBox(
-          width: isTopWine ? 200.0 : 260,
+          width: isTopWine ? 200.0 : 230,
           child: Text(
-            wineSelected.annee,
+            wine.annee,
             style: const TextStyle(fontSize: 18.0),
           ),
         ),
@@ -125,7 +146,7 @@ void goWinePage(BuildContext context, Wine wine) {
   ));
 }
 
-void showCustomDialog(BuildContext context, Wine wineSelected) {
+void showCustomDialog(BuildContext context, Wine wine) {
   // print("position ---- >  " + position.toString());
   showDialog(
       context: context,
@@ -135,7 +156,7 @@ void showCustomDialog(BuildContext context, Wine wineSelected) {
           content: SingleChildScrollView(
               child: ListBody(children: [
             Text(
-              wineSelected.nom,
+              wine.nom,
               style:
                   const TextStyle(fontSize: 25.0, fontWeight: FontWeight.w800),
             )
@@ -152,7 +173,7 @@ void showCustomDialog(BuildContext context, Wine wineSelected) {
             ),
             ElevatedButton(
               onPressed: () async {
-                deleteWine(context, wineSelected);
+                deleteWine(context, wine);
               },
               style: const ButtonStyle(
                   backgroundColor:
@@ -162,23 +183,4 @@ void showCustomDialog(BuildContext context, Wine wineSelected) {
           ],
         );
       });
-}
-
-Future<void> removeWineFromFavoris(
-    BuildContext context, Wine, wineSelected) async {}
-
-Future<void> deleteWine(BuildContext context, Wine wineSelected) async {
-  var wineSelectedFormated = {
-    "database": "urbanisation",
-    "collection": "Vin",
-    "filter": {
-      "id": wineSelected.id,
-    }
-  };
-  print(wineSelected.id);
-  var res = await _httpService.deleteWine(wineSelectedFormated);
-  if (res.statusCode == 200) {
-    Navigator.pop(context);
-    eventBus.emit("deleteWine");
-  }
 }
