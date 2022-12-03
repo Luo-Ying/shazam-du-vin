@@ -124,19 +124,17 @@ void showCustomDialog(BuildContext context, Wine wineSelected) {
             ),
             // TODO: fix-le!!!! qu'est-ce qu'il manque comme information dans le body ?????????????????????
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 var wineSelectedFormated = {
-                  "id": wineSelected.id,
-                  "nom": wineSelected.nom,
-                  "vignoble": wineSelected.vignoble,
-                  "cepage": wineSelected.cepage,
-                  "type": wineSelected.type,
-                  "annee": wineSelected.annee,
-                  "image": wineSelected.image,
-                  "description": wineSelected.description,
-                  "commentaire": wineSelected.listCommentaire
+                  "database": "urbanisation",
+                  "collection": "Vin",
+                  "filter": {
+                    "id": wineSelected.id,
+                  }
                 };
-                _httpService.deleteWine(wineSelectedFormated);
+                print(wineSelected.id);
+                var res = await _httpService.deleteWine(wineSelectedFormated);
+                if (res.statusCode == 200) {}
               },
               style: const ButtonStyle(
                   backgroundColor:

@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cross_file_image/cross_file_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shazam_du_vin/myListWinePage.dart';
 import 'package:uuid/uuid.dart';
 
 import './services/http_service.dart';
@@ -49,7 +51,17 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () async {
+            await setListAllWine();
+            print("list alla wines: $_listAllWines");
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) {
+                return MyListVinPage(
+                  listAllWines: _listAllWines,
+                );
+              },
+            ));
+          },
         ),
       ),
       body: Form(
@@ -94,7 +106,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
     // print(jsonDecode(res.body));
     // print(jsonDecode(res.body).length);
     for (var item in jsonDecode(res.body)) {
-      // print(item);
+      print(item);
       String id = item["id"];
       String nom = item["nom"];
       String vignoble = item["vignoble"];
@@ -102,23 +114,24 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
       String type = item["type"];
       String annee = item["annee"];
       String image = item["image"];
-      double noteGlobal = item["noteGlobal"];
       String description = item["description"];
+      // print(item["noteGlobale"]);
+      num noteGlobale = item["noteGlobale"];
       // print(data[i]["commentaire"][0]["userID"]);
       late List<Commentaire> listCommentaire = [];
       if (item["commentaire"].length > 0) {
         for (int j = 0; j < item["commentaire"].length; j++) {
-          String userId = item["commentaire"][j]["userID"];
+          String username = item["commentaire"][j]["username"];
           // print(userId);
           String text = item["commentaire"][j]["text"];
-          double note = item["commentaire"][j]["note"];
+          num note = item["commentaire"][j]["note"];
           int date = item["commentaire"][j]["date"];
-          Commentaire commentaire = Commentaire(userId, text, note, date);
+          Commentaire commentaire = Commentaire(username, text, note, date);
           listCommentaire.add(commentaire);
         }
       }
       Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
-          description, noteGlobal, listCommentaire);
+          description, noteGlobale, listCommentaire);
       _listAllWines.add(wine);
       VarGlobal.LISTALLWINES.add(wine);
     }
@@ -175,7 +188,9 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                   };
                   var res = await _httpService.addNewWine(newWine);
                   if (res.statusCode == 200) {
+                    // await setListAllWine();
                     (_formKey.currentState as FormState).reset();
+                    _selectedImage = null;
                     _isHaveImgFront.value = false;
                     Fluttertoast.showToast(
                       msg: VarGlobal.TOASTMESSAGE,
@@ -186,8 +201,15 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                       textColor: Colors.white,
                       fontSize: 16.0,
                     );
-
-                    Navigator.pop(context, _listAllWines);
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (context) {
+                    //     return MyListVinPage(
+                    //       listAllWines: _listAllWines,
+                    //     );
+                    //   },
+                    // ));
+                    // TODO: refresh page après ajouter un nouveau vin!!
+                    // Navigator.pop(context, _listAllWines);
                   }
                 });
               }
