@@ -51,6 +51,19 @@ Widget buildMainMenu(BuildContext context) {
       ),
       SpeedDialChild(
         child: const Icon(
+          Icons.favorite,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.black,
+        label: 'favorites wines',
+        labelStyle: const TextStyle(fontSize: 16.0),
+        onTap: () {
+          // isDialOpen.value = false;
+          goListFavorisPage(context);
+        },
+      ),
+      SpeedDialChild(
+        child: const Icon(
           Icons.list,
           color: Colors.white,
         ),
@@ -115,6 +128,8 @@ Future<void> goListVinPage(BuildContext context) async {
     },
   ));
 }
+
+Future<void> goListFavorisPage(BuildContext context) async {}
 
 Future<void> goHome(BuildContext context) async {
   await getTopWines();

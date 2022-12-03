@@ -10,7 +10,7 @@ import 'package:shazam_du_vin/services/var_global.dart';
 import './services/http_service.dart';
 import '../services/localStorage.dart';
 import './services/var_global.dart';
-import 'components/flutingActionButionMenu.dart';
+import 'components/floatingActionButionMenu.dart';
 import 'components/wineCard.dart';
 
 import 'utils/models.dart';
