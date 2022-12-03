@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:shazam_du_vin/myListWinesFavorites.dart';
 
 import '../services/http_service.dart';
 
@@ -20,6 +21,7 @@ ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 
 List<Wine> _listAllWines = [];
 List<Wine> _listTopWines = [];
+List<Wine> _listFavWines = [];
 
 Widget buildMainMenu(BuildContext context) {
   return SpeedDial(
@@ -118,7 +120,7 @@ Future<void> photo_camera(BuildContext context) async {
 }
 
 Future<void> goListVinPage(BuildContext context) async {
-  await setListAllWine();
+  await getListAllWine();
   print("list alla wines: $_listAllWines");
   Navigator.of(context).push(MaterialPageRoute(
     builder: (context) {
@@ -129,7 +131,20 @@ Future<void> goListVinPage(BuildContext context) async {
   ));
 }
 
-Future<void> goListFavorisPage(BuildContext context) async {}
+Future<void> goListFavorisPage(BuildContext context) async {
+  String currentUser = await readDataString("currentUser");
+  // print(currentUser);
+  // print(jsonDecode(jsonDecode(currentUser))[0]["username"]);
+  String currentUserName = jsonDecode(jsonDecode(currentUser))[0]["username"];
+  getListFavWines(currentUserName);
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) {
+      return MyListWinesFavorites(
+        listWinesFavorites: _listFavWines,
+      );
+    },
+  ));
+}
 
 Future<void> goHome(BuildContext context) async {
   await getTopWines();
@@ -144,7 +159,7 @@ Future<void> goHome(BuildContext context) async {
   ));
 }
 
-Future<void> setListAllWine() async {
+Future<void> getListAllWine() async {
   _listAllWines = [];
   var res = await _httpService.geAllWines();
   // print(jsonDecode(res.body));
@@ -204,17 +219,51 @@ Future<void> getTopWines() async {
     late List<Commentaire> listCommentaire = [];
     if (data[i]["commentaire"].length > 0) {
       for (int j = 0; j < data[i]["commentaire"].length; j++) {
-        String userId = data[i]["commentaire"][j]["username"];
-        print(userId);
+        String username = data[i]["commentaire"][j]["username"];
         String text = data[i]["commentaire"][j]["text"];
         num note = data[i]["commentaire"][j]["note"];
         int date = data[i]["commentaire"][j]["date"];
-        Commentaire commentaire = Commentaire(userId, text, note, date);
+        Commentaire commentaire = Commentaire(username, text, note, date);
         listCommentaire.add(commentaire);
       }
     }
     Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
         noteGlobale, listCommentaire);
     _listTopWines.add(wine);
+  }
+}
+
+Future<void> getListFavWines(String currentUserName) async {
+  _listFavWines = [];
+  var res = await _httpService.getFavorisWines(currentUserName);
+  var data = jsonDecode(res.body)[0];
+  print(data);
+  for (int i = 0; i < data.length; i++) {
+    String id = data[i]["id"];
+    String nom = data[i]["nom"];
+    String vignoble = data[i]["vignoble"];
+    String cepage = data[i]["cepage"];
+    String type = data[i]["type"];
+    String annee = data[i]["annee"];
+    String image = data[i]["image"];
+    String description = data[i]["description"];
+    // print(data[i]["noteGlobale"]);
+    num noteGlobale = data[i]["noteGlobale"];
+    print(data[i]["commentaire"]);
+    late List<Commentaire> listCommentaire = [];
+    if (data[i]["commentaire"].length > 0) {
+      for (int j = 0; j < data[i]["commentaire"].length; j++) {
+        String username = data[i]["commentaire"][j]["username"];
+        // print(userId);
+        String text = data[i]["commentaire"][j]["text"];
+        num note = data[i]["commentaire"][j]["note"];
+        int date = data[i]["commentaire"][j]["date"];
+        Commentaire commentaire = Commentaire(username, text, note, date);
+        listCommentaire.add(commentaire);
+      }
+    }
+    Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
+        noteGlobale, listCommentaire);
+    _listFavWines.add(wine);
   }
 }

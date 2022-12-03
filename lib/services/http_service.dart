@@ -66,6 +66,14 @@ class HttpService {
     return res;
   }
 
+  Future<http.Response> getFavorisWines(String username) async {
+    final res = await http.get(
+      Uri.parse("$BASE_URL/favVin?username=$username"),
+      headers: {"Content-Type": "application/json"},
+    );
+    return res;
+  }
+
   Future<http.Response> getImg(String imageUrl) async {
     var response = await http.get(Uri.parse(imageUrl));
     return response;
