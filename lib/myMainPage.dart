@@ -56,7 +56,8 @@ class _MyMainPageState extends State<MyMainPage> {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         return SizedBox(
-          child: buildWineCard(context, listTopWines[index], index, true),
+          child:
+              buildWineCard(context, listTopWines[index], index, true, false),
         );
       },
       itemCount: listTopWines.length,

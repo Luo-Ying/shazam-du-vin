@@ -62,7 +62,8 @@ class _MyListVinPageState extends State<MyListVinPage> {
       itemBuilder: (BuildContext context, int index) {
         return SizedBox(
           // height: 50,
-          child: buildWineCard(context, listAllWines[index], index, false),
+          child:
+              buildWineCard(context, listAllWines[index], index, false, false),
         );
       },
       itemCount: listAllWines.length,
