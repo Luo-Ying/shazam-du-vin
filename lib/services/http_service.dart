@@ -109,7 +109,23 @@ class HttpService {
     return res;
   }
 
-  Future<http.Response> addComment(Map<String, dynamic> newWine) async {
+  Future<http.Response> deleteWine(Map<String, dynamic> wineSelected) async {
+    print(wineSelected);
+    var body = jsonEncode(wineSelected);
+    print(body);
+    var res = await http.delete(
+      Uri.parse("$BASE_URL/Vin"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: body,
+    );
+    print(res.statusCode);
+    print(res.body);
+    return res;
+  }
+
+  Future<http.Response> addOrDeleteComment(Map<String, dynamic> newWine) async {
     var body = jsonEncode(newWine);
     print(body);
     var res = await http.put(

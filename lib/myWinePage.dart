@@ -185,7 +185,7 @@ class _MyWinePageState extends State<MyWinePage> {
               ]
             };
             try {
-              var res = await _httpService.addComment(newWineFormated);
+              var res = await _httpService.addOrDeleteComment(newWineFormated);
               print(res.statusCode);
               print(res.body);
               if (res.statusCode == 200) {
