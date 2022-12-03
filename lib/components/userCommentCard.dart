@@ -7,6 +7,7 @@ import 'package:shazam_du_vin/services/var_global.dart';
 
 import '../services/http_service.dart';
 import '../services/localStorage.dart';
+import '../utils/eventBus.dart';
 import '../utils/models.dart';
 
 late final HttpService _httpService = HttpService();
@@ -143,9 +144,6 @@ void showCustomDialog(
             ),
             ElevatedButton(
               onPressed: () async {
-                wine.listCommentaire.removeWhere((item) =>
-                    item.text == commentSelected.text &&
-                    item.date == commentSelected.date);
                 print(commentSelected);
                 var newWineFormated = {
                   "id": wine.id,
@@ -170,8 +168,20 @@ void showCustomDialog(
                   var res =
                       await _httpService.addOrDeleteComment(newWineFormated);
                   if (res.statusCode == 200) {
+                    num noteGlobale = wine.listCommentaire.length > 1
+                        ? (wine.noteGlobale * wine.listCommentaire.length -
+                                commentSelected.note) /
+                            (wine.listCommentaire.length - 1)
+                        : -1;
+                    wine.listCommentaire.removeWhere((item) =>
+                        item.text == commentSelected.text &&
+                        item.date == commentSelected.date);
+                    wine.noteGlobale = noteGlobale;
                     // setState(() {});
                     Navigator.pop(context, wine);
+                    eventBus.emit(
+                      "deleteComment",
+                    );
                     // VarGlobal.isCommentUpdated = true;
                     // print("??????");
                     // MyWinePage myWinePage = MyWinePage(wine: wine);
