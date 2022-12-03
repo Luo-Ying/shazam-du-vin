@@ -1,23 +1,45 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shazam_du_vin/myWinePage.dart';
 
+import '../services/http_service.dart';
+import '../services/localStorage.dart';
 import '../utils/models.dart';
 
-Widget buildUserCommentCard(BuildContext context, Commentaire commentaire) {
+late final HttpService _httpService = HttpService();
+
+Widget buildUserCommentCard(
+    BuildContext context, Commentaire commentaire, Wine wine) {
   return Card(
     elevation: 0,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(10)),
       side: BorderSide(color: Color.fromRGBO(235, 234, 234, 1)),
     ),
-    child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 5.0, left: 10.0, bottom: 15.0),
-          child: sizeBoxOfUserNameAndRating(context, commentaire),
-        ),
-        buildCommentText(context, commentaire),
-      ],
+    child: InkWell(
+      onLongPress: () async {
+        // print("coucou?");
+        String dataCurrentUser = await readDataString("currentUser");
+        String roleOfCurrentUser =
+            jsonDecode(jsonDecode(dataCurrentUser))[0]['role'];
+        String currentUserName =
+            jsonDecode(jsonDecode(dataCurrentUser))[0]['username'];
+        if (roleOfCurrentUser == "admin" ||
+            currentUserName == commentaire.username) {
+          showCustomDialog(context, commentaire, wine);
+        }
+      },
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0, left: 10.0, bottom: 15.0),
+            child: sizeBoxOfUserNameAndRating(context, commentaire),
+          ),
+          buildCommentText(context, commentaire),
+        ],
+      ),
     ),
   );
 }
@@ -90,3 +112,84 @@ Widget buildRatingText(BuildContext context, Commentaire commentaire) {
     ),
   );
 }
+
+void showCustomDialog(
+    BuildContext context, Commentaire commentSelected, Wine wine) {
+  // print("position ---- >  " + position.toString());
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Do you want delete this comment ?"),
+          content: SingleChildScrollView(
+              child: ListBody(children: [
+            Text(
+              commentSelected.text,
+              style:
+                  const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w800),
+            )
+          ])),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll<Color>(
+                      Color.fromRGBO(121, 121, 121, 1))),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                wine.listCommentaire.removeWhere((item) =>
+                    item.text == commentSelected.text &&
+                    item.date == commentSelected.date);
+                print(commentSelected);
+                var newWineFormated = {
+                  "id": wine.id,
+                  "nom": wine.nom,
+                  "vignoble": wine.vignoble,
+                  "cepage": wine.cepage,
+                  "type": wine.type,
+                  "annee": wine.annee,
+                  "image": wine.image,
+                  "description": wine.description,
+                  "commentaire": [
+                    for (var item in wine.listCommentaire)
+                      {
+                        "username": item.username,
+                        "text": item.text,
+                        "note": item.note,
+                        "date": item.date
+                      },
+                  ]
+                };
+                try {
+                  var res =
+                      await _httpService.addOrDeleteComment(newWineFormated);
+                  if (res.statusCode == 200) {
+                    // setState(() {});
+                    Navigator.pop(context, wine); // pop current page
+                    Navigator.pushNamed(context, "Setting"); // push it back in
+                    // TODO: débuger le problème de mettre à jours les données de la page !!!!!!!!
+                  }
+                } catch (e) {}
+              },
+              style: const ButtonStyle(
+                  backgroundColor:
+                      MaterialStatePropertyAll<Color>(Colors.black)),
+              child: const Text("Confirm"),
+            ),
+          ],
+        );
+      });
+}
+
+// List<Commentaire> newListComment(Commentaire commentSelected, Wine wine) {
+//   List<Commentaire> newListComment = [];
+//   for (int i=0; i<wine.listCommentaire.length; i++) {
+//     if (wine.listCommentaire[i].text != commentSelected.text && wine.listCommentaire[i].date != commentSelected.date) {
+//       newListComment.add(wine.listCommentaire)
+//     }
+//   }
+// }

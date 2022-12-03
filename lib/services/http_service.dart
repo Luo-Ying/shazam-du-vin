@@ -135,6 +135,8 @@ class HttpService {
       },
       body: body,
     );
+    print(res.statusCode);
+    print(res.body);
     return res;
   }
 }

@@ -87,7 +87,8 @@ class _MyWinePageState extends State<MyWinePage> {
       itemBuilder: (BuildContext context, int index) {
         return SizedBox(
           // height: 50,
-          child: buildUserCommentCard(context, wine.listCommentaire[index]),
+          child:
+              buildUserCommentCard(context, wine.listCommentaire[index], wine),
         );
       },
       itemCount: wine.listCommentaire.length,
@@ -188,8 +189,16 @@ class _MyWinePageState extends State<MyWinePage> {
               var res = await _httpService.addOrDeleteComment(newWineFormated);
               print(res.statusCode);
               print(res.body);
+              Commentaire newComment;
+              wine.listCommentaire.add(Commentaire(
+                  jsonDecode(jsonDecode(dataCurrentUser))[0]["username"],
+                  _commentText,
+                  _saveRating,
+                  myTimeStamp));
               if (res.statusCode == 200) {
                 (_formKey.currentState as FormState).reset();
+                Navigator.pop(context);
+                setState(() {});
                 // TODO: ajouter fonction pour afficher directement sur page quand utilisateur réussis de ajouter un commentaire.
               }
             } catch (e) {
