@@ -35,13 +35,6 @@ class _MyListVinPageState extends State<MyListVinPage> {
   Uint8List targetlUinit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
   Uint8List originalUnit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
 
-  // void _getRequests() {
-  //   eventBus.on("deleteWine", (arg) async {
-  //     await Navigator.pushReplacement(context,
-  //         MaterialPageRoute(builder: (BuildContext context) => super.widget));
-  //   });
-  // }
-
   @override
   void initState() {
     eventBus.on("deleteWine", (arg) async {

@@ -136,7 +136,7 @@ Future<void> goListFavorisPage(BuildContext context) async {
   // print(currentUser);
   // print(jsonDecode(jsonDecode(currentUser))[0]["username"]);
   String currentUserName = jsonDecode(jsonDecode(currentUser))[0]["username"];
-  getListFavWines(currentUserName);
+  await getListFavWines(currentUserName);
   Navigator.of(context).push(MaterialPageRoute(
     builder: (context) {
       return MyListWinesFavorites(
@@ -236,7 +236,7 @@ Future<void> getTopWines() async {
 Future<void> getListFavWines(String currentUserName) async {
   _listFavWines = [];
   var res = await _httpService.getFavorisWines(currentUserName);
-  var data = jsonDecode(res.body)[0];
+  var data = jsonDecode(res.body);
   print(data);
   for (int i = 0; i < data.length; i++) {
     String id = data[i]["id"];
