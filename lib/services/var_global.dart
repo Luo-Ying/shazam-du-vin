@@ -12,5 +12,5 @@ class VarGlobal {
 
   static List<Wine> LISTALLWINES = [];
 
-  static bool isCommentUpdated = false;
+  // static bool isCommentUpdated = false;
 }

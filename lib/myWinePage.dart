@@ -49,6 +49,7 @@ class _MyWinePageState extends State<MyWinePage> {
             buildTitle(),
             buildTitleLine(),
             buildImageView(context),
+            if (wine.noteGlobale > -1) buildShowRatingStar(context),
             buildFormWineInfo(context),
             buildLabel(context, "description : "),
             buildValue(context, wine.description),
@@ -464,6 +465,50 @@ class _MyWinePageState extends State<MyWinePage> {
     );
   }
 
+  Widget buildShowRatingStar(BuildContext context) {
+    // print(wine.noteGlobale);
+    // print(wine.noteGlobale.truncateToDouble());
+    // print((num.parse((wine.noteGlobale - wine.noteGlobale.truncateToDouble())
+    //         .toStringAsFixed(2))
+    //     .runtimeType));
+    num intPart = wine.noteGlobale.truncateToDouble();
+    num doublePart = num.parse(
+        (wine.noteGlobale - wine.noteGlobale.truncateToDouble())
+            .toStringAsFixed(2));
+    num rest = doublePart > 0 ? 5 - intPart - 1 : 5 - intPart;
+    // print(rest);
+    final size = MediaQuery.of(context).size;
+    final widthScreen = size.width;
+    // print(widthScreen);
+    final paddingLedt = (widthScreen - 150) / 2;
+    return Padding(
+      padding: EdgeInsets.only(top: 15.0, left: paddingLedt, bottom: 20.0),
+      child: Row(
+        children: [
+          for (int i = 0; i < intPart; i++)
+            const Icon(
+              Icons.star,
+              size: 30.0,
+              color: Colors.amber,
+            ),
+          if (doublePart != 0)
+            const Icon(
+              Icons.star_half,
+              size: 30.0,
+              color: Colors.amber,
+            ),
+          if (rest > 0)
+            for (int i = 0; i < rest; i++)
+              const Icon(
+                Icons.star_border,
+                size: 30.0,
+                color: Colors.grey,
+              ),
+        ],
+      ),
+    );
+  }
+
   Widget buildImageView(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
@@ -681,7 +726,7 @@ class _MyWinePageState extends State<MyWinePage> {
                     if (res.statusCode == 200) {
                       Navigator.pop(context);
                       setState(() {});
-                      VarGlobal.isCommentUpdated = true;
+                      // VarGlobal.isCommentUpdated = true;
                       // TODO: débuger le problème de mettre à jours les données de la page !!!!!!!!
                     }
                   } catch (e) {}

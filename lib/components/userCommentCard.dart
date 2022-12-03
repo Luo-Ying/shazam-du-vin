@@ -172,7 +172,7 @@ void showCustomDialog(
                   if (res.statusCode == 200) {
                     // setState(() {});
                     Navigator.pop(context, wine);
-                    VarGlobal.isCommentUpdated = true;
+                    // VarGlobal.isCommentUpdated = true;
                     // print("??????");
                     // MyWinePage myWinePage = MyWinePage(wine: wine);
                     // myWinePage.refrePage();
