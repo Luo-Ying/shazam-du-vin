@@ -50,6 +50,7 @@ dependencies:
   dio: ^4.0.6
   flutter_speed_dial: ^6.2.0
   flutter_rating_bar: ^4.0.1
+  event_bus: ^2.0.0
 
 dev_dependencies:
   flutter_test:

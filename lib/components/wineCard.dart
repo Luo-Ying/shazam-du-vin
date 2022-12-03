@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../myWinePage.dart';
 import '../services/http_service.dart';
 import '../services/localStorage.dart';
+import '../utils/eventBus.dart';
 import '../utils/models.dart';
 
 late final HttpService _httpService = HttpService();
@@ -134,7 +135,10 @@ void showCustomDialog(BuildContext context, Wine wineSelected) {
                 };
                 print(wineSelected.id);
                 var res = await _httpService.deleteWine(wineSelectedFormated);
-                if (res.statusCode == 200) {}
+                if (res.statusCode == 200) {
+                  Navigator.pop(context);
+                  eventBus.emit("deleteWine");
+                }
               },
               style: const ButtonStyle(
                   backgroundColor:

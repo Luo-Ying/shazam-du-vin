@@ -14,6 +14,7 @@ import 'components/floatingActionButionMenu.dart';
 import 'components/wineCard.dart';
 
 import 'utils/models.dart';
+import 'utils/eventBus.dart';
 
 class MyListVinPage extends StatefulWidget {
   const MyListVinPage({Key? key, required this.listAllWines}) : super(key: key);
@@ -33,6 +34,20 @@ class _MyListVinPageState extends State<MyListVinPage> {
 
   Uint8List targetlUinit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
   Uint8List originalUnit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // eventBus.on("deleteWine") {
+    //   setState(() {});
+    // };
+    eventBus.on("deleteWine", (arg) async {
+      print("coucou?????");
+      await Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

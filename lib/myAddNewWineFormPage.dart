@@ -192,6 +192,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                     (_formKey.currentState as FormState).reset();
                     _selectedImage = null;
                     _isHaveImgFront.value = false;
+                    FocusScope.of(context).requestFocus(FocusNode());
                     Fluttertoast.showToast(
                       msg: VarGlobal.TOASTMESSAGE,
                       toastLength: Toast.LENGTH_SHORT,
