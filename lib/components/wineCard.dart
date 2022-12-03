@@ -92,9 +92,7 @@ Widget buildWineCard(
 void goWinePage(BuildContext context, Wine wine) {
   Navigator.of(context).push(MaterialPageRoute(
     builder: (context) {
-      return MyWinePage(
-        wine: wine,
-      );
+      return MyWinePage(wine: wine);
     },
   ));
 }

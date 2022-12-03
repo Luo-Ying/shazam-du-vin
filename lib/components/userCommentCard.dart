@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shazam_du_vin/myWinePage.dart';
+import 'package:shazam_du_vin/services/var_global.dart';
 
 import '../services/http_service.dart';
 import '../services/localStorage.dart';
@@ -113,6 +114,7 @@ Widget buildRatingText(BuildContext context, Commentaire commentaire) {
   );
 }
 
+@override
 void showCustomDialog(
     BuildContext context, Commentaire commentSelected, Wine wine) {
   // print("position ---- >  " + position.toString());
@@ -169,8 +171,11 @@ void showCustomDialog(
                       await _httpService.addOrDeleteComment(newWineFormated);
                   if (res.statusCode == 200) {
                     // setState(() {});
-                    Navigator.pop(context, wine); // pop current page
-                    Navigator.pushNamed(context, "Setting"); // push it back in
+                    Navigator.pop(context, wine);
+                    VarGlobal.isCommentUpdated = true;
+                    // print("??????");
+                    // MyWinePage myWinePage = MyWinePage(wine: wine);
+                    // myWinePage.refrePage();
                     // TODO: débuger le problème de mettre à jours les données de la page !!!!!!!!
                   }
                 } catch (e) {}
@@ -184,12 +189,3 @@ void showCustomDialog(
         );
       });
 }
-
-// List<Commentaire> newListComment(Commentaire commentSelected, Wine wine) {
-//   List<Commentaire> newListComment = [];
-//   for (int i=0; i<wine.listCommentaire.length; i++) {
-//     if (wine.listCommentaire[i].text != commentSelected.text && wine.listCommentaire[i].date != commentSelected.date) {
-//       newListComment.add(wine.listCommentaire)
-//     }
-//   }
-// }
