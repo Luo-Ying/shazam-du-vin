@@ -4,15 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
-import 'package:shazam_du_vin/mySearchWineByImageResultPage.dart';
-import 'package:shazam_du_vin/myLoginPage.dart';
-import 'package:shazam_du_vin/utils/eventBus.dart';
 
-import './services/http_service.dart';
-import './services/localStorage.dart';
+import 'mySearchWineByImageResultPage.dart';
+import 'myLoginPage.dart';
+import 'services/winesActions.dart';
+import 'utils/eventBus.dart';
+
+import 'services/http_service.dart';
+import 'services/localStorage.dart';
 import 'components/floatingActionButionMenu.dart';
 import 'components/wineCard.dart';
-import './utils/models.dart';
+import 'utils/models.dart';
 
 class MyMainPage extends StatefulWidget {
   const MyMainPage({Key? key, required this.title, required this.listTopWines})
@@ -39,6 +41,7 @@ class _MyMainPageState extends State<MyMainPage> {
     print("list top wines:  $listTopWines");
     print(listTopWines.length);
     eventBus.on("deleteWine", (arg) async {
+      listTopWines = await setListAllWine();
       setState(() {});
     });
     eventBus.on("addInFavoris", (arg) async {

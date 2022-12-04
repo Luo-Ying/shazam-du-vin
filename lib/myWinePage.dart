@@ -552,18 +552,37 @@ class _MyWinePageState extends State<MyWinePage> {
     );
   }
 
+  Widget buildButtonModifAdmin(BuildContext context) {
+    return SizedBox(
+      child: IconButton(
+          onPressed: () {}, icon: const Icon(Icons.mode_edit_outline_outlined)),
+    );
+  }
+
   Widget buildTitle() {
+    double widthScreen = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         Padding(
           padding: const EdgeInsets.only(
               left: 8.0, right: 8.0, top: 0.0, bottom: 8.0),
-          child: Text(
-            wine.nom,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w500,
-            ),
+          child: Row(
+            children: [
+              SizedBox(
+                width: widthScreen - 64,
+                child: Text(
+                  wine.nom,
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Offstage(
+                offstage: VarGlobal.CURRENTUSERROLE == "user",
+                child: buildButtonModifAdmin(context),
+              )
+            ],
           ),
         )
       ],
@@ -581,181 +600,4 @@ class _MyWinePageState extends State<MyWinePage> {
       ),
     );
   }
-
-  // Widget buildUserCommentCard(
-  //     BuildContext context, Commentaire commentaire, Wine wine) {
-  //   return Card(
-  //     elevation: 0,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.all(Radius.circular(10)),
-  //       side: BorderSide(color: Color.fromRGBO(235, 234, 234, 1)),
-  //     ),
-  //     child: InkWell(
-  //       onLongPress: () async {
-  //         // print("coucou?");
-  //         String dataCurrentUser = await readDataString("currentUser");
-  //         String roleOfCurrentUser =
-  //             jsonDecode(jsonDecode(dataCurrentUser))[0]['role'];
-  //         String currentUserName =
-  //             jsonDecode(jsonDecode(dataCurrentUser))[0]['username'];
-  //         if (roleOfCurrentUser == "admin" ||
-  //             currentUserName == commentaire.username) {
-  //           showCustomDialog(context, commentaire, wine);
-  //         }
-  //       },
-  //       child: Column(
-  //         children: [
-  //           Padding(
-  //             padding:
-  //                 const EdgeInsets.only(top: 5.0, left: 10.0, bottom: 15.0),
-  //             child: sizeBoxOfUserNameAndRating(context, commentaire),
-  //           ),
-  //           buildCommentText(context, commentaire),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // Widget buildCommentText(BuildContext context, Commentaire commentaire) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(left: 15.0, right: 10.0, bottom: 15.0),
-  //     child: Text(
-  //       commentaire.text,
-  //       style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
-  //     ),
-  //   );
-  // }
-  //
-  // Widget sizeBoxOfUserNameAndRating(
-  //     BuildContext context, Commentaire commentaire) {
-  //   return SizedBox(
-  //     child: Row(
-  //       children: [
-  //         buildUserName(context, commentaire),
-  //         const SizedBox(width: 10.0),
-  //         buildRatingStar(context, commentaire),
-  //       ],
-  //     ),
-  //   );
-  // }
-  //
-  // Widget buildUserName(BuildContext context, Commentaire commentaire) {
-  //   return Text(
-  //     commentaire.username,
-  //     style: const TextStyle(
-  //       fontSize: 15.0,
-  //       fontWeight: FontWeight.w800,
-  //       color: Color.fromRGBO(142, 4, 100, 1),
-  //     ),
-  //   );
-  // }
-  //
-  // Widget buildRatingStar(BuildContext context, Commentaire commentaire) {
-  //   return Expanded(
-  //       child: Align(
-  //     alignment: Alignment(-1, 1),
-  //     child: Container(
-  //       height: 20.0,
-  //       width: 48.0,
-  //       decoration: const BoxDecoration(
-  //           color: Color.fromRGBO(249, 247, 214, 1),
-  //           borderRadius: BorderRadius.all(Radius.circular(15))),
-  //       child: buildRatingText(context, commentaire),
-  //     ),
-  //   ));
-  // }
-  //
-  // Widget buildRatingText(BuildContext context, Commentaire commentaire) {
-  //   num note = commentaire.note;
-  //   return Padding(
-  //     padding: const EdgeInsets.only(left: 3.0),
-  //     child: SizedBox(
-  //       child: Row(
-  //         children: [
-  //           const Icon(
-  //             Icons.star,
-  //             color: Color.fromRGBO(240, 164, 10, 1),
-  //             size: 15.0,
-  //           ),
-  //           const SizedBox(width: 3.0),
-  //           Text("$note")
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // @override
-  // void showCustomDialog(
-  //     BuildContext context, Commentaire commentSelected, Wine wine) {
-  //   // print("position ---- >  " + position.toString());
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: const Text("Do you want delete this comment ?"),
-  //           content: SingleChildScrollView(
-  //               child: ListBody(children: [
-  //             Text(
-  //               commentSelected.text,
-  //               style: const TextStyle(
-  //                   fontSize: 20.0, fontWeight: FontWeight.w800),
-  //             )
-  //           ])),
-  //           actions: [
-  //             ElevatedButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //               style: const ButtonStyle(
-  //                   backgroundColor: MaterialStatePropertyAll<Color>(
-  //                       Color.fromRGBO(121, 121, 121, 1))),
-  //               child: const Text("Cancel"),
-  //             ),
-  //             ElevatedButton(
-  //               onPressed: () async {
-  //                 wine.listCommentaire.removeWhere((item) =>
-  //                     item.text == commentSelected.text &&
-  //                     item.date == commentSelected.date);
-  //                 print(commentSelected);
-  //                 var newWineFormated = {
-  //                   "id": wine.id,
-  //                   "nom": wine.nom,
-  //                   "vignoble": wine.vignoble,
-  //                   "cepage": wine.cepage,
-  //                   "type": wine.type,
-  //                   "annee": wine.annee,
-  //                   "image": wine.image,
-  //                   "description": wine.description,
-  //                   "commentaire": [
-  //                     for (var item in wine.listCommentaire)
-  //                       {
-  //                         "username": item.username,
-  //                         "text": item.text,
-  //                         "note": item.note,
-  //                         "date": item.date
-  //                       },
-  //                   ]
-  //                 };
-  //                 try {
-  //                   var res =
-  //                       await _httpService.addOrDeleteComment(newWineFormated);
-  //                   if (res.statusCode == 200) {
-  //                     Navigator.pop(context);
-  //                     setState(() {});
-  //                     // VarGlobal.isCommentUpdated = true;
-  //                     // TODO: débuger le problème de mettre à jours les données de la page !!!!!!!!
-  //                   }
-  //                 } catch (e) {}
-  //               },
-  //               style: const ButtonStyle(
-  //                   backgroundColor:
-  //                       MaterialStatePropertyAll<Color>(Colors.black)),
-  //               child: const Text("Confirm"),
-  //             ),
-  //           ],
-  //         );
-  //       });
-  // }
 }

@@ -74,9 +74,50 @@ Future<void> deleteWine(BuildContext context, Wine wineSelected) async {
     }
   };
   print(wineSelected.id);
-  var res = await _httpService.deleteWine(wineSelectedFormated);
-  if (res.statusCode == 200) {
-    Navigator.pop(context);
-    eventBus.emit("deleteWine");
+  _httpService.deleteWine(wineSelectedFormated);
+  // Navigator.pop(context);
+  // eventBus.emit("deleteWine");
+  Navigator.pop(context);
+  eventBus.emit("deleteWine");
+  // if (res.statusCode == 200) {
+  // }
+}
+
+Future<List<Wine>> setListAllWine() async {
+  List<Wine> listWines = [];
+  var res = await _httpService.geAllWines();
+  // print(jsonDecode(res.body));
+  // print(jsonDecode(res.body).length);
+  for (var item in jsonDecode(res.body)) {
+    print(item);
+    String id = item["id"];
+    String nom = item["nom"];
+    String vignoble = item["vignoble"];
+    String cepage = item["cepage"];
+    String type = item["type"];
+    String annee = item["annee"];
+    String image = item["image"];
+    String description = item["description"];
+    // print(item["noteGlobale"]);
+    num noteGlobale = item["noteGlobale"];
+    // print(data[i]["commentaire"][0]["userID"]);
+    late List<Commentaire> listCommentaire = [];
+    if (item["commentaire"].length > 0) {
+      for (int j = 0; j < item["commentaire"].length; j++) {
+        String username = item["commentaire"][j]["username"];
+        // print(userId);
+        String text = item["commentaire"][j]["text"];
+        num note = item["commentaire"][j]["note"];
+        int date = item["commentaire"][j]["date"];
+        Commentaire commentaire = Commentaire(username, text, note, date);
+        listCommentaire.add(commentaire);
+      }
+    }
+    Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
+        noteGlobale, listCommentaire);
+    listWines.add(wine);
+    VarGlobal.LISTALLWINES.add(wine);
   }
+  // print(_listAllWine[0].description);
+  return listWines;
 }
