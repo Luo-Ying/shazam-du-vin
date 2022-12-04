@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shazam_du_vin/myImagePickerWidget.dart';
 import 'package:shazam_du_vin/myListWinesFavorites.dart';
 
 import '../mySearchWineByImageResultPage.dart';
@@ -140,7 +141,11 @@ Future<Future<int?>> photo_camera(BuildContext context) async {
                   }
                   Navigator.pop(context);
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MySearchWineByImageResultPage(),
+                    builder: (context) {
+                      return MyImagePickerWidget(
+                        imageSelected: _selectedImage,
+                      );
+                    },
                   ));
                 },
                 style: ElevatedButton.styleFrom(
