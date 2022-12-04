@@ -203,7 +203,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                       textColor: Colors.white,
                       fontSize: 16.0,
                     );
-                    // TODO: refresh page après ajouter un nouveau vin!!
                     // Navigator.pop(context, _listAllWines);
                   }
                 });

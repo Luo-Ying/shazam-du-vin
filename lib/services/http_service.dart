@@ -13,7 +13,7 @@ import './localStorage.dart';
 class HttpService {
   // static const BASE_URL = "http://10.0.2.2:5000"; // for emulator
   static const BASE_URL =
-      "https://urba-backend.v5jn6j0vmbe7s.eu-west-3.cs.amazonlightsail.com/";
+      "https://flask-service.v5jn6j0vmbe7s.eu-west-3.cs.amazonlightsail.com/";
 
   Future<http.Response> register(Map<String, dynamic> newUser) async {
     var body = json.encode(newUser);
@@ -76,6 +76,25 @@ class HttpService {
     print(res.statusCode);
     print(res.body);
     return res;
+  }
+
+  Future<http.StreamedResponse> searchWinesByImage(File imgFile) async {
+    print("coucou?");
+    print(imgFile);
+    print(imgFile.path.split("/").last);
+    var uri = Uri.parse("$BASE_URL/ocr");
+
+    var request = http.MultipartRequest("POST", uri);
+    request.files.add(http.MultipartFile.fromBytes(
+        "file", imgFile.readAsBytesSync(),
+        filename: "Photo.jpg", contentType: MediaType("image", "png")));
+
+    var response = await request.send();
+    // print(response.statusCode);
+    // response.stream.transform(utf8.decoder).listen((value) {
+    //   print(value);
+    // });
+    return response;
   }
 
   Future<void> addOrRemoveFavorisWine(

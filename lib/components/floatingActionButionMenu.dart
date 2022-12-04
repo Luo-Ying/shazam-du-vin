@@ -287,8 +287,7 @@ Future<void> getListFavWines(String currentUserName) async {
   _listFavWines = [];
   var res = await _httpService.getFavorisWines(currentUserName);
   // print(res.body);
-  // TODO: 500 pour récupérer la list fav du user!!!!!!
-  var data = jsonDecode(jsonDecode(res.body));
+  var data = jsonDecode(res.body);
   print(data);
   for (int i = 0; i < data.length; i++) {
     String id = data[i]["id"];
