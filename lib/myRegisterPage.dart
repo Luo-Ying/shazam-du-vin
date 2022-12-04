@@ -94,6 +94,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
         width: 270,
         child: ElevatedButton(
           style: ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll<Color>(Colors.black),
               shape: MaterialStateProperty.all(const StadiumBorder(
                   side: BorderSide(style: BorderStyle.none)))),
           child: Text('Sign up',
@@ -112,8 +113,11 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                 }
               };
               print(newUser);
-              _httpService.register(newUser);
-              (_formKey.currentState as FormState).reset();
+              var res = await _httpService.register(newUser);
+              print(res.statusCode);
+              if (res.statusCode == 200) {
+                (_formKey.currentState as FormState).reset();
+              }
               // TODO: ajouter une condition : reset le form que quand tout va bien!
               Fluttertoast.showToast(
                 msg: VarGlobal.TOASTMESSAGE,

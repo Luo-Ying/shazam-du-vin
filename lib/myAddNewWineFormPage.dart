@@ -39,9 +39,18 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
   late String _type;
   late String _annee;
   late String _noteGlobal;
+  late String _tauxAlcool;
+  late String _price;
   late String _description;
 
   List<Wine> _listAllWines = [];
+
+  Future<void> setListAllWine() async {
+    // _listAllWines = [];
+    var res = await _httpService.geAllWines();
+    WineActions.setListWine(1, jsonDecode(res.body));
+    _listAllWines = WineActions.listAllWines;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +101,10 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
             const SizedBox(height: 30),
             buildYearTextField(context),
             const SizedBox(height: 30),
+            buildAlcoolPercentTextField(context),
+            const SizedBox(height: 30),
+            buildPriceTextField(context),
+            const SizedBox(height: 30),
             buildWineDescriptionTextField(context),
             const SizedBox(height: 40),
             buildAddWineButton(context),
@@ -102,45 +115,29 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
     );
   }
 
-  Future<void> setListAllWine() async {
-    // _listAllWines = [];
-    var res = await _httpService.geAllWines();
-    WineActions.setListWine(1, jsonDecode(res.body));
-    _listAllWines = WineActions.listAllWines;
-    // print(jsonDecode(res.body));
-    // print(jsonDecode(res.body).length);
-    // for (var item in jsonDecode(res.body)) {
-    //   print(item);
-    //   String id = item["id"];
-    //   String nom = item["nom"];
-    //   String vignoble = item["vignoble"];
-    //   String cepage = item["cepage"];
-    //   String type = item["type"];
-    //   String annee = item["annee"];
-    //   String image = item["image"];
-    //   String description = item["description"];
-    //   // print(item["noteGlobale"]);
-    //   num noteGlobale = item["noteGlobale"];
-    //   num prix = item["prix"];
-    //   // print(data[i]["commentaire"][0]["userID"]);
-    //   late List<Commentaire> listCommentaire = [];
-    //   if (item["commentaire"].length > 0) {
-    //     for (int j = 0; j < item["commentaire"].length; j++) {
-    //       String username = item["commentaire"][j]["username"];
-    //       // print(userId);
-    //       String text = item["commentaire"][j]["text"];
-    //       num note = item["commentaire"][j]["note"];
-    //       int date = item["commentaire"][j]["date"];
-    //       Commentaire commentaire = Commentaire(username, text, note, date);
-    //       listCommentaire.add(commentaire);
-    //     }
-    //   }
-    //   Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
-    //       description, noteGlobale, prix, listCommentaire);
-    //   _listAllWines.add(wine);
-    //   VarGlobal.LISTALLWINES.add(wine);
-    // }
-    // print(_listAllWine[0].description);
+  Widget buildPriceTextField(BuildContext context) {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(labelText: 'Price'),
+      onSaved: (v) => _price = v!,
+      validator: (v) {
+        if (v!.isEmpty) {
+          return 'Please enter the wine description!';
+        }
+      },
+    );
+  }
+
+  Widget buildAlcoolPercentTextField(BuildContext context) {
+    return TextFormField(
+      decoration: const InputDecoration(labelText: 'Alcool percent'),
+      onSaved: (v) => _tauxAlcool = v!,
+      validator: (v) {
+        if (v!.isEmpty) {
+          return 'Please enter the wine description!';
+        }
+      },
+    );
   }
 
   Widget buildAddWineButton(BuildContext context) {

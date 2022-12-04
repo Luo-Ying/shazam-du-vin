@@ -95,6 +95,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
         width: 270,
         child: ElevatedButton(
           style: ButtonStyle(
+              backgroundColor:
+                  const MaterialStatePropertyAll<Color>(Colors.black),
               shape: MaterialStateProperty.all(const StadiumBorder(
                   side: BorderSide(style: BorderStyle.none)))),
           child: Text('Sign in',
@@ -119,13 +121,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     jsonDecode(jsonDecode(currentUser))[0]["role"];
                 VarGlobal.CURRENTUSERNAME =
                     jsonDecode(jsonDecode(currentUser))[0]["username"];
-                // TODO: verifier initialisation du CURRENTUSERROLE du VarGlobal en récupérant role du currentuser stoké dans le fichier
-                // VarGlobal.CURRENTUSERROLE = "admin";
-                // Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (context) => const MyMainPage(
-                //     title: 'Main page',
-                //   ),
-                // ));
                 await getWines();
                 print("coucou! $_listTopWines");
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -137,15 +132,15 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   },
                 ));
               } else {
-                // Fluttertoast.showToast(
-                //   msg: VarGlobal.TOASTMESSAGE,
-                //   toastLength: Toast.LENGTH_SHORT,
-                //   gravity: ToastGravity.BOTTOM,
-                //   timeInSecForIosWeb: 2,
-                //   backgroundColor: Colors.black45,
-                //   textColor: Colors.white,
-                //   fontSize: 16.0,
-                // );
+                Fluttertoast.showToast(
+                  msg: VarGlobal.TOASTMESSAGE,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2,
+                  backgroundColor: Colors.black45,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
               }
 
               // VarGlobal.CURRENTUSERROLE = "admin";
@@ -250,35 +245,5 @@ class _MyLoginPageState extends State<MyLoginPage> {
     print(data);
     WineActions.setListWine(2, data);
     _listTopWines = WineActions.listTopWines;
-    // print(data[0]["commentaire"].length);
-    // print(data.length);
-    // for (int i = 0; i < data.length; i++) {
-    //   String id = data[i]["id"];
-    //   String nom = data[i]["nom"];
-    //   String vignoble = data[i]["vignoble"];
-    //   String cepage = data[i]["cepage"];
-    //   String type = data[i]["type"];
-    //   String annee = data[i]["annee"];
-    //   String image = data[i]["image"];
-    //   num noteGlobale = data[i]["noteGlobale"];
-    //   num prix = data[i]["prix"];
-    //   String description = data[i]["description"];
-    //   // print(data[i]["commentaire"][0]["userID"]);
-    //   late List<Commentaire> listCommentaire = [];
-    //   if (data[i]["commentaire"].length > 0) {
-    //     for (int j = 0; j < data[i]["commentaire"].length; j++) {
-    //       String userId = data[i]["commentaire"][j]["username"];
-    //       print(userId);
-    //       String text = data[i]["commentaire"][j]["text"];
-    //       num note = data[i]["commentaire"][j]["note"];
-    //       int date = data[i]["commentaire"][j]["date"];
-    //       Commentaire commentaire = Commentaire(userId, text, note, date);
-    //       listCommentaire.add(commentaire);
-    //     }
-    //   }
-    //   Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
-    //       description, noteGlobale, prix, listCommentaire);
-    //   _listTopWines.add(wine);
-    // }
   }
 }

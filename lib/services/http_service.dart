@@ -39,10 +39,11 @@ class HttpService {
     print(res.body);
     if (res.statusCode == 200) {
       // final responseJson = jsonDecode(res.body);
-      print(res.body.runtimeType);
+      print(res.body);
       saveDataString("currentUser", res.body);
     } else {
       // VarGlobal.TOASTMESSAGE = "username or password not correctly!";
+      VarGlobal.TOASTMESSAGE = "username or password incorrect! ";
     }
     return res;
     // TODO: les cas d'érreurs quand utilisateur entre les mauvais username ou password

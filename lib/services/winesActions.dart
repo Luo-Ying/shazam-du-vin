@@ -93,7 +93,7 @@ class WineActions {
     print(wineSelected.id);
     _httpService.deleteWine(wineSelectedFormated);
     Navigator.pop(context);
-    eventBus.emit("deleteWine ");
+    eventBus.emit("deleteWine");
   }
 
   static void setListWine(int choice, var data) {
@@ -121,6 +121,7 @@ class WineActions {
       // print(item["noteGlobale"]);
       num noteGlobale = item["noteGlobale"];
       num prix = item["prix"];
+      print(item);
       String tauxAlcool = item["tauxAlcool"];
       // print(data[i]["commentaire"][0]["userID"]);
       late List<Commentaire> listCommentaire = [];

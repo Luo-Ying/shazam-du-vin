@@ -297,6 +297,8 @@ Future<void> getListFavWines(String currentUserName) async {
   var res = await _httpService.getFavorisWines(currentUserName);
   // print(res.body);
   var data = jsonDecode(res.body);
+  WineActions.setListWine(3, data);
+  _listFavWines = WineActions.listFavWines;
   print(data);
   // for (int i = 0; i < data.length; i++) {
   //   String id = data[i]["id"];

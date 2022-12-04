@@ -55,6 +55,8 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
   late String _type;
   late String _annee;
   late String _noteGlobal;
+  late String _tauxAlcool;
+  late String _price;
   late String _description;
 
   List<Wine> _listAllWines = [];
@@ -82,14 +84,12 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     //         (route) => route == null);
   }
 
-  // @override
-  // void initState() {
-  //   isModif ? ValueNotifier(true) : ValueNotifier(false);
-  //   print("is modif ? $isModif");
-  //   bool value = _isHaveImgFront.value;
-  //   print("is have image front ? $value");
-  //   super.initState();
-  // }
+  Future<void> setListAllWine() async {
+    _listAllWines = [];
+    var res = await _httpService.geAllWines();
+    WineActions.setListWine(1, jsonDecode(res.body));
+    _listAllWines = WineActions.listAllWines;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,212 +116,72 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       body: Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: ListView(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          children: [
-            Stack(
-              children: [
-                buildTitle(),
-              ],
-            ),
-            buildTitleLine(),
-            const SizedBox(height: 10),
-            // buildBoxAdd2Images(context),
-            buildBoxImagePickerFront(context),
-            const SizedBox(height: 40),
-            buildWineNameTextField(),
-            const SizedBox(height: 30),
-            buildVineyardTextField(context),
-            const SizedBox(height: 30),
-            buildGrapvarietyTextField(context),
-            const SizedBox(height: 30),
-            buildWineTypeTextField(context),
-            const SizedBox(height: 30),
-            buildYearTextField(context),
-            const SizedBox(height: 30),
-            buildWineDescriptionTextField(context),
-            const SizedBox(height: 40),
-            buildAddWineButton(context),
-            const SizedBox(height: 40),
-          ],
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  buildTitle(),
+                ],
+              ),
+              buildTitleLine(),
+              const SizedBox(height: 10),
+              // buildBoxAdd2Images(context),
+              buildBoxImagePickerFront(context),
+              const SizedBox(height: 40),
+              buildWineNameTextField(),
+              const SizedBox(height: 30),
+              buildVineyardTextField(context),
+              const SizedBox(height: 30),
+              buildGrapvarietyTextField(context),
+              const SizedBox(height: 30),
+              buildWineTypeTextField(context),
+              const SizedBox(height: 30),
+              buildYearTextField(context),
+              const SizedBox(height: 30),
+              buildAlcoolPercentTextField(context),
+              const SizedBox(height: 30),
+              buildPriceTextField(context),
+              const SizedBox(height: 30),
+              buildWineDescriptionTextField(context),
+              const SizedBox(height: 40),
+              buildAddWineButton(context),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future<void> setListAllWine() async {
-    _listAllWines = [];
-    var res = await _httpService.geAllWines();
-    // print(jsonDecode(res.body));
-    // print(jsonDecode(res.body).length);
-    WineActions.setListWine(1, jsonDecode(res.body));
-    _listAllWines = WineActions.listAllWines;
-    // for (var item in jsonDecode(res.body)) {
-    //   print(item);
-    //   String id = item["id"];
-    //   String nom = item["nom"];
-    //   String vignoble = item["vignoble"];
-    //   String cepage = item["cepage"];
-    //   String type = item["type"];
-    //   String annee = item["annee"];
-    //   String image = item["image"];
-    //   String description = item["description"];
-    //   // print(item["noteGlobale"]);
-    //   num noteGlobale = item["noteGlobale"];
-    //   num prix = item["prix"];
-    //   // print(data[i]["commentaire"][0]["userID"]);
-    //   late List<Commentaire> listCommentaire = [];
-    //   if (item["commentaire"].length > 0) {
-    //     for (int j = 0; j < item["commentaire"].length; j++) {
-    //       String username = item["commentaire"][j]["username"];
-    //       // print(userId);
-    //       String text = item["commentaire"][j]["text"];
-    //       num note = item["commentaire"][j]["note"];
-    //       int date = item["commentaire"][j]["date"];
-    //       Commentaire commentaire = Commentaire(username, text, note, date);
-    //       listCommentaire.add(commentaire);
-    //     }
-    //   }
-    //   Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
-    //       description, noteGlobale, prix, listCommentaire);
-    //   _listAllWines.add(wine);
-    //   VarGlobal.LISTALLWINES.add(wine);
-    // }
-    // print(_listAllWine[0].description);
-  }
-
-  Future<void> addNewWine() async {
-    if ((_formKey.currentState as FormState).validate()) {
-      (_formKey.currentState as FormState).save();
-      print("Name : $_nom");
-      print("Vignoble : $_vignoble");
-      print("Ceppage : $_cepage");
-      print("Type : $_type");
-      print("Annee : $_annee");
-      print("Description : $_description");
-      print("Image : $_selectedImage");
-      // Image imgFile = Image.file(File(_selectedImage!.path));
-      print(_selectedImage.path.runtimeType);
-      File imgFile = File(_selectedImage.path);
-      var res = await _httpService.insertImage(imgFile);
-      if (res.statusCode == 200) {
-        var id = uuid.v4();
-        print(id);
-        res.stream.transform(utf8.decoder).listen((value) async {
-          print(value);
-          var newWine = {
-            "database": "urbanisation",
-            "collection": "Vin",
-            "data": {
-              "id": id,
-              "nom": _nom,
-              "vignoble": _vignoble,
-              "cepage": _cepage,
-              "type": _type,
-              "annee": _annee,
-              "image": value,
-              "description": _description,
-              "noteGlobale": -1,
-              "commentaire": [],
-            }
-          };
-          var res = await _httpService.addNewWine(newWine);
-          if (res.statusCode == 200) {
-            // await setListAllWine();
-            (_formKey.currentState as FormState).reset();
-            _selectedImage = null;
-            _isHaveImgFront.value = false;
-            FocusScope.of(context).requestFocus(FocusNode());
-            Fluttertoast.showToast(
-              msg: VarGlobal.TOASTMESSAGE,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.black45,
-              textColor: Colors.white,
-              fontSize: 16.0,
-            );
-            eventBus.emit("addNewWine");
-            // Navigator.pop(context, _listAllWines);
-          }
-        });
-      }
-    }
-  }
-
-  Future<void> updateModifWine() async {
-    if ((_formKey.currentState as FormState).validate()) {
-      (_formKey.currentState as FormState).save();
-      print("Name : $_nom");
-      print("Vignoble : $_vignoble");
-      print("Ceppage : $_cepage");
-      print("Type : $_type");
-      print("Annee : $_annee");
-      print("Description : $_description");
-      print("Image : $_selectedImage");
-      // Image imgFile = Image.file(File(_selectedImage!.path));
-      // print(_selectedImage.path.runtimeType);
-      String imgFilePath = "";
-      if (_selectedImage != null) {
-        File imgFile = File(_selectedImage.path);
-        var resImage = await _httpService.insertImage(imgFile);
-        if (resImage.statusCode == 200) {
-          resImage.stream.transform(utf8.decoder).listen((value) async {
-            print(value);
-            imgFilePath = value;
-          });
+  Widget buildPriceTextField(BuildContext context) {
+    return TextFormField(
+      initialValue: wineSelected.price.toString(),
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(labelText: 'Price'),
+      onChanged: (value) => setState(() => _price = value),
+      onSaved: (v) => _price = v!,
+      validator: (v) {
+        if (v!.isEmpty) {
+          return 'Please enter the wine price!';
         }
-      } else {
-        imgFilePath = wineSelected.image;
-      }
-      print(imgFilePath);
-      var newWineFormated = {
-        "id": wineSelected.id,
-        "nom": _nom,
-        "vignoble": _vignoble,
-        "cepage": _cepage,
-        "type": _type,
-        "annee": _annee,
-        "image": imgFilePath,
-        "description": _description,
-        "commentaire": [
-          for (var item in wineSelected.listCommentaire)
-            {
-              "username": item.username,
-              "text": item.text,
-              "note": item.note,
-              "date": item.date
-            },
-        ]
-      };
-      print(newWineFormated);
-      var res = await _httpService.modifWine(newWineFormated);
-      if (res.statusCode == 200) {
-        // await setListAllWine();
-        // (_formKey.currentState as FormState).reset();
-        wineSelected.nom = _nom;
-        wineSelected.vignoble = _vignoble;
-        wineSelected.cepage = _cepage;
-        wineSelected.type = _type;
-        wineSelected.annee = _annee;
-        wineSelected.image = imagePath;
-        wineSelected.description = _description;
-        Fluttertoast.showToast(
-          msg: VarGlobal.TOASTMESSAGE,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.black45,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) {
-            return MyWinePage(wine: wineSelected);
-          },
-        ));
-      }
-    }
+      },
+    );
+  }
+
+  Widget buildAlcoolPercentTextField(BuildContext context) {
+    return TextFormField(
+      initialValue: wineSelected.tauxAlcool,
+      decoration: const InputDecoration(labelText: 'Alcool percent'),
+      onChanged: (value) => setState(() => _tauxAlcool = value),
+      onSaved: (v) => _tauxAlcool = v!,
+      validator: (v) {
+        if (v!.isEmpty) {
+          return 'Please enter the alcool percent of!';
+        }
+      },
+    );
   }
 
   Widget buildAddWineButton(BuildContext context) {
@@ -365,6 +225,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.annee,
       decoration: const InputDecoration(labelText: 'Year'),
+      onChanged: (value) => setState(() => _annee = value),
       onSaved: (v) => _annee = v!,
       validator: (v) {
         if (v!.isEmpty) {
@@ -378,6 +239,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.type,
       decoration: const InputDecoration(labelText: 'Type'),
+      onChanged: (value) => setState(() => _type = value),
       onSaved: (v) => _type = v!,
       validator: (v) {
         if (v!.isEmpty) {
@@ -391,6 +253,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.cepage,
       decoration: const InputDecoration(labelText: 'Grap variety'),
+      onChanged: (value) => setState(() => _cepage = value),
       onSaved: (v) => _cepage = v!,
       validator: (v) {
         if (v!.isEmpty) {
@@ -404,6 +267,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.vignoble,
       decoration: const InputDecoration(labelText: 'Vineyard'),
+      onChanged: (value) => setState(() => _vignoble = value),
       onSaved: (v) => _vignoble = v!,
       validator: (v) {
         if (v!.isEmpty) {
@@ -417,6 +281,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.nom,
       decoration: const InputDecoration(labelText: 'Wine name'),
+      onChanged: (value) => setState(() => _nom = value),
       onSaved: (v) => _nom = v!,
       validator: (v) {
         if (v!.isEmpty) {
@@ -600,5 +465,143 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         ),
       ),
     );
+  }
+
+  Future<void> addNewWine() async {
+    if ((_formKey.currentState as FormState).validate()) {
+      (_formKey.currentState as FormState).save();
+      // print("Name : $_nom");
+      // print("Vignoble : $_vignoble");
+      // print("Ceppage : $_cepage");
+      // print("Type : $_type");
+      // print("Annee : $_annee");
+      // print("Description : $_description");
+      // print("Image : $_selectedImage");
+      // Image imgFile = Image.file(File(_selectedImage!.path));
+      print(_selectedImage.path.runtimeType);
+      File imgFile = File(_selectedImage.path);
+      var res = await _httpService.insertImage(imgFile);
+      if (res.statusCode == 200) {
+        var id = uuid.v4();
+        print(id);
+        res.stream.transform(utf8.decoder).listen((value) async {
+          print(value);
+          var newWine = {
+            "database": "urbanisation",
+            "collection": "Vin",
+            "data": {
+              "id": id,
+              "nom": _nom,
+              "vignoble": _vignoble,
+              "cepage": _cepage,
+              "type": _type,
+              "annee": _annee,
+              "image": value,
+              "tauxAlcool": _tauxAlcool,
+              "description": _description,
+              "prix": num.parse(_price),
+              "noteGlobale": -1,
+              "commentaire": [],
+            }
+          };
+          var res = await _httpService.addNewWine(newWine);
+          if (res.statusCode == 200) {
+            // await setListAllWine();
+            (_formKey.currentState as FormState).reset();
+            _selectedImage = null;
+            _isHaveImgFront.value = false;
+            FocusScope.of(context).requestFocus(FocusNode());
+            Fluttertoast.showToast(
+              msg: VarGlobal.TOASTMESSAGE,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.black45,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+            eventBus.emit("addNewWine");
+            // Navigator.pop(context, _listAllWines);
+          }
+        });
+      }
+    }
+  }
+
+  Future<void> updateModifWine() async {
+    if ((_formKey.currentState as FormState).validate()) {
+      (_formKey.currentState as FormState).save();
+      print("Name : $_nom");
+      print("Vignoble : $_vignoble");
+      print("Ceppage : $_cepage");
+      print("Type : $_type");
+      print("Annee : $_annee");
+      print("Description : $_description");
+      print("Image : $_selectedImage");
+      // Image imgFile = Image.file(File(_selectedImage!.path));
+      // print(_selectedImage.path.runtimeType);
+      String imgFilePath = "";
+      if (_selectedImage != null) {
+        File imgFile = File(_selectedImage.path);
+        var resImage = await _httpService.insertImage(imgFile);
+        if (resImage.statusCode == 200) {
+          resImage.stream.transform(utf8.decoder).listen((value) async {
+            print(value);
+            imgFilePath = value;
+          });
+        }
+      } else {
+        imgFilePath = wineSelected.image;
+      }
+      print(imgFilePath);
+      var newWineFormated = {
+        "id": wineSelected.id,
+        "nom": _nom,
+        "vignoble": _vignoble,
+        "cepage": _cepage,
+        "type": _type,
+        "annee": _annee,
+        "image": imgFilePath,
+        "tauxAlcool": _tauxAlcool,
+        "description": _description,
+        "prix": num.parse(_price),
+        "commentaire": [
+          for (var item in wineSelected.listCommentaire)
+            {
+              "username": item.username,
+              "text": item.text,
+              "note": item.note,
+              "date": item.date
+            },
+        ]
+      };
+      print(newWineFormated);
+      var res = await _httpService.modifWine(newWineFormated);
+      if (res.statusCode == 200) {
+        // await setListAllWine();
+        // (_formKey.currentState as FormState).reset();
+        wineSelected.nom = _nom;
+        wineSelected.vignoble = _vignoble;
+        wineSelected.cepage = _cepage;
+        wineSelected.type = _type;
+        wineSelected.annee = _annee;
+        wineSelected.image = imagePath;
+        wineSelected.description = _description;
+        Fluttertoast.showToast(
+          msg: VarGlobal.TOASTMESSAGE,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.black45,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) {
+            return MyWinePage(wine: wineSelected);
+          },
+        ));
+      }
+    }
   }
 }
