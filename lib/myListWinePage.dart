@@ -43,15 +43,29 @@ class _MyListVinPageState extends State<MyListVinPage> {
   void initState() {
     eventBus.on("deleteWine", (arg) async {
       print("coucou??????");
-      setState(() {});
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        listAllWines = WineActions.listAllWines;
+      });
     });
     eventBus.on("addInFavoris", (arg) async {
+      if (!mounted) {
+        return;
+      }
       setState(() {});
     });
     eventBus.on("removeFromFavoris", (arg) async {
+      if (!mounted) {
+        return;
+      }
       setState(() {});
     });
     eventBus.on("addNewWine", (arg) async {
+      if (!mounted) {
+        return;
+      }
       setState(() {});
     });
     super.initState();

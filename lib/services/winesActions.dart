@@ -91,8 +91,10 @@ class WineActions {
       }
     };
     print(wineSelected.id);
-    _httpService.deleteWine(wineSelectedFormated);
-    Navigator.pop(context);
+    await _httpService.deleteWine(wineSelectedFormated);
+    listAllWines.removeWhere((element) => element.id == wineSelected.id);
+    listTopWines.removeWhere((element) => element.id == wineSelected.id);
+    listFavWines.removeWhere((element) => element.id == wineSelected.id);
     eventBus.emit("deleteWine");
   }
 

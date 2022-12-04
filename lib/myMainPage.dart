@@ -41,7 +41,9 @@ class _MyMainPageState extends State<MyMainPage> {
     print("list top wines:  $listTopWines");
     print(listTopWines.length);
     eventBus.on("deleteWine", (arg) async {
-      setState(() {});
+      setState(() {
+        listTopWines = WineActions.listTopWines;
+      });
     });
     eventBus.on("addInFavoris", (arg) async {
       setState(() {});

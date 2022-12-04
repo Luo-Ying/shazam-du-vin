@@ -157,7 +157,8 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
 
   Widget buildPriceTextField(BuildContext context) {
     return TextFormField(
-      initialValue: wineSelected.price.toString(),
+      initialValue:
+          wineSelected.price != 0 ? wineSelected.price.toString() : "",
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(labelText: 'Price'),
       onChanged: (value) => setState(() => _price = value),

@@ -173,7 +173,8 @@ void showCustomDialog(BuildContext context, Wine wine) {
             ),
             ElevatedButton(
               onPressed: () async {
-                WineActions.deleteWine(context, wine);
+                await WineActions.deleteWine(context, wine);
+                Navigator.pop(context);
               },
               style: const ButtonStyle(
                   backgroundColor:
