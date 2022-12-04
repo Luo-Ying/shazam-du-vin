@@ -74,6 +74,21 @@ class HttpService {
     return res;
   }
 
+  Future<void> addFavorisWine(Map<String, dynamic> userDataUpdated) async {
+    var body = jsonEncode(userDataUpdated);
+    print(body);
+    var res = await http.put(
+      Uri.parse("$BASE_URL/User"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: body,
+    );
+    print(res.statusCode);
+    print(res.body);
+    // return res;
+  }
+
   Future<http.Response> getImg(String imageUrl) async {
     var response = await http.get(Uri.parse(imageUrl));
     return response;

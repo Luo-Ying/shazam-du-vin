@@ -179,9 +179,7 @@ void showCustomDialog(
                     wine.noteGlobale = noteGlobale;
                     // setState(() {});
                     Navigator.pop(context, wine);
-                    eventBus.emit(
-                      "deleteComment",
-                    );
+                    eventBus.emit("deleteComment");
                     // VarGlobal.isCommentUpdated = true;
                     // print("??????");
                     // MyWinePage myWinePage = MyWinePage(wine: wine);

@@ -11,16 +11,35 @@ class HttpResponse {
 
 class User {
   late String _username;
+  late String _password;
   late String _role;
   late VinFav _vinFav;
 
-  User(this._username, this._role, this._vinFav);
+  User(this._username, this._password, this._role, this._vinFav);
 
   VinFav get vinFav => _vinFav;
 
   String get role => _role;
 
   String get username => _username;
+
+  String get password => _password;
+
+  set vinFav(VinFav value) {
+    _vinFav = value;
+  }
+
+  set role(String value) {
+    _role = value;
+  }
+
+  set password(String value) {
+    _password = value;
+  }
+
+  set username(String value) {
+    _username = value;
+  }
 }
 
 class VinFav {

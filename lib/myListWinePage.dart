@@ -38,8 +38,15 @@ class _MyListVinPageState extends State<MyListVinPage> {
   @override
   void initState() {
     eventBus.on("deleteWine", (arg) async {
-      await Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+      setState(() {});
+    });
+    eventBus.on("addInFavoris", (arg) async {
+      print("add !!!!!!!!");
+      setState(() {});
+    });
+    eventBus.on("removeFromFavoris", (arg) async {
+      print("remove!!!!!!!!!!!");
+      setState(() {});
     });
     super.initState();
   }

@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:shazam_du_vin/services/localStorage.dart';
+import 'package:shazam_du_vin/services/var_global.dart';
 
 import '../utils/eventBus.dart';
 import '../utils/models.dart';
@@ -6,10 +10,45 @@ import 'http_service.dart';
 
 late final HttpService _httpService = HttpService();
 
-Future<void> addWineToFavoris(BuildContext context, Wine wineSelected) async {}
+Future<void> addWineToFavoris(BuildContext context, Wine wineSelected) async {
+  print("add in favoris!");
+  var currentUser = await readDataString("currentUser");
+  print(jsonDecode(jsonDecode(currentUser))[0]);
+  List<String> listIdVinFav = [];
+  for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]["value"]) {
+    listIdVinFav.add(item);
+  }
+  var userFormated = {
+    "database": "urbanisation",
+    "collection": "User",
+    "data": {
+      "username": jsonDecode(jsonDecode(currentUser))[0]["username"],
+      "password": jsonDecode(jsonDecode(currentUser))[0]["password"],
+      "role": jsonDecode(jsonDecode(currentUser))[0]["role"],
+      "vinFav": {
+        "value": [
+          for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]
+              ["value"])
+            item,
+          wineSelected.id
+        ]
+      },
+    }
+  };
+  _httpService.addFavorisWine(userFormated);
+  VarGlobal.CURRENTUSER_VINFAV.add(wineSelected.id);
+  eventBus.emit("addInFavoris");
+}
 
 Future<void> removeWineFromFavoris(
-    BuildContext context, Wine wineSelected) async {}
+    BuildContext context, Wine wineSelected) async {
+  print("remove from favoris!");
+  var currentUser = await readDataString("currentUser");
+  print(jsonDecode(jsonDecode(currentUser))[0]);
+
+  VarGlobal.CURRENTUSER_VINFAV.removeWhere((item) => item == wineSelected.id);
+  eventBus.emit("removeFromFavoris");
+}
 
 Future<void> deleteWine(BuildContext context, Wine wineSelected) async {
   var wineSelectedFormated = {
