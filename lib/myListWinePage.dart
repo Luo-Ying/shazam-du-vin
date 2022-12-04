@@ -140,7 +140,7 @@ class _MyListVinPageState extends State<MyListVinPage> {
       width: 150,
       child: ElevatedButton(
         onPressed: () {
-          Wine wine = Wine("", "", "", "", "", "", "", "", -1, []);
+          Wine wine = Wine("", "", "", "", "", "", "", "", -1, 0, "", []);
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
                 MyWineFormPage(wineSelected: wine, isModif: false),

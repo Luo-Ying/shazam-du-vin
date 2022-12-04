@@ -15,6 +15,8 @@ class VarGlobal {
   static String CURRENTUSERNAME = "";
 
   static List<Wine> LISTALLWINES = [];
+  static List<Wine> LISTTOPWINES = [];
+  static List<Wine> LISTFAVWINES = [];
 
   // static bool isCommentUpdated = false;
 }

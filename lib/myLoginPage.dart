@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shazam_du_vin/myMainPage.dart';
+import 'package:shazam_du_vin/services/winesActions.dart';
 
 import 'services/var_global.dart';
 import 'services/http_service.dart';
@@ -247,34 +248,37 @@ class _MyLoginPageState extends State<MyLoginPage> {
     var res = await _httpService.getTopWines();
     var data = jsonDecode(res.body);
     print(data);
+    WineActions.setListWine(2, data);
+    _listTopWines = WineActions.listTopWines;
     // print(data[0]["commentaire"].length);
     // print(data.length);
-    for (int i = 0; i < data.length; i++) {
-      String id = data[i]["id"];
-      String nom = data[i]["nom"];
-      String vignoble = data[i]["vignoble"];
-      String cepage = data[i]["cepage"];
-      String type = data[i]["type"];
-      String annee = data[i]["annee"];
-      String image = data[i]["image"];
-      num noteGlobale = data[i]["noteGlobale"];
-      String description = data[i]["description"];
-      // print(data[i]["commentaire"][0]["userID"]);
-      late List<Commentaire> listCommentaire = [];
-      if (data[i]["commentaire"].length > 0) {
-        for (int j = 0; j < data[i]["commentaire"].length; j++) {
-          String userId = data[i]["commentaire"][j]["username"];
-          print(userId);
-          String text = data[i]["commentaire"][j]["text"];
-          num note = data[i]["commentaire"][j]["note"];
-          int date = data[i]["commentaire"][j]["date"];
-          Commentaire commentaire = Commentaire(userId, text, note, date);
-          listCommentaire.add(commentaire);
-        }
-      }
-      Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
-          description, noteGlobale, listCommentaire);
-      _listTopWines.add(wine);
-    }
+    // for (int i = 0; i < data.length; i++) {
+    //   String id = data[i]["id"];
+    //   String nom = data[i]["nom"];
+    //   String vignoble = data[i]["vignoble"];
+    //   String cepage = data[i]["cepage"];
+    //   String type = data[i]["type"];
+    //   String annee = data[i]["annee"];
+    //   String image = data[i]["image"];
+    //   num noteGlobale = data[i]["noteGlobale"];
+    //   num prix = data[i]["prix"];
+    //   String description = data[i]["description"];
+    //   // print(data[i]["commentaire"][0]["userID"]);
+    //   late List<Commentaire> listCommentaire = [];
+    //   if (data[i]["commentaire"].length > 0) {
+    //     for (int j = 0; j < data[i]["commentaire"].length; j++) {
+    //       String userId = data[i]["commentaire"][j]["username"];
+    //       print(userId);
+    //       String text = data[i]["commentaire"][j]["text"];
+    //       num note = data[i]["commentaire"][j]["note"];
+    //       int date = data[i]["commentaire"][j]["date"];
+    //       Commentaire commentaire = Commentaire(userId, text, note, date);
+    //       listCommentaire.add(commentaire);
+    //     }
+    //   }
+    //   Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
+    //       description, noteGlobale, prix, listCommentaire);
+    //   _listTopWines.add(wine);
+    // }
   }
 }

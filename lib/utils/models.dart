@@ -50,29 +50,6 @@ class VinFav {
   List<String> get value => _value;
 }
 
-class DocumentUser {
-  late String username;
-  late String password;
-  late VinFav vinFav;
-  late String role;
-
-  DocumentUser({
-    required this.username,
-    required this.password,
-    required this.vinFav,
-    required this.role,
-  });
-
-  factory DocumentUser.fromJson(Map<String, dynamic> json) {
-    return DocumentUser(
-      username: json["username"] as String,
-      password: json["password"] as String,
-      vinFav: json["vinFav"] as VinFav,
-      role: json["role"] as String,
-    );
-  }
-}
-
 class Commentaire {
   late String _username;
   late String _text;
@@ -116,6 +93,8 @@ class Wine {
   late String _image;
   late String _description;
   late num _noteGlobale;
+  late num _price;
+  late String _tauxAlcool;
   late List<Commentaire> _listCommentaire;
 
   Wine(
@@ -128,6 +107,8 @@ class Wine {
       this._image,
       this._description,
       this._noteGlobale,
+      this._price,
+      this._tauxAlcool,
       this._listCommentaire);
 
   List<Commentaire> get listCommentaire => _listCommentaire;
@@ -149,6 +130,10 @@ class Wine {
   String get cepage => _cepage;
 
   num get noteGlobale => _noteGlobale;
+
+  num get price => _price;
+
+  String get tauxAlcool => _tauxAlcool;
 
   set listCommentaire(List<Commentaire> value) {
     _listCommentaire = value;
@@ -188,6 +173,14 @@ class Wine {
 
   set noteGlobale(num value) {
     _noteGlobale = value;
+  }
+
+  set price(num value) {
+    _price = value;
+  }
+
+  set tauxAlcool(String value) {
+    _tauxAlcool = value;
   }
 }
 

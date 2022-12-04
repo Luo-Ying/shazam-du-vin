@@ -61,8 +61,8 @@ Widget buildIconActions(BuildContext context, Wine wine, bool isWineFavoris) {
   return IconButton(
       onPressed: () {
         isWineInListFav
-            ? removeWineFromFavoris(context, wine)
-            : addWineToFavoris(context, wine);
+            ? WineActions.removeWineFromFavoris(context, wine)
+            : WineActions.addWineToFavoris(context, wine);
       },
       icon: isWineInListFav
           ? const Icon(
@@ -173,7 +173,7 @@ void showCustomDialog(BuildContext context, Wine wine) {
             ),
             ElevatedButton(
               onPressed: () async {
-                deleteWine(context, wine);
+                WineActions.deleteWine(context, wine);
               },
               style: const ButtonStyle(
                   backgroundColor:
