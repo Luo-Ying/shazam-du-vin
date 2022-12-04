@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shazam_du_vin/services/localStorage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 
@@ -121,3 +123,36 @@ Future<List<Wine>> setListAllWine() async {
   // print(_listAllWine[0].description);
   return listWines;
 }
+
+// Future<http.Response> addNewWineAction(XFile selectedImage, String nom, String vignoble,
+//     String cepage, String type, String annee, String description) async {
+//   File imgFile = File(selectedImage.path);
+//   var res = await _httpService.insertImage(imgFile);
+//   if (res.statusCode == 200) {
+//     var uuid;
+//     var id = uuid.v4();
+//     print(id);
+//     res.stream.transform(utf8.decoder).listen((value) async {
+//       print(value);
+//       var newWine = {
+//         "database": "urbanisation",
+//         "collection": "Vin",
+//         "data": {
+//           "id": id,
+//           "nom": nom,
+//           "vignoble": vignoble,
+//           "cepage": cepage,
+//           "type": type,
+//           "annee": annee,
+//           "image": value,
+//           "description": description,
+//           "noteGlobale": -1,
+//           "commentaire": [],
+//         }
+//       };
+//       var res = await _httpService.addNewWine(newWine);
+//       return res;
+//     });
+//   }
+//   return
+// }

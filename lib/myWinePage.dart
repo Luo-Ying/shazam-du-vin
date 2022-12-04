@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shazam_du_vin/myWineFormPage.dart';
 import 'package:shazam_du_vin/services/localStorage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 import 'package:shazam_du_vin/utils/eventBus.dart';
@@ -555,7 +556,12 @@ class _MyWinePageState extends State<MyWinePage> {
   Widget buildButtonModifAdmin(BuildContext context) {
     return SizedBox(
       child: IconButton(
-          onPressed: () {}, icon: const Icon(Icons.mode_edit_outline_outlined)),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return MyWineFormPage(wineSelected: wine, isModif: true);
+            }));
+          },
+          icon: const Icon(Icons.mode_edit_outline_outlined)),
     );
   }
 

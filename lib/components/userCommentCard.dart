@@ -159,6 +159,15 @@ void showCustomDialog(
             ElevatedButton(
               onPressed: () async {
                 print(commentSelected);
+                num noteGlobale = wine.listCommentaire.length > 1
+                    ? (wine.noteGlobale * wine.listCommentaire.length -
+                            commentSelected.note) /
+                        (wine.listCommentaire.length - 1)
+                    : -1;
+                wine.listCommentaire.removeWhere((item) =>
+                    item.text == commentSelected.text &&
+                    item.date == commentSelected.date);
+                wine.noteGlobale = noteGlobale;
                 var newWineFormated = {
                   "id": wine.id,
                   "nom": wine.nom,
@@ -182,15 +191,6 @@ void showCustomDialog(
                   var res =
                       await _httpService.addOrDeleteComment(newWineFormated);
                   if (res.statusCode == 200) {
-                    num noteGlobale = wine.listCommentaire.length > 1
-                        ? (wine.noteGlobale * wine.listCommentaire.length -
-                                commentSelected.note) /
-                            (wine.listCommentaire.length - 1)
-                        : -1;
-                    wine.listCommentaire.removeWhere((item) =>
-                        item.text == commentSelected.text &&
-                        item.date == commentSelected.date);
-                    wine.noteGlobale = noteGlobale;
                     // setState(() {});
                     Navigator.pop(context, wine);
                     eventBus.emit("deleteComment");
