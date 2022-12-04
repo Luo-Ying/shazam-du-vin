@@ -4,7 +4,9 @@ import 'package:cross_file_image/cross_file_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shazam_du_vin/mySearchWineByImageResultPage.dart';
 import 'package:shazam_du_vin/services/http_service.dart';
+import 'package:shazam_du_vin/utils/models.dart';
 
 class MyImagePickerWidget extends StatefulWidget {
   const MyImagePickerWidget({Key? key, required this.imageSelected})
@@ -24,6 +26,8 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
   _MyImagePickerWidgetState(this.imageSelected);
 
   late final HttpService _httpService = HttpService();
+
+  List<Wine> _listResultWines = [];
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +75,12 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
     if (res.statusCode == 200) {
       res.stream.transform(utf8.decoder).listen((value) async {
         print(value);
+        print(value.runtimeType);
+        await _getListResultWines(value);
+        await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return MySearchWineByImageResultPage(
+              listResultWines: _listResultWines);
+        }));
       });
     }
   }
@@ -89,6 +99,7 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
               backgroundColor: const MaterialStatePropertyAll<Color>(
                   Color.fromRGBO(91, 98, 205, 1))),
           onPressed: () {
+            print("?????????");
             _searchWineByImage();
           },
           child: const Text(
@@ -150,5 +161,39 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> _getListResultWines(String result) async {
+    _listResultWines = [];
+    var data = jsonDecode(result);
+    print(data);
+    for (int i = 0; i < data.length; i++) {
+      String id = data[i]["id"];
+      String nom = data[i]["nom"];
+      String vignoble = data[i]["vignoble"];
+      String cepage = data[i]["cepage"];
+      String type = data[i]["type"];
+      String annee = data[i]["annee"];
+      String image = data[i]["image"];
+      String description = data[i]["description"];
+      // print(data[i]["noteGlobale"]);
+      num noteGlobale = data[i]["noteGlobale"];
+      print(data[i]["commentaire"]);
+      late List<Commentaire> listCommentaire = [];
+      if (data[i]["commentaire"].length > 0) {
+        for (int j = 0; j < data[i]["commentaire"].length; j++) {
+          String username = data[i]["commentaire"][j]["username"];
+          // print(userId);
+          String text = data[i]["commentaire"][j]["text"];
+          num note = data[i]["commentaire"][j]["note"];
+          int date = data[i]["commentaire"][j]["date"];
+          Commentaire commentaire = Commentaire(username, text, note, date);
+          listCommentaire.add(commentaire);
+        }
+      }
+      Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
+          description, noteGlobale, listCommentaire);
+      _listResultWines.add(wine);
+    }
   }
 }

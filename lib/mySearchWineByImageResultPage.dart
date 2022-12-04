@@ -1,31 +1,71 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shazam_du_vin/utils/models.dart';
 
 import 'components/floatingActionButionMenu.dart';
+import 'components/wineCard.dart';
 
 class MySearchWineByImageResultPage extends StatefulWidget {
-  const MySearchWineByImageResultPage({Key? key}) : super(key: key);
+  const MySearchWineByImageResultPage({Key? key, required this.listResultWines})
+      : super(key: key);
+
+  final List<Wine> listResultWines;
 
   @override
-  State<MySearchWineByImageResultPage> createState() =>
-      _MySearchWineByImageResultPageState();
+  _MySearchWineByImageResultPageState createState() {
+    return _MySearchWineByImageResultPageState(listResultWines);
+  }
 }
 
 class _MySearchWineByImageResultPageState
     extends State<MySearchWineByImageResultPage> {
-  var _imgPath;
+  List<Wine> listResultWines;
+
+  _MySearchWineByImageResultPageState(this.listResultWines);
 
   @override
   Widget build(BuildContext context) {
+    print(listResultWines);
+    print(listResultWines.length);
     return Scaffold(
       appBar: buildApBar(context),
       body: Container(
-          // child: builListViewOfListAllWine(context),
-          ),
+        child: buildPageLayoutWidget(context),
+      ),
       floatingActionButton: buildMainMenu(context),
     );
     // body: ;
+  }
+
+  Widget buildPageLayoutWidget(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        const SizedBox(height: 10.0),
+        buildTextNotifNbResult(context),
+        const SizedBox(height: 10.0),
+        builListViewOfListResultWine(context),
+      ],
+    );
+  }
+
+  Widget buildTextNotifNbResult(BuildContext context) {
+    int nbResult = listResultWines.length;
+    return Text("Have $nbResult result similar");
+  }
+
+  Widget builListViewOfListResultWine(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        return SizedBox(
+          // height: 50,
+          child: buildWineCard(
+              context, listResultWines[index], index, true, false, false),
+        );
+      },
+      itemCount: listResultWines.length,
+    );
   }
 
   PreferredSize buildApBar(BuildContext context) {
