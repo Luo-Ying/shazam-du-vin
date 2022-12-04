@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
-import 'package:shazam_du_vin/myImagePickerWidget.dart';
+import 'package:shazam_du_vin/mySearchWineByImageResultPage.dart';
 import 'package:shazam_du_vin/myLoginPage.dart';
+import 'package:shazam_du_vin/utils/eventBus.dart';
 
 import './services/http_service.dart';
 import './services/localStorage.dart';
@@ -37,6 +38,15 @@ class _MyMainPageState extends State<MyMainPage> {
   void initState() {
     print("list top wines:  $listTopWines");
     print(listTopWines.length);
+    eventBus.on("deleteWine", (arg) async {
+      setState(() {});
+    });
+    eventBus.on("addInFavoris", (arg) async {
+      setState(() {});
+    });
+    eventBus.on("removeFromFavoris", (arg) async {
+      setState(() {});
+    });
     super.initState();
   }
 

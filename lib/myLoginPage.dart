@@ -111,7 +111,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 print(jsonDecode(jsonDecode(currentUser)));
                 print(jsonDecode(jsonDecode(currentUser))[0]);
                 for (var item in jsonDecode(jsonDecode(currentUser))[0]
-                    ["vinFav"]["value"]) {
+                    ["vinFav"]) {
                   VarGlobal.CURRENTUSER_VINFAV.add(item);
                 }
                 VarGlobal.CURRENTUSERROLE =

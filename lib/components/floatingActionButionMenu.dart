@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shazam_du_vin/myListWinesFavorites.dart';
 
+import '../mySearchWineByImageResultPage.dart';
 import '../services/http_service.dart';
 
-import '../myImagePickerWidget.dart';
 import '../myListWinePage.dart';
 import '../myLoginPage.dart';
 import '../myMainPage.dart';
@@ -22,6 +23,8 @@ ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 List<Wine> _listAllWines = [];
 List<Wine> _listTopWines = [];
 List<Wine> _listFavWines = [];
+
+var _selectedImage;
 
 Widget buildMainMenu(BuildContext context) {
   return SpeedDial(
@@ -113,10 +116,51 @@ Future<void> logout(BuildContext context) async {
   ));
 }
 
-Future<void> photo_camera(BuildContext context) async {
-  Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => const MyImagePickerWidget(),
-  ));
+Future<Future<int?>> photo_camera(BuildContext context) async {
+  late List<String> options = ["Take a photo", "Select a photo from album"];
+  return showModalBottomSheet<int>(
+    isScrollControlled: false,
+    context: context,
+    builder: (BuildContext context) {
+      return SizedBox(
+        height: 100.0,
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () async {
+                  print(index);
+                  if (index == 0) {
+                    _selectedImage = await ImagePicker()
+                        .pickImage(source: ImageSource.camera);
+                  } else if (index == 1) {
+                    _selectedImage = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                  }
+                  Navigator.pop(context);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const MySearchWineByImageResultPage(),
+                  ));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                ),
+                child: Text(
+                  options[index],
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            );
+          },
+          itemCount: options.length,
+        ),
+      );
+    },
+  );
 }
 
 Future<void> goListVinPage(BuildContext context) async {
@@ -133,9 +177,10 @@ Future<void> goListVinPage(BuildContext context) async {
 
 Future<void> goListFavorisPage(BuildContext context) async {
   String currentUser = await readDataString("currentUser");
-  // print(currentUser);
+  print(currentUser);
   // print(jsonDecode(jsonDecode(currentUser))[0]["username"]);
   String currentUserName = jsonDecode(jsonDecode(currentUser))[0]["username"];
+  print(currentUserName);
   await getListFavWines(currentUserName);
   Navigator.of(context).push(MaterialPageRoute(
     builder: (context) {
@@ -236,7 +281,9 @@ Future<void> getTopWines() async {
 Future<void> getListFavWines(String currentUserName) async {
   _listFavWines = [];
   var res = await _httpService.getFavorisWines(currentUserName);
-  var data = jsonDecode(res.body);
+  // print(res.body);
+  // TODO: 500 pour récupérer la list fav du user!!!!!!
+  var data = jsonDecode(jsonDecode(res.body));
   print(data);
   for (int i = 0; i < data.length; i++) {
     String id = data[i]["id"];
@@ -267,3 +314,42 @@ Future<void> getListFavWines(String currentUserName) async {
     _listFavWines.add(wine);
   }
 }
+
+// void showCustomDialog(BuildContext context) {
+//   // print("position ---- >  " + position.toString());
+//   showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: const Text("Do you want delete ?"),
+//           content: SingleChildScrollView(
+//               child: ListBody(children: [
+//             Text(
+//               wine.nom,
+//               style:
+//                   const TextStyle(fontSize: 25.0, fontWeight: FontWeight.w800),
+//             )
+//           ])),
+//           actions: [
+//             ElevatedButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               style: const ButtonStyle(
+//                   backgroundColor: MaterialStatePropertyAll<Color>(
+//                       Color.fromRGBO(121, 121, 121, 1))),
+//               child: const Text("Cancel"),
+//             ),
+//             ElevatedButton(
+//               onPressed: () async {
+//                 deleteWine(context, wine);
+//               },
+//               style: const ButtonStyle(
+//                   backgroundColor:
+//                       MaterialStatePropertyAll<Color>(Colors.black)),
+//               child: const Text("Confirm"),
+//             ),
+//           ],
+//         );
+//       });
+// }

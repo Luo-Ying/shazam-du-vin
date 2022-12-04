@@ -14,28 +14,25 @@ Future<void> addWineToFavoris(BuildContext context, Wine wineSelected) async {
   print("add in favoris!");
   var currentUser = await readDataString("currentUser");
   print(jsonDecode(jsonDecode(currentUser))[0]);
-  List<String> listIdVinFav = [];
-  for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]["value"]) {
-    listIdVinFav.add(item);
-  }
+  // List<String> listIdVinFav = [];
+  // for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]["value"]) {
+  //   listIdVinFav.add(item);
+  // }
   var userFormated = {
     "database": "urbanisation",
     "collection": "User",
+    "filter": {"username": jsonDecode(jsonDecode(currentUser))[0]["username"]},
     "data": {
       "username": jsonDecode(jsonDecode(currentUser))[0]["username"],
       "password": jsonDecode(jsonDecode(currentUser))[0]["password"],
       "role": jsonDecode(jsonDecode(currentUser))[0]["role"],
-      "vinFav": {
-        "value": [
-          for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]
-              ["value"])
-            item,
-          wineSelected.id
-        ]
-      },
+      "vinFav": [
+        for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]) item,
+        wineSelected.id
+      ]
     }
   };
-  _httpService.addFavorisWine(userFormated);
+  _httpService.addOrRemoveFavorisWine(userFormated);
   VarGlobal.CURRENTUSER_VINFAV.add(wineSelected.id);
   eventBus.emit("addInFavoris");
 }
@@ -45,7 +42,25 @@ Future<void> removeWineFromFavoris(
   print("remove from favoris!");
   var currentUser = await readDataString("currentUser");
   print(jsonDecode(jsonDecode(currentUser))[0]);
-
+  List<String> listIdVinFav = [];
+  for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]) {
+    listIdVinFav.add(item);
+  }
+  var userFormated = {
+    "database": "urbanisation",
+    "collection": "User",
+    "filter": {"username": jsonDecode(jsonDecode(currentUser))[0]["username"]},
+    "data": {
+      "username": jsonDecode(jsonDecode(currentUser))[0]["username"],
+      "password": jsonDecode(jsonDecode(currentUser))[0]["password"],
+      "role": jsonDecode(jsonDecode(currentUser))[0]["role"],
+      "vinFav": [
+        for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"])
+          if (item != wineSelected.id) item
+      ]
+    }
+  };
+  _httpService.addOrRemoveFavorisWine(userFormated);
   VarGlobal.CURRENTUSER_VINFAV.removeWhere((item) => item == wineSelected.id);
   eventBus.emit("removeFromFavoris");
 }

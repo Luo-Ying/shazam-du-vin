@@ -67,14 +67,19 @@ class HttpService {
   }
 
   Future<http.Response> getFavorisWines(String username) async {
+    print("username??????????? $username");
     final res = await http.get(
       Uri.parse("$BASE_URL/favVin?username=$username"),
       headers: {"Content-Type": "application/json"},
     );
+    print("nique ta mère?????????");
+    print(res.statusCode);
+    print(res.body);
     return res;
   }
 
-  Future<void> addFavorisWine(Map<String, dynamic> userDataUpdated) async {
+  Future<void> addOrRemoveFavorisWine(
+      Map<String, dynamic> userDataUpdated) async {
     var body = jsonEncode(userDataUpdated);
     print(body);
     var res = await http.put(

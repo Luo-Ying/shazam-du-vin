@@ -41,11 +41,9 @@ class _MyListVinPageState extends State<MyListVinPage> {
       setState(() {});
     });
     eventBus.on("addInFavoris", (arg) async {
-      print("add !!!!!!!!");
       setState(() {});
     });
     eventBus.on("removeFromFavoris", (arg) async {
-      print("remove!!!!!!!!!!!");
       setState(() {});
     });
     super.initState();
