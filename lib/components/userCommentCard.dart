@@ -62,6 +62,8 @@ Widget sizeBoxOfUserNameAndRating(
     child: Row(
       children: [
         buildUserName(context, commentaire),
+        if (VarGlobal.CURRENTUSERNAME == commentaire.username)
+          buildTextToShowUserCurrent(context, commentaire),
         const SizedBox(width: 10.0),
         buildRatingStar(context, commentaire),
       ],
@@ -76,6 +78,18 @@ Widget buildUserName(BuildContext context, Commentaire commentaire) {
       fontSize: 15.0,
       fontWeight: FontWeight.w800,
       color: Color.fromRGBO(142, 4, 100, 1),
+    ),
+  );
+}
+
+Widget buildTextToShowUserCurrent(
+    BuildContext context, Commentaire commentaire) {
+  return const Text(
+    "(you)",
+    style: TextStyle(
+      fontSize: 15.0,
+      fontWeight: FontWeight.w800,
+      color: Color.fromRGBO(180, 180, 180, 1),
     ),
   );
 }

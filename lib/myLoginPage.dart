@@ -116,6 +116,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 }
                 VarGlobal.CURRENTUSERROLE =
                     jsonDecode(jsonDecode(currentUser))[0]["role"];
+                VarGlobal.CURRENTUSERNAME =
+                    jsonDecode(jsonDecode(currentUser))[0]["username"];
                 // TODO: verifier initialisation du CURRENTUSERROLE du VarGlobal en récupérant role du currentuser stoké dans le fichier
                 // VarGlobal.CURRENTUSERROLE = "admin";
                 // Navigator.of(context).push(MaterialPageRoute(
