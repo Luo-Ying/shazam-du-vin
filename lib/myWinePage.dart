@@ -379,6 +379,7 @@ class _MyWinePageState extends State<MyWinePage> {
   }
 
   Widget buildFormWineInfo(BuildContext context) {
+    String price = wine.price.toString();
     return Column(
       children: [
         buildWineInfoText(context, "name : ", wine.nom),
@@ -390,6 +391,10 @@ class _MyWinePageState extends State<MyWinePage> {
         buildWineInfoText(context, "type : ", wine.type),
         buildLineSeparate(context),
         buildWineInfoText(context, "year : ", wine.annee),
+        buildLineSeparate(context),
+        buildWineInfoText(context, "alcool percent : ", wine.tauxAlcool),
+        buildLineSeparate(context),
+        buildWineInfoText(context, "price : ", "$price euro"),
         buildLineSeparate(context),
       ],
     );
