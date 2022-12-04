@@ -112,7 +112,7 @@ Future<void> logout(BuildContext context) async {
   deleteData("currentUser");
   String result1 = await readDataString("currentUser");
   print("result apprès suprimé: " + result1);
-  Navigator.of(context).push(MaterialPageRoute(
+  Navigator.of(context).pushReplacement(MaterialPageRoute(
     builder: (context) => const MyLoginPage(title: "login"),
   ));
 }
@@ -139,14 +139,16 @@ Future<Future<int?>> photo_camera(BuildContext context) async {
                     _selectedImage = await ImagePicker()
                         .pickImage(source: ImageSource.gallery);
                   }
-                  Navigator.pop(context);
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return MyImagePickerWidget(
-                        imageSelected: _selectedImage,
-                      );
-                    },
-                  ));
+                  // Navigator.pop(context);
+                  if (_selectedImage != null) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) {
+                        return MyImagePickerWidget(
+                          imageSelected: _selectedImage,
+                        );
+                      },
+                    ));
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -171,7 +173,7 @@ Future<Future<int?>> photo_camera(BuildContext context) async {
 Future<void> goListVinPage(BuildContext context) async {
   await getListAllWine();
   print("list alla wines: $_listAllWines");
-  Navigator.of(context).push(MaterialPageRoute(
+  Navigator.of(context).pushReplacement(MaterialPageRoute(
     builder: (context) {
       return MyListVinPage(
         listAllWines: _listAllWines,
@@ -187,7 +189,7 @@ Future<void> goListFavorisPage(BuildContext context) async {
   String currentUserName = jsonDecode(jsonDecode(currentUser))[0]["username"];
   print(currentUserName);
   await getListFavWines(currentUserName);
-  Navigator.of(context).push(MaterialPageRoute(
+  Navigator.of(context).pushReplacement(MaterialPageRoute(
     builder: (context) {
       return MyListWinesFavorites(
         listWinesFavorites: _listFavWines,
@@ -199,7 +201,7 @@ Future<void> goListFavorisPage(BuildContext context) async {
 Future<void> goHome(BuildContext context) async {
   await getTopWines();
   print("coucou! $_listTopWines");
-  Navigator.of(context).push(MaterialPageRoute(
+  Navigator.of(context).pushReplacement(MaterialPageRoute(
     builder: (context) {
       return MyMainPage(
         title: 'main',

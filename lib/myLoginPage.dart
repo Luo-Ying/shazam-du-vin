@@ -127,7 +127,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 // ));
                 await getWines();
                 print("coucou! $_listTopWines");
-                Navigator.of(context).push(MaterialPageRoute(
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) {
                     return MyMainPage(
                       title: 'main',

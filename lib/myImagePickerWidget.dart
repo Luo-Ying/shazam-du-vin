@@ -77,7 +77,8 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
         print(value);
         print(value.runtimeType);
         await _getListResultWines(value);
-        await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        await Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) {
           return MySearchWineByImageResultPage(
               listResultWines: _listResultWines);
         }));

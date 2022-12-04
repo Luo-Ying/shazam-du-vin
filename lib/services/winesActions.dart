@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shazam_du_vin/myListWinePage.dart';
 import 'package:shazam_du_vin/services/localStorage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 
@@ -11,6 +13,8 @@ import '../utils/models.dart';
 import 'http_service.dart';
 
 late final HttpService _httpService = HttpService();
+
+List<Wine> _listAllWines = [];
 
 Future<void> addWineToFavoris(BuildContext context, Wine wineSelected) async {
   print("add in favoris!");
@@ -77,16 +81,12 @@ Future<void> deleteWine(BuildContext context, Wine wineSelected) async {
   };
   print(wineSelected.id);
   _httpService.deleteWine(wineSelectedFormated);
-  // Navigator.pop(context);
-  // eventBus.emit("deleteWine");
   Navigator.pop(context);
-  eventBus.emit("deleteWine");
-  // if (res.statusCode == 200) {
-  // }
+  eventBus.emit("deleteWine ");
 }
 
-Future<List<Wine>> setListAllWine() async {
-  List<Wine> listWines = [];
+Future<void> setListAllWine() async {
+  _listAllWines = [];
   var res = await _httpService.geAllWines();
   // print(jsonDecode(res.body));
   // print(jsonDecode(res.body).length);
@@ -117,11 +117,11 @@ Future<List<Wine>> setListAllWine() async {
     }
     Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
         noteGlobale, listCommentaire);
-    listWines.add(wine);
+    _listAllWines.add(wine);
     VarGlobal.LISTALLWINES.add(wine);
   }
   // print(_listAllWine[0].description);
-  return listWines;
+  // return listWines;
 }
 
 // Future<http.Response> addNewWineAction(XFile selectedImage, String nom, String vignoble,

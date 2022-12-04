@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shazam_du_vin/myListWinePage.dart';
+import 'package:shazam_du_vin/utils/eventBus.dart';
 import 'package:uuid/uuid.dart';
 
 import './services/http_service.dart';
@@ -64,13 +65,20 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
   Future<void> goPageListAllWines() async {
     await setListAllWine();
     print("list alla wines: $_listAllWines");
-    Navigator.of(context).push(MaterialPageRoute(
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) {
         return MyListVinPage(
           listAllWines: _listAllWines,
         );
       },
     ));
+    // Navigator.pushAndRemoveUntil(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (context) => MyListVinPage(
+    //           listAllWines: _listAllWines,
+    //         )),
+    //         (route) => route == null);
   }
 
   // @override
@@ -229,6 +237,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               textColor: Colors.white,
               fontSize: 16.0,
             );
+            eventBus.emit("addNewWine");
             // Navigator.pop(context, _listAllWines);
           }
         });

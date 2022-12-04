@@ -54,14 +54,14 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
           onPressed: () async {
             await setListAllWine();
             print("list alla wines: $_listAllWines");
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) {
-                return MyListVinPage(
-                  listAllWines: _listAllWines,
-                );
-              },
-            ));
-            // Navigator.pop(context, true);
+            // await Navigator.pushAndRemoveUntil(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => MyListVinPage(
+            //               listAllWines: _listAllWines,
+            //             )),
+            //     (route) => route == null);
+            Navigator.pop(context);
           },
         ),
       ),
