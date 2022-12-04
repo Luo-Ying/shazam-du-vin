@@ -12,6 +12,7 @@ import './services/http_service.dart';
 import 'components/fluttertoast.dart';
 import '../utils/models.dart';
 
+import 'myWinePage.dart';
 import 'services/var_global.dart';
 
 class MyWineFormPage extends StatefulWidget {
@@ -42,6 +43,8 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
 
   final ValueNotifier<bool> _isHaveImgFront = ValueNotifier(false);
 
+  String imagePath = "";
+
   var _selectedImage;
   // var _imgBackPath;
   late String _nom;
@@ -70,10 +73,24 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     ));
   }
 
+  // @override
+  // void initState() {
+  //   isModif ? ValueNotifier(true) : ValueNotifier(false);
+  //   print("is modif ? $isModif");
+  //   bool value = _isHaveImgFront.value;
+  //   print("is have image front ? $value");
+  //   super.initState();
+  // }
+
   @override
   Widget build(BuildContext context) {
     print("isModif ? $isModif");
     print("wine selected : $wineSelected");
+    imagePath = wineSelected.image;
+    imagePath != ""
+        ? _isHaveImgFront.value = true
+        : _isHaveImgFront.value = false;
+    print(imagePath);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -230,49 +247,66 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       print("Description : $_description");
       print("Image : $_selectedImage");
       // Image imgFile = Image.file(File(_selectedImage!.path));
-      print(_selectedImage.path.runtimeType);
-      File imgFile = File(_selectedImage.path);
-      var res = await _httpService.insertImage(imgFile);
+      // print(_selectedImage.path.runtimeType);
+      String imgFilePath = "";
+      if (_selectedImage != null) {
+        File imgFile = File(_selectedImage.path);
+        var resImage = await _httpService.insertImage(imgFile);
+        if (resImage.statusCode == 200) {
+          resImage.stream.transform(utf8.decoder).listen((value) async {
+            print(value);
+            imgFilePath = value;
+          });
+        }
+      } else {
+        imgFilePath = wineSelected.image;
+      }
+      print(imgFilePath);
+      var newWineFormated = {
+        "id": wineSelected.id,
+        "nom": _nom,
+        "vignoble": _vignoble,
+        "cepage": _cepage,
+        "type": _type,
+        "annee": _annee,
+        "image": imgFilePath,
+        "description": _description,
+        "commentaire": [
+          for (var item in wineSelected.listCommentaire)
+            {
+              "username": item.username,
+              "text": item.text,
+              "note": item.note,
+              "date": item.date
+            },
+        ]
+      };
+      print(newWineFormated);
+      var res = await _httpService.modifWine(newWineFormated);
       if (res.statusCode == 200) {
-        var id = uuid.v4();
-        print(id);
-        res.stream.transform(utf8.decoder).listen((value) async {
-          print(value);
-          var newWine = {
-            "database": "urbanisation",
-            "collection": "Vin",
-            "data": {
-              "id": id,
-              "nom": _nom,
-              "vignoble": _vignoble,
-              "cepage": _cepage,
-              "type": _type,
-              "annee": _annee,
-              "image": value,
-              "description": _description,
-              "noteGlobale": -1,
-              "commentaire": [],
-            }
-          };
-          var res = await _httpService.addNewWine(newWine);
-          if (res.statusCode == 200) {
-            // await setListAllWine();
-            (_formKey.currentState as FormState).reset();
-            _selectedImage = null;
-            _isHaveImgFront.value = false;
-            FocusScope.of(context).requestFocus(FocusNode());
-            Fluttertoast.showToast(
-              msg: VarGlobal.TOASTMESSAGE,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.black45,
-              textColor: Colors.white,
-              fontSize: 16.0,
-            );
-            // Navigator.pop(context, _listAllWines);
-          }
-        });
+        // await setListAllWine();
+        // (_formKey.currentState as FormState).reset();
+        wineSelected.nom = _nom;
+        wineSelected.vignoble = _vignoble;
+        wineSelected.cepage = _cepage;
+        wineSelected.type = _type;
+        wineSelected.annee = _annee;
+        wineSelected.image = imagePath;
+        wineSelected.description = _description;
+        Fluttertoast.showToast(
+          msg: VarGlobal.TOASTMESSAGE,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.black45,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) {
+            return MyWinePage(wine: wineSelected);
+          },
+        ));
       }
     }
   }
@@ -291,7 +325,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
           child: Text(isModif ? 'Confirm' : 'Add',
               style: Theme.of(context).primaryTextTheme.headline5),
           onPressed: () async {
-            addNewWine();
+            isModif ? updateModifWine() : addNewWine();
           },
         ),
       ),
@@ -300,9 +334,11 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
 
   Widget buildWineDescriptionTextField(BuildContext context) {
     return TextFormField(
+      initialValue: wineSelected.description,
       keyboardType: TextInputType.multiline,
       maxLines: null,
       decoration: const InputDecoration(labelText: 'Description'),
+      onChanged: (value) => setState(() => _description = value),
       onSaved: (v) => _description = v!,
       validator: (v) {
         if (v!.isEmpty) {
@@ -314,6 +350,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
 
   Widget buildYearTextField(BuildContext context) {
     return TextFormField(
+      initialValue: wineSelected.annee,
       decoration: const InputDecoration(labelText: 'Year'),
       onSaved: (v) => _annee = v!,
       validator: (v) {
@@ -326,6 +363,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
 
   Widget buildWineTypeTextField(BuildContext context) {
     return TextFormField(
+      initialValue: wineSelected.type,
       decoration: const InputDecoration(labelText: 'Type'),
       onSaved: (v) => _type = v!,
       validator: (v) {
@@ -338,6 +376,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
 
   Widget buildGrapvarietyTextField(BuildContext context) {
     return TextFormField(
+      initialValue: wineSelected.cepage,
       decoration: const InputDecoration(labelText: 'Grap variety'),
       onSaved: (v) => _cepage = v!,
       validator: (v) {
@@ -350,6 +389,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
 
   Widget buildVineyardTextField(BuildContext context) {
     return TextFormField(
+      initialValue: wineSelected.vignoble,
       decoration: const InputDecoration(labelText: 'Vineyard'),
       onSaved: (v) => _vignoble = v!,
       validator: (v) {
@@ -362,6 +402,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
 
   Widget buildWineNameTextField() {
     return TextFormField(
+      initialValue: wineSelected.nom,
       decoration: const InputDecoration(labelText: 'Wine name'),
       onSaved: (v) => _nom = v!,
       validator: (v) {
@@ -395,9 +436,12 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
                       builder:
                           (BuildContext context, bool value, Widget? child) {
                         return Container(
-                          child: _selectedImage == null
-                              ? buildButtonToAddImgFront(context)
-                              : buildShowImageFrontReview(context),
+                          // child: _selectedImage == null
+                          //     ? buildButtonToAddImgFront(context)
+                          //     : buildShowImageFrontReview(context),
+                          child: imagePath != "" || _selectedImage != null
+                              ? buildShowImageFrontReview(context)
+                              : buildButtonToAddImgFront(context),
                         );
                       }),
                 ),
@@ -414,7 +458,9 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       children: [
         Align(
           alignment: Alignment.center,
-          child: Image(image: XFileImage(_selectedImage)),
+          child: _selectedImage == null
+              ? Image.network(wineSelected.image)
+              : Image(image: XFileImage(_selectedImage)),
         ),
         Align(
           alignment: const Alignment(0, 0.9),
@@ -424,6 +470,8 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               onPressed: () {
                 _selectedImage = null;
                 _isHaveImgFront.value = false;
+                imagePath = "";
+                print(imagePath);
                 print(_selectedImage);
               },
               style: ButtonStyle(
@@ -529,11 +577,11 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
   }
 
   Widget buildTitle() {
-    return const Padding(
-      padding: EdgeInsets.only(left: 1.0, top: 0.0, bottom: 8.0),
+    return Padding(
+      padding: const EdgeInsets.only(left: 1.0, top: 0.0, bottom: 8.0),
       child: Text(
-        'Add new Wines',
-        style: TextStyle(
+        isModif ? wineSelected.nom : 'Add new Wines',
+        style: const TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w500,
         ),

@@ -172,7 +172,7 @@ class HttpService {
     return res;
   }
 
-  Future<http.Response> addOrDeleteComment(Map<String, dynamic> newWine) async {
+  Future<http.Response> updateWine(Map<String, dynamic> newWine) async {
     var body = jsonEncode(newWine);
     print(body);
     var res = await http.put(
@@ -184,6 +184,26 @@ class HttpService {
     );
     print(res.statusCode);
     print(res.body);
+    return res;
+  }
+
+  Future<http.Response> addOrDeleteComment(Map<String, dynamic> newWine) async {
+    var res = await updateWine(newWine);
+    if (res.statusCode == 200) {
+      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Status"];
+    } else {
+      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Error"];
+    }
+    return res;
+  }
+
+  Future<http.Response> modifWine(Map<String, dynamic> newWine) async {
+    var res = await updateWine(newWine);
+    if (res.statusCode == 200) {
+      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Status"];
+    } else {
+      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Error"];
+    }
     return res;
   }
 }
