@@ -49,7 +49,7 @@ Widget buildMainMenu(BuildContext context) {
           color: Colors.white,
         ),
         backgroundColor: Colors.black,
-        label: 'camera',
+        label: 'scan a bottle',
         labelStyle: const TextStyle(fontSize: 16.0),
         onTap: () {
           // isDialOpen.value = false;
@@ -88,7 +88,7 @@ Widget buildMainMenu(BuildContext context) {
           color: Colors.white,
         ),
         backgroundColor: Colors.black,
-        label: 'home',
+        label: 'top 10 wines',
         labelStyle: const TextStyle(fontSize: 16.0),
         onTap: () {
           // isDialOpen.value = false;
@@ -217,40 +217,6 @@ Future<void> getListAllWine() async {
   var res = await _httpService.geAllWines();
   WineActions.setListWine(1, jsonDecode(res.body));
   _listAllWines = WineActions.listAllWines;
-  // print(jsonDecode(res.body));
-  // print(jsonDecode(res.body).length);
-  // for (var item in jsonDecode(res.body)) {
-  //   print(item);
-  //   String id = item["id"];
-  //   String nom = item["nom"];
-  //   String vignoble = item["vignoble"];
-  //   String cepage = item["cepage"];
-  //   String type = item["type"];
-  //   String annee = item["annee"];
-  //   String image = item["image"];
-  //   String description = item["description"];
-  //   num prix = item["prix"];
-  //   print(item["noteGlobale"]);
-  //   num noteGlobale = item["noteGlobale"];
-  //   // print(data[i]["commentaire"][0]["userID"]);
-  //   late List<Commentaire> listCommentaire = [];
-  //   if (item["commentaire"].length > 0) {
-  //     for (int j = 0; j < item["commentaire"].length; j++) {
-  //       String username = item["commentaire"][j]["username"];
-  //       // print(userId);
-  //       String text = item["commentaire"][j]["text"];
-  //       num note = item["commentaire"][j]["note"];
-  //       int date = item["commentaire"][j]["date"];
-  //       Commentaire commentaire = Commentaire(username, text, note, date);
-  //       listCommentaire.add(commentaire);
-  //     }
-  //   }
-  //   Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
-  //       noteGlobale, prix, listCommentaire);
-  //   _listAllWines.add(wine);
-  //   VarGlobal.LISTALLWINES.add(wine);
-  // }
-  // print(_listAllWine[0].description);
 }
 
 Future<void> getTopWines() async {
@@ -259,37 +225,6 @@ Future<void> getTopWines() async {
   var data = jsonDecode(res.body);
   WineActions.setListWine(2, data);
   _listTopWines = WineActions.listTopWines;
-  // print(data);
-  // print(data[0]["commentaire"].length);
-  // print(data.length);
-  // for (int i = 0; i < data.length; i++) {
-  //   String id = data[i]["id"];
-  //   String nom = data[i]["nom"];
-  //   String vignoble = data[i]["vignoble"];
-  //   String cepage = data[i]["cepage"];
-  //   String type = data[i]["type"];
-  //   String annee = data[i]["annee"];
-  //   String image = data[i]["image"];
-  //   String description = data[i]["description"];
-  //   print(data[i]["noteGlobale"]);
-  //   num noteGlobale = data[i]["noteGlobale"];
-  //   num prix = data[i]["prix"];
-  //   print(data[i]["commentaire"]);
-  //   late List<Commentaire> listCommentaire = [];
-  //   if (data[i]["commentaire"].length > 0) {
-  //     for (int j = 0; j < data[i]["commentaire"].length; j++) {
-  //       String username = data[i]["commentaire"][j]["username"];
-  //       String text = data[i]["commentaire"][j]["text"];
-  //       num note = data[i]["commentaire"][j]["note"];
-  //       int date = data[i]["commentaire"][j]["date"];
-  //       Commentaire commentaire = Commentaire(username, text, note, date);
-  //       listCommentaire.add(commentaire);
-  //     }
-  //   }
-  //   Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
-  //       noteGlobale, prix, listCommentaire);
-  //   _listTopWines.add(wine);
-  // }
 }
 
 Future<void> getListFavWines(String currentUserName) async {
@@ -300,72 +235,4 @@ Future<void> getListFavWines(String currentUserName) async {
   WineActions.setListWine(3, data);
   _listFavWines = WineActions.listFavWines;
   print(data);
-  // for (int i = 0; i < data.length; i++) {
-  //   String id = data[i]["id"];
-  //   String nom = data[i]["nom"];
-  //   String vignoble = data[i]["vignoble"];
-  //   String cepage = data[i]["cepage"];
-  //   String type = data[i]["type"];
-  //   String annee = data[i]["annee"];
-  //   String image = data[i]["image"];
-  //   String description = data[i]["description"];
-  //   // print(data[i]["noteGlobale"]);
-  //   num noteGlobale = data[i]["noteGlobale"];
-  //   num prix = data[i]["prix"];
-  //   print(data[i]["commentaire"]);
-  //   late List<Commentaire> listCommentaire = [];
-  //   if (data[i]["commentaire"].length > 0) {
-  //     for (int j = 0; j < data[i]["commentaire"].length; j++) {
-  //       String username = data[i]["commentaire"][j]["username"];
-  //       // print(userId);
-  //       String text = data[i]["commentaire"][j]["text"];
-  //       num note = data[i]["commentaire"][j]["note"];
-  //       int date = data[i]["commentaire"][j]["date"];
-  //       Commentaire commentaire = Commentaire(username, text, note, date);
-  //       listCommentaire.add(commentaire);
-  //     }
-  //   }
-  //   Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image, description,
-  //       noteGlobale, prix, listCommentaire);
-  //   _listFavWines.add(wine);
-  // }
 }
-
-// void showCustomDialog(BuildContext context) {
-//   // print("position ---- >  " + position.toString());
-//   showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: const Text("Do you want delete ?"),
-//           content: SingleChildScrollView(
-//               child: ListBody(children: [
-//             Text(
-//               wine.nom,
-//               style:
-//                   const TextStyle(fontSize: 25.0, fontWeight: FontWeight.w800),
-//             )
-//           ])),
-//           actions: [
-//             ElevatedButton(
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//               style: const ButtonStyle(
-//                   backgroundColor: MaterialStatePropertyAll<Color>(
-//                       Color.fromRGBO(121, 121, 121, 1))),
-//               child: const Text("Cancel"),
-//             ),
-//             ElevatedButton(
-//               onPressed: () async {
-//                 deleteWine(context, wine);
-//               },
-//               style: const ButtonStyle(
-//                   backgroundColor:
-//                       MaterialStatePropertyAll<Color>(Colors.black)),
-//               child: const Text("Confirm"),
-//             ),
-//           ],
-//         );
-//       });
-// }

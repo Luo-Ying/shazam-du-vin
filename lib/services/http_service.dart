@@ -112,6 +112,11 @@ class HttpService {
     print(res.statusCode);
     print(res.body);
     // return res;
+    if (res.statusCode == 200) {
+      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Status"];
+    } else {
+      VarGlobal.TOASTMESSAGE = jsonDecode(res.body)["Error"];
+    }
   }
 
   Future<http.Response> getImg(String imageUrl) async {

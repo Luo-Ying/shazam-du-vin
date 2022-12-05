@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shazam_du_vin/services/winesActions.dart';
+import 'package:shazam_du_vin/utils/eventBus.dart';
 
 import 'components/floatingActionButionMenu.dart';
 import 'components/wineCard.dart';
@@ -21,6 +23,27 @@ class _MyListWinesFavoritesState extends State<MyListWinesFavorites> {
   List<Wine> listWinesFavorites;
 
   _MyListWinesFavoritesState(this.listWinesFavorites);
+
+  @override
+  void initState() {
+    eventBus.on("addInFavoris", (arg) async {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        listWinesFavorites = WineActions.listFavWines;
+      });
+    });
+    eventBus.on("removeFromFavoris", (arg) async {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        listWinesFavorites = WineActions.listFavWines;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

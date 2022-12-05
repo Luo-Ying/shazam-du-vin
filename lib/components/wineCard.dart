@@ -10,6 +10,7 @@ import '../services/localStorage.dart';
 import '../services/winesActions.dart';
 import '../utils/eventBus.dart';
 import '../utils/models.dart';
+import 'fluttertoast.dart';
 
 late final HttpService _httpService = HttpService();
 
@@ -63,6 +64,16 @@ Widget buildIconActions(BuildContext context, Wine wine, bool isWineFavoris) {
         isWineInListFav
             ? WineActions.removeWineFromFavoris(context, wine)
             : WineActions.addWineToFavoris(context, wine);
+
+        Fluttertoast.showToast(
+          msg: VarGlobal.TOASTMESSAGE,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.black45,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       },
       icon: isWineInListFav
           ? const Icon(
@@ -175,6 +186,15 @@ void showCustomDialog(BuildContext context, Wine wine) {
               onPressed: () async {
                 await WineActions.deleteWine(context, wine);
                 Navigator.pop(context);
+                Fluttertoast.showToast(
+                  msg: VarGlobal.TOASTMESSAGE,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2,
+                  backgroundColor: Colors.black45,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
               },
               style: const ButtonStyle(
                   backgroundColor:

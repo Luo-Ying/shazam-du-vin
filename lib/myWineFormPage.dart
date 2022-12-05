@@ -587,6 +587,8 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         wineSelected.type = _type;
         wineSelected.annee = _annee;
         wineSelected.image = imagePath;
+        wineSelected.tauxAlcool = _tauxAlcool;
+        wineSelected.price = num.parse(_price);
         wineSelected.description = _description;
         Fluttertoast.showToast(
           msg: VarGlobal.TOASTMESSAGE,
