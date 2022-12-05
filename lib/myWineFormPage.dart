@@ -471,14 +471,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
   Future<void> addNewWine() async {
     if ((_formKey.currentState as FormState).validate()) {
       (_formKey.currentState as FormState).save();
-      // print("Name : $_nom");
-      // print("Vignoble : $_vignoble");
-      // print("Ceppage : $_cepage");
-      // print("Type : $_type");
-      // print("Annee : $_annee");
-      // print("Description : $_description");
-      // print("Image : $_selectedImage");
-      // Image imgFile = Image.file(File(_selectedImage!.path));
       print(_selectedImage.path.runtimeType);
       File imgFile = File(_selectedImage.path);
       var res = await _httpService.insertImage(imgFile);
@@ -590,6 +582,9 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         wineSelected.tauxAlcool = _tauxAlcool;
         wineSelected.price = num.parse(_price);
         wineSelected.description = _description;
+        WineActions.updatedWine = wineSelected;
+        eventBus.emit("modifedWine");
+        Navigator.pop(context);
         Fluttertoast.showToast(
           msg: VarGlobal.TOASTMESSAGE,
           toastLength: Toast.LENGTH_SHORT,
@@ -599,11 +594,11 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) {
-            return MyWinePage(wine: wineSelected);
-          },
-        ));
+        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //   builder: (context) {
+        //     return MyWinePage(wine: wineSelected);
+        //   },
+        // ));
       }
     }
   }

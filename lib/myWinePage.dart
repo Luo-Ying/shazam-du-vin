@@ -6,6 +6,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shazam_du_vin/myWineFormPage.dart';
 import 'package:shazam_du_vin/services/localStorage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
+import 'package:shazam_du_vin/services/winesActions.dart';
 import 'package:shazam_du_vin/utils/eventBus.dart';
 
 import 'services/http_service.dart';
@@ -49,6 +50,9 @@ class _MyWinePageState extends State<MyWinePage> {
     // });
     eventBus.on("deleteComment", (arg) {
       setState(() {});
+    });
+    eventBus.on("modifedWine", (arg) {
+      wine = WineActions.updatedWine;
     });
     super.initState();
   }

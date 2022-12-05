@@ -19,6 +19,7 @@ class WineActions {
   static List<Wine> listTopWines = [];
   static List<Wine> listFavWines = [];
   static List<Wine> listWines = [];
+  static Wine updatedWine = {} as Wine;
 
   static Future<void> addWineToFavoris(
       BuildContext context, Wine wineSelected) async {
