@@ -113,10 +113,16 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 print(jsonDecode(currentUser));
                 print(jsonDecode(jsonDecode(currentUser)));
                 print(jsonDecode(jsonDecode(currentUser))[0]);
-                for (var item in jsonDecode(jsonDecode(currentUser))[0]
-                    ["vinFav"]) {
-                  VarGlobal.CURRENTUSER_VINFAV.add(item);
+                VarGlobal.CURRENTUSER_VINFAV = [];
+                if (jsonDecode(jsonDecode(currentUser))[0]["vinFav"].length >
+                    0) {
+                  for (var item in jsonDecode(jsonDecode(currentUser))[0]
+                      ["vinFav"]) {
+                    VarGlobal.CURRENTUSER_VINFAV.add(item);
+                  }
                 }
+                var favVin = VarGlobal.CURRENTUSER_VINFAV;
+                print("var globale currentuser vinfav : $favVin");
                 VarGlobal.CURRENTUSERROLE =
                     jsonDecode(jsonDecode(currentUser))[0]["role"];
                 VarGlobal.CURRENTUSERNAME =

@@ -49,7 +49,9 @@ class _MyWinePageState extends State<MyWinePage> {
     //       MaterialPageRoute(builder: (BuildContext context) => super.widget));
     // });
     eventBus.on("deleteComment", (arg) {
-      setState(() {});
+      setState(() {
+        // wine = WineActions.updatedWine;
+      });
     });
     eventBus.on("modifedWine", (arg) {
       wine = WineActions.updatedWine;
@@ -232,6 +234,9 @@ class _MyWinePageState extends State<MyWinePage> {
                     _saveRating,
                     myTimeStamp));
                 wine.noteGlobale = noteGlobale;
+                var res = await _httpService.getTopWines();
+                WineActions.setListWine(2, jsonDecode(res.body));
+                eventBus.emit("addComment");
                 (_formKey.currentState as FormState).reset();
                 Navigator.pop(context);
                 setState(() {});

@@ -217,4 +217,9 @@ class HttpService {
     }
     return res;
   }
+
+  Future<http.Response> getWineById(String id) async {
+    var response = await http.get(Uri.parse("$BASE_URL/Vin?$id"));
+    return response;
+  }
 }

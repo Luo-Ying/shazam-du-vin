@@ -30,6 +30,8 @@ class WineActions {
     // for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]["value"]) {
     //   listIdVinFav.add(item);
     // }
+    VarGlobal.CURRENTUSER_VINFAV.add(wineSelected.id);
+    print(VarGlobal.CURRENTUSER_VINFAV);
     var userFormated = {
       "database": "urbanisation",
       "collection": "User",
@@ -40,16 +42,12 @@ class WineActions {
         "username": jsonDecode(jsonDecode(currentUser))[0]["username"],
         "password": jsonDecode(jsonDecode(currentUser))[0]["password"],
         "role": jsonDecode(jsonDecode(currentUser))[0]["role"],
-        "vinFav": [
-          for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"])
-            item,
-          wineSelected.id
-        ]
+        "vinFav": [for (var item in VarGlobal.CURRENTUSER_VINFAV) item]
       }
     };
     await _httpService.addOrRemoveFavorisWine(userFormated);
-    VarGlobal.CURRENTUSER_VINFAV.add(wineSelected.id);
-    listFavWines.add(wineSelected);
+    // VarGlobal.CURRENTUSER_VINFAV.add(wineSelected.id);
+    // listFavWines.add(wineSelected);
     eventBus.emit("addInFavoris");
   }
 
@@ -58,10 +56,11 @@ class WineActions {
     print("remove from favoris!");
     var currentUser = await readDataString("currentUser");
     print(jsonDecode(jsonDecode(currentUser))[0]);
-    List<String> listIdVinFav = [];
-    for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]) {
-      listIdVinFav.add(item);
-    }
+    // List<String> listIdVinFav = [];
+    // for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]) {
+    //   listIdVinFav.add(item);
+    // }
+    VarGlobal.CURRENTUSER_VINFAV.removeWhere((item) => item == wineSelected.id);
     var userFormated = {
       "database": "urbanisation",
       "collection": "User",
@@ -72,16 +71,17 @@ class WineActions {
         "username": jsonDecode(jsonDecode(currentUser))[0]["username"],
         "password": jsonDecode(jsonDecode(currentUser))[0]["password"],
         "role": jsonDecode(jsonDecode(currentUser))[0]["role"],
-        "vinFav": [
-          for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"])
-            if (item != wineSelected.id) item
-        ]
+        "vinFav": [for (var item in VarGlobal.CURRENTUSER_VINFAV) item]
       }
     };
     await _httpService.addOrRemoveFavorisWine(userFormated);
-    VarGlobal.CURRENTUSER_VINFAV.removeWhere((item) => item == wineSelected.id);
+    // VarGlobal.CURRENTUSER_VINFAV.removeWhere((item) => item == wineSelected.id);
     listFavWines.removeWhere((element) => element.id == wineSelected.id);
     eventBus.emit("removeFromFavoris");
+  }
+
+  void deletComment() {
+    for (var item in listTopWines) {}
   }
 
   static Future<void> deleteWine(
@@ -104,60 +104,70 @@ class WineActions {
   static void setListWine(int choice, var data) {
     if (choice == 1) {
       listAllWines = [];
+      VarGlobal.LISTALLWINES = [];
     } else if (choice == 2) {
       listTopWines = [];
+      VarGlobal.LISTTOPWINES = [];
     } else if (choice == 3) {
       listFavWines = [];
+      VarGlobal.LISTFAVWINES = [];
     } else {
       listWines = [];
     }
+    print(listFavWines);
     // print(jsonDecode(res.body));
     // print(jsonDecode(res.body).length);
-    for (var item in data) {
-      print(item);
-      String id = item["id"];
-      String nom = item["nom"];
-      String vignoble = item["vignoble"];
-      String cepage = item["cepage"];
-      String type = item["type"];
-      String annee = item["annee"];
-      String image = item["image"];
-      String description = item["description"];
-      // print(item["noteGlobale"]);
-      num noteGlobale = item["noteGlobale"];
-      num prix = item["prix"];
-      print(item);
-      String tauxAlcool = item["tauxAlcool"];
-      // print(data[i]["commentaire"][0]["userID"]);
-      late List<Commentaire> listCommentaire = [];
-      if (item["commentaire"].length > 0) {
-        for (int j = 0; j < item["commentaire"].length; j++) {
-          String username = item["commentaire"][j]["username"];
-          // print(userId);
-          String text = item["commentaire"][j]["text"];
-          num note = item["commentaire"][j]["note"];
-          int date = item["commentaire"][j]["date"];
-          Commentaire commentaire = Commentaire(username, text, note, date);
-          listCommentaire.add(commentaire);
+    // if (data.runtimeType);
+    print('data:  $data');
+    if (data != null && data.length > 0) {
+      for (var item in data) {
+        print(item);
+        String id = item["id"];
+        String nom = item["nom"];
+        String vignoble = item["vignoble"];
+        String cepage = item["cepage"];
+        String type = item["type"];
+        String annee = item["annee"];
+        String image = item["image"];
+        String description = item["description"];
+        // print(item["noteGlobale"]);
+        num noteGlobale = item["noteGlobale"];
+        num prix = item["prix"];
+        print(item);
+        String tauxAlcool = item["tauxAlcool"];
+        // print(data[i]["commentaire"][0]["userID"]);
+        late List<Commentaire> listCommentaire = [];
+        if (item["commentaire"].length > 0) {
+          for (int j = 0; j < item["commentaire"].length; j++) {
+            String username = item["commentaire"][j]["username"];
+            // print(userId);
+            String text = item["commentaire"][j]["text"];
+            num note = item["commentaire"][j]["note"];
+            int date = item["commentaire"][j]["date"];
+            Commentaire commentaire = Commentaire(username, text, note, date);
+            listCommentaire.add(commentaire);
+          }
         }
-      }
-      Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
-          description, noteGlobale, prix, tauxAlcool, listCommentaire);
-      if (choice == 1) {
-        listAllWines.add(wine);
-        VarGlobal.LISTALLWINES.add(wine);
-      } else if (choice == 2) {
-        listTopWines.add(wine);
-        VarGlobal.LISTTOPWINES.add(wine);
-      } else if (choice == 3) {
-        listFavWines.add(wine);
-        VarGlobal.LISTFAVWINES.add(wine);
-      } else {
-        listWines.add(wine);
+        Wine wine = Wine(id, nom, vignoble, cepage, type, annee, image,
+            description, noteGlobale, prix, tauxAlcool, listCommentaire);
+        if (choice == 1) {
+          listAllWines.add(wine);
+          VarGlobal.LISTALLWINES.add(wine);
+        } else if (choice == 2) {
+          listTopWines.add(wine);
+          VarGlobal.LISTTOPWINES.add(wine);
+        } else if (choice == 3) {
+          listFavWines.add(wine);
+          VarGlobal.LISTFAVWINES.add(wine);
+        } else {
+          listWines.add(wine);
+        }
       }
     }
     // print(_listAllWine[0].description);
     // return listWines;
+    print("result => $listFavWines");
+    print(listFavWines.length);
   }
 
 // Future<http.Response> addNewWineAction(XFile selectedImage, String nom, String vignoble,

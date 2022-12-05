@@ -230,8 +230,9 @@ Future<void> getTopWines() async {
 Future<void> getListFavWines(String currentUserName) async {
   _listFavWines = [];
   var res = await _httpService.getFavorisWines(currentUserName);
-  // print(res.body);
+  print(res.body);
   var data = jsonDecode(res.body);
+  print(data);
   WineActions.setListWine(3, data);
   _listFavWines = WineActions.listFavWines;
   print(data);

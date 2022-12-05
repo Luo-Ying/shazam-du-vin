@@ -7,6 +7,7 @@ import 'package:shazam_du_vin/services/var_global.dart';
 
 import '../services/http_service.dart';
 import '../services/localStorage.dart';
+import '../services/winesActions.dart';
 import '../utils/eventBus.dart';
 import '../utils/models.dart';
 
@@ -192,7 +193,13 @@ void showCustomDialog(
                       await _httpService.addOrDeleteComment(newWineFormated);
                   if (res.statusCode == 200) {
                     // setState(() {});
-                    Navigator.pop(context, wine);
+                    Navigator.pop(context);
+                    // var res = await _httpService.getWineById(wine.id);
+                    // print(res.body);
+                    // WineActions.setListWine(4, jsonDecode(res.body));
+                    // WineActions.updatedWine = WineActions.listWines[0];
+                    var res = await _httpService.getTopWines();
+                    WineActions.setListWine(2, jsonDecode(res.body));
                     eventBus.emit("deleteComment");
                     // VarGlobal.isCommentUpdated = true;
                     // print("??????");

@@ -51,6 +51,14 @@ class _MyMainPageState extends State<MyMainPage> {
     eventBus.on("removeFromFavoris", (arg) async {
       setState(() {});
     });
+    eventBus.on("deleteComment", (arg) {
+      setState(() {
+        listTopWines = WineActions.listTopWines;
+      });
+    });
+    eventBus.on("addComment", (arg) {
+      listTopWines = WineActions.listTopWines;
+    });
     super.initState();
   }
 
