@@ -47,7 +47,7 @@ class WineActions {
         ]
       }
     };
-    _httpService.addOrRemoveFavorisWine(userFormated);
+    await _httpService.addOrRemoveFavorisWine(userFormated);
     VarGlobal.CURRENTUSER_VINFAV.add(wineSelected.id);
     listFavWines.add(wineSelected);
     eventBus.emit("addInFavoris");
@@ -78,7 +78,7 @@ class WineActions {
         ]
       }
     };
-    _httpService.addOrRemoveFavorisWine(userFormated);
+    await _httpService.addOrRemoveFavorisWine(userFormated);
     VarGlobal.CURRENTUSER_VINFAV.removeWhere((item) => item == wineSelected.id);
     listFavWines.removeWhere((element) => element.id == wineSelected.id);
     eventBus.emit("removeFromFavoris");

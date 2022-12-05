@@ -60,10 +60,10 @@ void getUserData() async {
 Widget buildIconActions(BuildContext context, Wine wine, bool isWineFavoris) {
   bool isWineInListFav = VarGlobal.CURRENTUSER_VINFAV.contains(wine.id);
   return IconButton(
-      onPressed: () {
+      onPressed: () async {
         isWineInListFav
-            ? WineActions.removeWineFromFavoris(context, wine)
-            : WineActions.addWineToFavoris(context, wine);
+            ? await WineActions.removeWineFromFavoris(context, wine)
+            : await WineActions.addWineToFavoris(context, wine);
 
         Fluttertoast.showToast(
           msg: VarGlobal.TOASTMESSAGE,

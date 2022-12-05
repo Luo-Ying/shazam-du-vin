@@ -583,6 +583,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         wineSelected.price = num.parse(_price);
         wineSelected.description = _description;
         WineActions.updatedWine = wineSelected;
+        print(WineActions.updatedWine);
         eventBus.emit("modifedWine");
         Navigator.pop(context);
         Fluttertoast.showToast(
