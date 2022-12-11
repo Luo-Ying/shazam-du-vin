@@ -34,12 +34,16 @@ class HttpService {
   Future<http.Response> connexion(String username, String password) async {
     final res = await http.get(
       Uri.parse("$BASE_URL/User?username=$username&password=$password"),
-      headers: {"Content-Type": "application/json"},
+      // headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/xml"
+      },
     );
-    print(res.body);
+    // print(res.body);
     if (res.statusCode == 200) {
       // final responseJson = jsonDecode(res.body);
-      print(res.body);
+      // print(res.body);
       saveDataString("currentUser", res.body);
     } else {
       // VarGlobal.TOASTMESSAGE = "username or password not correctly!";
