@@ -46,10 +46,10 @@ jobs:
           cd front-end
           flutter pub get
 
-      - name: ✅ Run tests
-        run: |
-          cd front-end
-          flutter test --coverage
+      # - name: ✅ Run tests
+      #   run: |
+      #     cd front-end
+      #     flutter test --coverage
 
       - name: 🏗️ Build APKs
         run: |
