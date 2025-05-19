@@ -151,8 +151,8 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                   side: BorderSide(style: BorderStyle.none))),
               backgroundColor:
                   const MaterialStatePropertyAll<Color>(Colors.black)),
-          child:
-              Text('Add', style: Theme.of(context).primaryTextTheme.headline5),
+          child: Text('Add',
+              style: Theme.of(context).primaryTextTheme.headlineSmall),
           onPressed: () async {
             if ((_formKey.currentState as FormState).validate()) {
               (_formKey.currentState as FormState).save();

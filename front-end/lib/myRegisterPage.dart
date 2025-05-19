@@ -98,7 +98,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               shape: MaterialStateProperty.all(const StadiumBorder(
                   side: BorderSide(style: BorderStyle.none)))),
           child: Text('Sign up',
-              style: Theme.of(context).primaryTextTheme.headline5),
+              style: Theme.of(context).primaryTextTheme.headlineSmall),
           onPressed: () async {
             if ((_formKey.currentState as FormState).validate()) {
               (_formKey.currentState as FormState).save();

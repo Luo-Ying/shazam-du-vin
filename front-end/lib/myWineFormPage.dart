@@ -197,7 +197,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               backgroundColor:
                   const MaterialStatePropertyAll<Color>(Colors.black)),
           child: Text(isModif ? 'Confirm' : 'Add',
-              style: Theme.of(context).primaryTextTheme.headline5),
+              style: Theme.of(context).primaryTextTheme.headlineSmall),
           onPressed: () async {
             isModif ? updateModifWine() : addNewWine();
           },
