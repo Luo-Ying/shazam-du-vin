@@ -42,17 +42,23 @@ jobs:
           channel: stable
 
       - name: 📥 Get dependencies
-      - run: cd front-end
-      - run: flutter pub get
+        run: |
+          cd front-end
+          flutter pub get
 
       - name: ✅ Run tests
-        run: flutter test --coverage
+        run: |
+          cd front-end
+          flutter test --coverage
 
       - name: 🏗️ Build APKs
-        run: flutter build apk --release --split-per-abi
+        run: |
+          cd front-end
+          flutter build apk --release --split-per-abi
 
       - name: 📦 Prepare artifacts
         run: |
+          cd front-end
           mkdir -p artifacts
           cp build/app/outputs/flutter-apk/*.apk artifacts/
 
