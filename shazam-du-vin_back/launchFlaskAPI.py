@@ -126,6 +126,9 @@ def user_crud():
                 "database": "urbanisation",
                 "collection": "User"
             }
+            return Response(response=json.dumps(data),
+                            status=200,
+                            mimetype='application/json')
 
         print(data)
 

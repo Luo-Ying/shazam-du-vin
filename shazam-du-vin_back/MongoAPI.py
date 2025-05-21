@@ -11,8 +11,8 @@ printer = PrettyPrinter()
 #a mix of some custom to work with every endpoint depending of the need
 class MongoAPI:
     def __init__(self, data):
-        #self.client = MongoClient("mongodb://127.0.0.1:27017/")
-        self.client = MongoClient('mongodb+srv://ovhUser:h0Ip6pe9NJnK1EnC@urbanisationceri.vpzkh.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=certifi.where())
+        # self.client = MongoClient("mongodb://ip_of_mongo_container:27017/")
+        self.client = MongoClient("mongodb://mongodb:27017/")
 
         database = data['database']
         collection = data['collection']
