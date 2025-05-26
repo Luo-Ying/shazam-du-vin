@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/src/response.dart';
 
-import './utils/models.dart';
 import './services/var_global.dart';
 import './services/http_service.dart';
 
-// import './components/fluttertoast.dart';
 import './myLoginPage.dart';
 
 class MyRegisterPage extends StatefulWidget {
@@ -20,9 +16,15 @@ class MyRegisterPage extends StatefulWidget {
 
 class _MyRegisterPageState extends State<MyRegisterPage> {
   final GlobalKey _formKey = GlobalKey<FormState>();
+
   late String _username = "";
   late String _password = "";
   late String _passwordconfirmation = "";
+
+  late bool _isUsernamValid = true;
+  late bool _ispasswordValid = true;
+  late bool _isPasswordConfirmationValid = true;
+
   bool _isObscure = true;
   Color _eyeColor = Colors.grey;
 
@@ -94,8 +96,9 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
         width: 270,
         child: ElevatedButton(
           style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll<Color>(Colors.black),
-              shape: MaterialStateProperty.all(const StadiumBorder(
+              backgroundColor:
+                  const WidgetStatePropertyAll<Color>(Colors.black),
+              shape: WidgetStateProperty.all(const StadiumBorder(
                   side: BorderSide(style: BorderStyle.none)))),
           child: Text('Sign up',
               style: Theme.of(context).primaryTextTheme.headlineSmall),
@@ -139,16 +142,22 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
     return TextFormField(
       obscureText: _isObscure, // s'il affiche des text
       onSaved: (v) => _passwordconfirmation = v!,
+      onChanged: (v) {
+        if (v.isEmpty) {
+          _isPasswordConfirmationValid = false;
+        } else {
+          _isPasswordConfirmationValid = true;
+        }
+      },
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isPasswordConfirmationValid) {
           return 'Please confirme your password!';
         } else if (_password.isNotEmpty) {
           if (v != _password) {
-            // print(v);
-            print(_password);
             return 'The password are not same!';
           }
         }
+        return null;
       },
       decoration: InputDecoration(
         labelText: "Password confirmation",
@@ -172,13 +181,20 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
 
   Widget buildPasswordTextField(BuildContext context) {
     return TextFormField(
-      onChanged: (v) => _password = v,
       obscureText: _isObscure, // s'il affiche des text
       onSaved: (v) => _password = v!,
+      onChanged: (v) {
+        if (v.isEmpty) {
+          _ispasswordValid = false;
+        } else {
+          _ispasswordValid = true;
+        }
+      },
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_ispasswordValid) {
           return 'Please enter your password!';
         }
+        return null;
       },
       decoration: InputDecoration(
         labelText: "Password",
@@ -204,10 +220,18 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
     return TextFormField(
       decoration: const InputDecoration(labelText: 'Username'),
       onSaved: (v) => _username = v!,
+      onChanged: (v) {
+        if (v.isEmpty) {
+          _isUsernamValid = false;
+        } else {
+          _isUsernamValid = true;
+        }
+      },
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isUsernamValid) {
           return 'Please enter your username!';
         }
+        return null;
       },
     );
   }

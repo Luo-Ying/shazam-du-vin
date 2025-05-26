@@ -1,18 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 
 import '../myWinePage.dart';
-import '../services/http_service.dart';
 import '../services/localStorage.dart';
 import '../services/winesActions.dart';
-import '../utils/eventBus.dart';
 import '../utils/models.dart';
 import 'fluttertoast.dart';
-
-late final HttpService _httpService = HttpService();
 
 String user = "";
 
@@ -58,7 +53,7 @@ void getUserData() async {
 }
 
 Widget buildIconActions(BuildContext context, Wine wine, bool isWineFavoris) {
-  bool isWineInListFav = VarGlobal.CURRENTUSER_VINFAV.contains(wine.id);
+  bool isWineInListFav = VarGlobal.currentUser.vinFav.value.contains(wine.id);
   return IconButton(
       onPressed: () async {
         isWineInListFav
@@ -121,7 +116,6 @@ Widget buildWineInfos(
     BuildContext context, bool isTopWine, Wine wine, bool isListAllWine) {
   return Column(
     children: [
-      // Text(listAllWines[index].nom),
       Padding(
         padding: EdgeInsets.only(left: isListAllWine ? 55 : 25.0, top: 5.0),
         child: Container(
@@ -158,7 +152,6 @@ void goWinePage(BuildContext context, Wine wine) {
 }
 
 void showCustomDialog(BuildContext context, Wine wine) {
-  // print("position ---- >  " + position.toString());
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -178,7 +171,7 @@ void showCustomDialog(BuildContext context, Wine wine) {
                 Navigator.of(context).pop();
               },
               style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(
+                  backgroundColor: WidgetStatePropertyAll<Color>(
                       Color.fromRGBO(121, 121, 121, 1))),
               child: const Text("Cancel"),
             ),
@@ -197,8 +190,7 @@ void showCustomDialog(BuildContext context, Wine wine) {
                 );
               },
               style: const ButtonStyle(
-                  backgroundColor:
-                      MaterialStatePropertyAll<Color>(Colors.black)),
+                  backgroundColor: WidgetStatePropertyAll<Color>(Colors.black)),
               child: const Text("Confirm"),
             ),
           ],

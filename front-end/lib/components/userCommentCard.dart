@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shazam_du_vin/myWinePage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 
 import '../services/http_service.dart';
@@ -23,7 +21,6 @@ Widget buildUserCommentCard(
     ),
     child: InkWell(
       onLongPress: () async {
-        // print("coucou?");
         String dataCurrentUser = await readDataString("currentUser");
         String roleOfCurrentUser =
             jsonDecode(jsonDecode(dataCurrentUser))[0]['role'];
@@ -63,7 +60,7 @@ Widget sizeBoxOfUserNameAndRating(
     child: Row(
       children: [
         buildUserName(context, commentaire),
-        if (VarGlobal.CURRENTUSERNAME == commentaire.username)
+        if (VarGlobal.currentUser.username == commentaire.username)
           buildTextToShowUserCurrent(context, commentaire),
         const SizedBox(width: 10.0),
         buildRatingStar(context, commentaire),
@@ -98,7 +95,7 @@ Widget buildTextToShowUserCurrent(
 Widget buildRatingStar(BuildContext context, Commentaire commentaire) {
   return Expanded(
       child: Align(
-    alignment: Alignment(-1, 1),
+    alignment: const Alignment(-1, 1),
     child: Container(
       height: 20.0,
       width: 48.0,
@@ -133,7 +130,6 @@ Widget buildRatingText(BuildContext context, Commentaire commentaire) {
 @override
 void showCustomDialog(
     BuildContext context, Commentaire commentSelected, Wine wine) {
-  // print("position ---- >  " + position.toString());
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -153,7 +149,7 @@ void showCustomDialog(
                 Navigator.of(context).pop();
               },
               style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(
+                  backgroundColor: WidgetStatePropertyAll<Color>(
                       Color.fromRGBO(121, 121, 121, 1))),
               child: const Text("Cancel"),
             ),
@@ -192,26 +188,16 @@ void showCustomDialog(
                   var res =
                       await _httpService.addOrDeleteComment(newWineFormated);
                   if (res.statusCode == 200) {
-                    // setState(() {});
                     Navigator.pop(context);
-                    // var res = await _httpService.getWineById(wine.id);
-                    // print(res.body);
-                    // WineActions.setListWine(4, jsonDecode(res.body));
-                    // WineActions.updatedWine = WineActions.listWines[0];
                     var res = await _httpService.getTopWines();
                     WineActions.setListWine(2, jsonDecode(res.body));
                     eventBus.emit("deleteComment");
-                    // VarGlobal.isCommentUpdated = true;
-                    // print("??????");
-                    // MyWinePage myWinePage = MyWinePage(wine: wine);
-                    // myWinePage.refrePage();
                     // TODO: débuger le problème de mettre à jours les données de la page !!!!!!!!
                   }
                 } catch (e) {}
               },
               style: const ButtonStyle(
-                  backgroundColor:
-                      MaterialStatePropertyAll<Color>(Colors.black)),
+                  backgroundColor: WidgetStatePropertyAll<Color>(Colors.black)),
               child: const Text("Confirm"),
             ),
           ],

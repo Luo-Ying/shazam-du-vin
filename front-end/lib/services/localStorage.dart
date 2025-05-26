@@ -11,8 +11,7 @@ saveDataInt() async {
 Future<int> readDataInt() async {
   var prefs = await SharedPreferences.getInstance();
   var result = prefs.getInt('Key_Int');
-  return result ??
-      0; // 读取数据时，如果没有当前 Key 则返回 null，所以使用 ?? 操作符，如果 result 为 null，则返回 ?? 操作符后面的值。
+  return result ?? 0;
 }
 
 /// double
@@ -81,13 +80,13 @@ Future<void> clearData() async {
 Future<Object> getKeys() async {
   var prefs = await SharedPreferences.getInstance();
   var keys = prefs.getKeys();
-  return keys ?? [];
+  return keys;
 }
 
 /// 检测是否 Key 是否存在：
 Future<bool> containsKey() async {
   var prefs = await SharedPreferences.getInstance();
-  return prefs.containsKey('Key') ?? false;
+  return prefs.containsKey('Key');
 }
 
 Future<Map<String, dynamic>> getAllContents() async {

@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shazam_du_vin/myListWinePage.dart';
 import 'package:shazam_du_vin/services/localStorage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 
@@ -26,12 +23,7 @@ class WineActions {
     print("add in favoris!");
     var currentUser = await readDataString("currentUser");
     print(jsonDecode(jsonDecode(currentUser))[0]);
-    // List<String> listIdVinFav = [];
-    // for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]["value"]) {
-    //   listIdVinFav.add(item);
-    // }
-    VarGlobal.CURRENTUSER_VINFAV.add(wineSelected.id);
-    print(VarGlobal.CURRENTUSER_VINFAV);
+    VarGlobal.currentUser.vinFav.value.add(wineSelected.id);
     var userFormated = {
       "database": "urbanisation",
       "collection": "User",
@@ -42,12 +34,10 @@ class WineActions {
         "username": jsonDecode(jsonDecode(currentUser))[0]["username"],
         "password": jsonDecode(jsonDecode(currentUser))[0]["password"],
         "role": jsonDecode(jsonDecode(currentUser))[0]["role"],
-        "vinFav": [for (var item in VarGlobal.CURRENTUSER_VINFAV) item]
+        "vinFav": [for (var item in VarGlobal.currentUser.vinFav.value) item]
       }
     };
     await _httpService.addOrRemoveFavorisWine(userFormated);
-    // VarGlobal.CURRENTUSER_VINFAV.add(wineSelected.id);
-    // listFavWines.add(wineSelected);
     eventBus.emit("addInFavoris");
   }
 
@@ -56,11 +46,8 @@ class WineActions {
     print("remove from favoris!");
     var currentUser = await readDataString("currentUser");
     print(jsonDecode(jsonDecode(currentUser))[0]);
-    // List<String> listIdVinFav = [];
-    // for (var item in jsonDecode(jsonDecode(currentUser))[0]["vinFav"]) {
-    //   listIdVinFav.add(item);
-    // }
-    VarGlobal.CURRENTUSER_VINFAV.removeWhere((item) => item == wineSelected.id);
+    VarGlobal.currentUser.vinFav.value
+        .removeWhere((item) => item == wineSelected.id);
     var userFormated = {
       "database": "urbanisation",
       "collection": "User",
@@ -71,11 +58,10 @@ class WineActions {
         "username": jsonDecode(jsonDecode(currentUser))[0]["username"],
         "password": jsonDecode(jsonDecode(currentUser))[0]["password"],
         "role": jsonDecode(jsonDecode(currentUser))[0]["role"],
-        "vinFav": [for (var item in VarGlobal.CURRENTUSER_VINFAV) item]
+        "vinFav": [for (var item in VarGlobal.currentUser.vinFav.value) item]
       }
     };
     await _httpService.addOrRemoveFavorisWine(userFormated);
-    // VarGlobal.CURRENTUSER_VINFAV.removeWhere((item) => item == wineSelected.id);
     listFavWines.removeWhere((element) => element.id == wineSelected.id);
     eventBus.emit("removeFromFavoris");
   }
@@ -115,9 +101,6 @@ class WineActions {
       listWines = [];
     }
     print(listFavWines);
-    // print(jsonDecode(res.body));
-    // print(jsonDecode(res.body).length);
-    // if (data.runtimeType);
     print('data:  $data');
     if (data != null && data.length > 0) {
       for (var item in data) {
@@ -130,17 +113,14 @@ class WineActions {
         String annee = item["annee"];
         String image = item["image"];
         String description = item["description"];
-        // print(item["noteGlobale"]);
         num noteGlobale = item["noteGlobale"];
         num prix = item["prix"];
         print(item);
         String tauxAlcool = item["tauxAlcool"];
-        // print(data[i]["commentaire"][0]["userID"]);
         late List<Commentaire> listCommentaire = [];
         if (item["commentaire"].length > 0) {
           for (int j = 0; j < item["commentaire"].length; j++) {
             String username = item["commentaire"][j]["username"];
-            // print(userId);
             String text = item["commentaire"][j]["text"];
             num note = item["commentaire"][j]["note"];
             int date = item["commentaire"][j]["date"];
@@ -164,8 +144,6 @@ class WineActions {
         }
       }
     }
-    // print(_listAllWine[0].description);
-    // return listWines;
     print("result => $listFavWines");
     print(listFavWines.length);
   }

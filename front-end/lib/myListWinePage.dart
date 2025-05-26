@@ -1,17 +1,10 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:shazam_du_vin/myAddNewWineFormPage.dart';
 import 'package:shazam_du_vin/myWineFormPage.dart';
 import 'package:shazam_du_vin/services/var_global.dart';
 import 'package:shazam_du_vin/services/winesActions.dart';
 
-import './services/http_service.dart';
-import '../services/localStorage.dart';
-import './services/var_global.dart';
 import 'components/floatingActionButionMenu.dart';
 import 'components/wineCard.dart';
 
@@ -34,15 +27,12 @@ class _MyListVinPageState extends State<MyListVinPage> {
 
   _MyListVinPageState(this.listAllWines);
 
-  late final HttpService _httpService = HttpService();
-
   Uint8List targetlUinit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
   Uint8List originalUnit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
 
   @override
   void initState() {
     eventBus.on("deleteWine", (arg) async {
-      print("coucou??????");
       if (!mounted) {
         return;
       }
@@ -74,7 +64,7 @@ class _MyListVinPageState extends State<MyListVinPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildApBar(context),
+      appBar: buildAppBar(context),
       body: Container(child: builListViewOfListAllWine(context)),
       floatingActionButton: buildMainMenu(context),
     );
@@ -105,7 +95,7 @@ class _MyListVinPageState extends State<MyListVinPage> {
     );
   }
 
-  PreferredSize buildApBar(BuildContext context) {
+  PreferredSize buildAppBar(BuildContext context) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(100.0),
       child: Column(
@@ -132,10 +122,9 @@ class _MyListVinPageState extends State<MyListVinPage> {
                     Expanded(
                         child: Align(
                       alignment: Alignment.bottomRight,
-                      child: Offstage(
-                        offstage: VarGlobal.CURRENTUSERROLE == "user",
-                        child: buildAddWineButtonAdmin(context),
-                      ),
+                      child: VarGlobal.currentUser.username == "admin"
+                          ? buildAddWineButtonAdmin(context)
+                          : const SizedBox.shrink(),
                     ))
                   ],
                 ),
@@ -151,7 +140,7 @@ class _MyListVinPageState extends State<MyListVinPage> {
   Widget buildAddWineButtonAdmin(BuildContext context) {
     return SizedBox(
       height: 28,
-      width: 150,
+      width: 160,
       child: ElevatedButton(
         onPressed: () {
           Wine wine = Wine("", "", "", "", "", "", "", "", -1, 0, "", []);
@@ -163,10 +152,10 @@ class _MyListVinPageState extends State<MyListVinPage> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black,
         ),
-        child: Stack(
+        child: const Stack(
           children: [
             Row(
-              children: const [
+              children: [
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(

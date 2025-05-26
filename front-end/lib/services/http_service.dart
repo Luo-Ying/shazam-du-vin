@@ -1,19 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:image_picker/image_picker.dart';
 
-import '../utils/models.dart';
 import '../services/var_global.dart';
-import './localStorage.dart';
 
 class HttpService {
   // static const BASE_URL = "http://10.0.2.2:5000"; // for emulator
-  static const BASE_URL =
-      "https://flask-service.v5jn6j0vmbe7s.eu-west-3.cs.amazonlightsail.com/";
+  static const BASE_URL = "http://localhost:5000"; // for device
 
   Future<http.Response> register(Map<String, dynamic> newUser) async {
     var body = json.encode(newUser);
@@ -34,19 +28,14 @@ class HttpService {
   Future<http.Response> connexion(String username, String password) async {
     final res = await http.get(
       Uri.parse("$BASE_URL/User?username=$username&password=$password"),
-      // headers: {"Content-Type": "application/json"},
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/xml"
       },
     );
-    // print(res.body);
     if (res.statusCode == 200) {
-      // final responseJson = jsonDecode(res.body);
-      // print(res.body);
-      saveDataString("currentUser", res.body);
+      print(res.body);
     } else {
-      // VarGlobal.TOASTMESSAGE = "username or password not correctly!";
       VarGlobal.TOASTMESSAGE = "username or password incorrect! ";
     }
     return res;
@@ -58,7 +47,6 @@ class HttpService {
       Uri.parse("$BASE_URL/Vin"),
       headers: {"Content-Type": "application/json"},
     );
-    // print(res.body);
     return res;
   }
 
@@ -95,10 +83,6 @@ class HttpService {
         filename: "Photo.jpg", contentType: MediaType("image", "png")));
 
     var response = await request.send();
-    // print(response.statusCode);
-    // response.stream.transform(utf8.decoder).listen((value) {
-    //   print(value);
-    // });
     return response;
   }
 
@@ -140,10 +124,6 @@ class HttpService {
         filename: "Photo.jpg", contentType: MediaType("image", "png")));
 
     var response = await request.send();
-    // print(response.statusCode);
-    // response.stream.transform(utf8.decoder).listen((value) {
-    //   print(value);
-    // });
     return response;
   }
 

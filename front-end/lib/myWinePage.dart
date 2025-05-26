@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shazam_du_vin/myWineFormPage.dart';
@@ -10,7 +9,6 @@ import 'package:shazam_du_vin/services/winesActions.dart';
 import 'package:shazam_du_vin/utils/eventBus.dart';
 
 import 'services/http_service.dart';
-import 'utils/algorithme.dart';
 
 import 'utils/models.dart';
 import 'components/userCommentCard.dart';
@@ -19,8 +17,6 @@ class MyWinePage extends StatefulWidget {
   const MyWinePage({Key? key, required this.wine}) : super(key: key);
 
   final Wine wine;
-
-  // final _MyWinePageState _myWinePageState = _MyWinePageState(wine);
 
   @override
   _MyWinePageState createState() {
@@ -44,10 +40,6 @@ class _MyWinePageState extends State<MyWinePage> {
 
   @override
   void initState() {
-    // eventBus.on("deleteComment", (arg) async {
-    //   await Navigator.pushReplacement(context,
-    //       MaterialPageRoute(builder: (BuildContext context) => super.widget));
-    // });
     eventBus.on("deleteComment", (arg) {
       setState(() {
         // wine = WineActions.updatedWine;
@@ -62,7 +54,6 @@ class _MyWinePageState extends State<MyWinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // resizeToAvoidBottomInset: true,
         appBar: buildAppppBar(context),
         body: ListView(
           children: [
@@ -119,7 +110,6 @@ class _MyWinePageState extends State<MyWinePage> {
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         return SizedBox(
-          // height: 50,
           child:
               buildUserCommentCard(context, wine.listCommentaire[index], wine),
         );
@@ -154,7 +144,6 @@ class _MyWinePageState extends State<MyWinePage> {
         decoration: const InputDecoration(
           hintText: "Comment ... ",
           border: OutlineInputBorder(
-            // borderRadius: BorderRadius.circular(60.0),
             borderSide: BorderSide(
               color: Color.fromRGBO(140, 142, 173, 1),
               width: 1.0,
@@ -169,6 +158,7 @@ class _MyWinePageState extends State<MyWinePage> {
           } else {
             _isValid.value = true;
           }
+          return null;
         },
       ),
     );
@@ -184,12 +174,7 @@ class _MyWinePageState extends State<MyWinePage> {
             print(_commentText);
             print(_saveRating);
             print(wine);
-            // Wine newWine =
-            //     await addNewCommentInWine(wine, _commentText, _saveRating);
-            // print(newWine.listCommentaire.length);
             String dataCurrentUser = await readDataString("currentUser");
-            // DateTime currentPhoneDate = DateTime.now();
-            // Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
             int myTimeStamp = DateTime.now().millisecondsSinceEpoch;
             print(myTimeStamp);
             var newWineFormated = {
@@ -222,7 +207,6 @@ class _MyWinePageState extends State<MyWinePage> {
               var res = await _httpService.addOrDeleteComment(newWineFormated);
               print(res.statusCode);
               print(res.body);
-              // Commentaire newComment;
               num noteGlobale =
                   (wine.noteGlobale * wine.listCommentaire.length +
                           _saveRating) /
@@ -245,11 +229,10 @@ class _MyWinePageState extends State<MyWinePage> {
             } catch (e) {
               print("Exception Happened: ${e.toString()}");
             }
-            // print(jsonEncode(newWineFormated));
           }
         },
         style: const ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll<Color>(Colors.black)),
+            backgroundColor: WidgetStatePropertyAll<Color>(Colors.black)),
         child: const Text(
           "Send",
           style: TextStyle(fontSize: 20.0),
@@ -264,7 +247,7 @@ class _MyWinePageState extends State<MyWinePage> {
       child: ElevatedButton(
         onPressed: null,
         style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll<Color>(
+            backgroundColor: WidgetStatePropertyAll<Color>(
                 Color.fromRGBO(123, 123, 123, 1))),
         child: Text(
           "Send",
@@ -333,7 +316,6 @@ class _MyWinePageState extends State<MyWinePage> {
             const SizedBox(height: 16.0),
             Column(
               children: [
-                // const SizedBox(width: 16.0),
                 buildCommentTextField(context),
                 buildStarRating(context),
                 buildButtonSend(context)
@@ -346,7 +328,6 @@ class _MyWinePageState extends State<MyWinePage> {
   Future<int?> _showBasicModalBottomSheet(context) {
     // TODO: améliorer: monter le champ de form add comment quand utilisateur active le clavier
     return showModalBottomSheet<int>(
-      // isScrollControlled: false,
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
@@ -363,7 +344,7 @@ class _MyWinePageState extends State<MyWinePage> {
           _showBasicModalBottomSheet(context);
         },
         style: const ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll<Color>(Colors.black)),
+            backgroundColor: WidgetStatePropertyAll<Color>(Colors.black)),
         child: const Text("Add comment"));
   }
 
@@ -499,20 +480,13 @@ class _MyWinePageState extends State<MyWinePage> {
   }
 
   Widget buildShowRatingStar(BuildContext context) {
-    // print(wine.noteGlobale);
-    // print(wine.noteGlobale.truncateToDouble());
-    // print((num.parse((wine.noteGlobale - wine.noteGlobale.truncateToDouble())
-    //         .toStringAsFixed(2))
-    //     .runtimeType));
     num intPart = wine.noteGlobale.truncateToDouble();
     num doublePart = num.parse(
         (wine.noteGlobale - wine.noteGlobale.truncateToDouble())
             .toStringAsFixed(2));
     num rest = doublePart > 0 ? 5 - intPart - 1 : 5 - intPart;
-    // print(rest);
     final size = MediaQuery.of(context).size;
     final widthScreen = size.width;
-    // print(widthScreen);
     final paddingLedt = (widthScreen - 150) / 2;
     return Padding(
       padding: EdgeInsets.only(top: 15.0, left: paddingLedt, bottom: 20.0),
@@ -598,10 +572,9 @@ class _MyWinePageState extends State<MyWinePage> {
                   ),
                 ),
               ),
-              Offstage(
-                offstage: VarGlobal.CURRENTUSERROLE == "user",
-                child: buildButtonModifAdmin(context),
-              )
+              VarGlobal.currentUser.username == "user"
+                  ? buildButtonModifAdmin(context)
+                  : const SizedBox.shrink(),
             ],
           ),
         )

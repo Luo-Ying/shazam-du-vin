@@ -1,16 +1,79 @@
-# shazam_du_vin
+# Shazam du Vin
 
-A new Flutter project.
+A wine recognition application based on Flutter.
 
-## Getting Started
+## Project Structure
 
-This project is a starting point for a Flutter application.
+- **front-end**: Flutter mobile application
+- **shazam-du-vin_back**: Flask backend API
 
-A few resources to get you started if this is your first Flutter project:
+## Backend Deployment
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Using Docker Compose
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+We provide a Docker Compose configuration that can start the complete backend environment (Flask + MongoDB) with a single command:
+
+1. Make sure Docker and Docker Compose are installed
+
+2. Set AWS environment variables (for image processing and OCR functionality):
+   ```bash
+   export AWS_ACCESS_KEY_ID=your_aws_key
+   export AWS_SECRET_ACCESS_KEY=your_aws_secret
+   ```
+
+3. Start services:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. Stop services:
+   ```bash
+   docker-compose down
+   ```
+
+### Manual Deployment
+
+If you want to run the backend service separately:
+
+```bash
+cd shazam-du-vin_back
+docker build -t shazamvin_backend:v1.0.0 .
+docker run --rm --name shazamvin_back -p 5000:5000 shazamvin_backend:v1.0.0
+```
+
+#### Installing MongoDB Docker Image and Configuration
+
+Use these commands to install and run the official MongoDB Docker image:
+
+```bash
+docker pull mongo
+docker run --rm --name mongodb -p 27017:27017 id_of_container/name_of_container
+```
+
+To get the IP address of your MongoDB container, use:
+
+```bash
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' id_of_container/name_of_container
+```
+
+If you're setting up the services separately (without Docker Compose), you'll need to modify the MongoDB connection string in `MongoAPI.py`. Change:
+
+```python
+self.client = MongoClient("mongodb://mongodb:27017/")
+```
+
+to:
+
+```python
+self.client = MongoClient("mongodb://your_mongodb_container_ip:27017/")
+```
+
+## Frontend Deployment
+
+The APK is available on Git. Simply download it and run it on your Android device.
+
+And if you use the APK on Git, to ensure the connection between the application and back-end, use this command.
+
+```cmd
+adb reverse tcp:5000 tcp:5000
+```

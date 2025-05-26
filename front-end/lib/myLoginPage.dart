@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shazam_du_vin/myMainPage.dart';
 import 'package:shazam_du_vin/services/winesActions.dart';
+import 'package:shazam_du_vin/utils/buildCurrentUser.dart';
 
 import 'services/var_global.dart';
 import 'services/http_service.dart';
@@ -22,8 +23,13 @@ class MyLoginPage extends StatefulWidget {
 
 class _MyLoginPageState extends State<MyLoginPage> {
   final GlobalKey _formKey = GlobalKey<FormState>();
+
   late String _username = "";
   late String _password = "";
+
+  late bool _isUsernameValid = true;
+  late bool _isPasswordValid = true;
+
   bool _isObscure = true;
   Color _eyeColor = Colors.grey;
 
@@ -96,8 +102,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
         child: ElevatedButton(
           style: ButtonStyle(
               backgroundColor:
-                  const MaterialStatePropertyAll<Color>(Colors.black),
-              shape: MaterialStateProperty.all(const StadiumBorder(
+                  const WidgetStatePropertyAll<Color>(Colors.black),
+              shape: WidgetStateProperty.all(const StadiumBorder(
                   side: BorderSide(style: BorderStyle.none)))),
           child: Text('Sign in',
               style: Theme.of(context).primaryTextTheme.headlineSmall),
@@ -105,30 +111,13 @@ class _MyLoginPageState extends State<MyLoginPage> {
             if ((_formKey.currentState as FormState).validate()) {
               (_formKey.currentState as FormState).save();
               print('username: $_username, password: $_password');
-              // TODO: fonction pour user connecter
               var res = await _httpService.connexion(_username, _password);
               print(res.statusCode);
               if (res.statusCode == 200) {
-                String currentUser = await readDataString("currentUser");
-                print(jsonDecode(currentUser));
-                print(jsonDecode(jsonDecode(currentUser)));
-                print(jsonDecode(jsonDecode(currentUser))[0]);
-                VarGlobal.CURRENTUSER_VINFAV = [];
-                if (jsonDecode(jsonDecode(currentUser))[0]["vinFav"].length >
-                    0) {
-                  for (var item in jsonDecode(jsonDecode(currentUser))[0]
-                      ["vinFav"]) {
-                    VarGlobal.CURRENTUSER_VINFAV.add(item);
-                  }
-                }
-                var favVin = VarGlobal.CURRENTUSER_VINFAV;
-                print("var globale currentuser vinfav : $favVin");
-                VarGlobal.CURRENTUSERROLE =
-                    jsonDecode(jsonDecode(currentUser))[0]["role"];
-                VarGlobal.CURRENTUSERNAME =
-                    jsonDecode(jsonDecode(currentUser))[0]["username"];
-                await getWines();
-                print("coucou! $_listTopWines");
+                await saveDataString("currentUser", res.body);
+                VarGlobal.currentUser = await buildCurrentUser();
+                print(VarGlobal.currentUser.vinFav.value);
+
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) {
                     return MyMainPage(
@@ -148,20 +137,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   fontSize: 16.0,
                 );
               }
-
-              // VarGlobal.CURRENTUSERROLE = "admin";
-              // Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) => const MyMainPage(
-              //     title: 'Main page',
-              //   ),
-              // ));
-
-              // print(json.decode(res[0]));
-              // if ()
-              // TODO: les cas d'érreurs quand utilisateur entre les mauvais username ou password
-              // String result = await readDataString("test1");
-              // print("result: " + result);
-              // print(getKeys());
             }
           },
         ),
@@ -173,10 +148,19 @@ class _MyLoginPageState extends State<MyLoginPage> {
     return TextFormField(
       obscureText: _isObscure, // s'il affiche des text
       onSaved: (v) => _password = v!,
+      onChanged: (v) {
+        _password = v;
+        if (v.isEmpty) {
+          _isPasswordValid = false;
+        } else {
+          _isPasswordValid = true;
+        }
+      },
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isPasswordValid) {
           return 'Please enter your password!';
         }
+        return null;
       },
       decoration: InputDecoration(
         labelText: "Password",
@@ -202,10 +186,19 @@ class _MyLoginPageState extends State<MyLoginPage> {
     return TextFormField(
       decoration: const InputDecoration(labelText: 'Username'),
       onSaved: (v) => _username = v!,
+      onChanged: (v) {
+        _username = v;
+        if (v.isEmpty) {
+          _isUsernameValid = false;
+        } else {
+          _isUsernameValid = true;
+        }
+      },
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isUsernameValid) {
           return 'Please enter your username!';
         }
+        return null;
       },
     );
   }
