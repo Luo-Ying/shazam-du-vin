@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cross_file_image/cross_file_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shazam_du_vin/mySearchWineByImageResultPage.dart';
@@ -10,21 +9,25 @@ import 'package:shazam_du_vin/services/winesActions.dart';
 import 'package:shazam_du_vin/utils/models.dart';
 
 class MyImagePickerWidget extends StatefulWidget {
-  const MyImagePickerWidget({Key? key, required this.imageSelected})
-      : super(key: key);
-
   final XFile imageSelected;
 
+  const MyImagePickerWidget({
+    super.key,
+    required this.imageSelected,
+  });
+
   @override
-  _MyImagePickerWidgetState createState() {
-    return _MyImagePickerWidgetState(imageSelected);
-  }
+  State<MyImagePickerWidget> createState() => _MyImagePickerWidgetState();
 }
 
 class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
-  XFile imageSelected;
+  late XFile imageSelected;
 
-  _MyImagePickerWidgetState(this.imageSelected);
+  @override
+  void initState() {
+    super.initState();
+    imageSelected = widget.imageSelected;
+  }
 
   late final HttpService _httpService = HttpService();
 
@@ -51,13 +54,13 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
       height: 40.0,
       child: ElevatedButton(
           style: ButtonStyle(
-              shadowColor: const MaterialStatePropertyAll<Color>(
+              shadowColor: const WidgetStatePropertyAll<Color>(
                   Color.fromRGBO(91, 98, 205, 1)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0))),
               backgroundColor:
-                  const MaterialStatePropertyAll<Color>(Colors.grey)),
+                  const WidgetStatePropertyAll<Color>(Colors.grey)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -93,12 +96,12 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
       height: 40.0,
       child: ElevatedButton(
           style: ButtonStyle(
-              shadowColor: const MaterialStatePropertyAll<Color>(
+              shadowColor: const WidgetStatePropertyAll<Color>(
                   Color.fromRGBO(91, 98, 205, 1)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0))),
-              backgroundColor: const MaterialStatePropertyAll<Color>(
+              backgroundColor: const WidgetStatePropertyAll<Color>(
                   Color.fromRGBO(91, 98, 205, 1))),
           onPressed: () {
             print("?????????");

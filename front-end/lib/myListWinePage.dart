@@ -17,15 +17,11 @@ class MyListVinPage extends StatefulWidget {
   final List<Wine> listAllWines;
 
   @override
-  _MyListVinPageState createState() {
-    return _MyListVinPageState(listAllWines);
-  }
+  State<MyListVinPage> createState() => _MyListVinPageState();
 }
 
 class _MyListVinPageState extends State<MyListVinPage> {
-  List<Wine> listAllWines;
-
-  _MyListVinPageState(this.listAllWines);
+  late List<Wine> listAllWines;
 
   Uint8List targetlUinit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
   Uint8List originalUnit8List = Uint8List.fromList([0, 2, 5, 7, 42, 255]);
@@ -159,12 +155,18 @@ class _MyListVinPageState extends State<MyListVinPage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(
-                    child: Icon(Icons.add),
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text("add new wine"),
+                  child: Text(
+                    "add new wine",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
               ],
             ),

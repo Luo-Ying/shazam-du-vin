@@ -14,15 +14,11 @@ class MyListWinesFavorites extends StatefulWidget {
   final List<Wine> listWinesFavorites;
 
   @override
-  _MyListWinesFavoritesState createState() {
-    return _MyListWinesFavoritesState(listWinesFavorites);
-  }
+  State<MyListWinesFavorites> createState() => _MyListWinesFavoritesState();
 }
 
 class _MyListWinesFavoritesState extends State<MyListWinesFavorites> {
-  List<Wine> listWinesFavorites;
-
-  _MyListWinesFavoritesState(this.listWinesFavorites);
+  late List<Wine> listWinesFavorites;
 
   @override
   void initState() {
@@ -47,7 +43,6 @@ class _MyListWinesFavoritesState extends State<MyListWinesFavorites> {
 
   @override
   Widget build(BuildContext context) {
-    // print("list favorites wines???? $listWinesFavorites");
     return Scaffold(
       appBar: buildApBar(context),
       body: Container(

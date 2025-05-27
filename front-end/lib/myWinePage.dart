@@ -19,15 +19,11 @@ class MyWinePage extends StatefulWidget {
   final Wine wine;
 
   @override
-  _MyWinePageState createState() {
-    return _MyWinePageState(wine);
-  }
+  State<MyWinePage> createState() => _MyWinePageState();
 }
 
 class _MyWinePageState extends State<MyWinePage> {
-  Wine wine;
-
-  _MyWinePageState(this.wine);
+  late Wine wine;
 
   final GlobalKey _formKey = GlobalKey<FormState>();
 

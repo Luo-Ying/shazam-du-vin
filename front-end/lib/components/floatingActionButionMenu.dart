@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,7 +7,6 @@ import 'package:shazam_du_vin/myImagePickerWidget.dart';
 import 'package:shazam_du_vin/myListWinesFavorites.dart';
 import 'package:shazam_du_vin/services/winesActions.dart';
 
-import '../mySearchWineByImageResultPage.dart';
 import '../services/http_service.dart';
 
 import '../myListWinePage.dart';
@@ -16,9 +14,8 @@ import '../myLoginPage.dart';
 import '../myMainPage.dart';
 import '../services/localStorage.dart';
 import '../utils/models.dart';
-import '../services/var_global.dart';
 
-late final HttpService _httpService = HttpService();
+final HttpService _httpService = HttpService();
 
 ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 
@@ -40,7 +37,6 @@ Widget buildMainMenu(BuildContext context) {
           label: 'log out',
           labelStyle: const TextStyle(fontSize: 16.0),
           onTap: () {
-            // isDialOpen.value = false;
             logout(context);
           }),
       SpeedDialChild(
@@ -52,8 +48,7 @@ Widget buildMainMenu(BuildContext context) {
         label: 'scan a bottle',
         labelStyle: const TextStyle(fontSize: 16.0),
         onTap: () {
-          // isDialOpen.value = false;
-          photo_camera(context);
+          photoCamera(context);
         },
       ),
       SpeedDialChild(
@@ -65,7 +60,6 @@ Widget buildMainMenu(BuildContext context) {
         label: 'favorites wines',
         labelStyle: const TextStyle(fontSize: 16.0),
         onTap: () {
-          // isDialOpen.value = false;
           goListFavorisPage(context);
         },
       ),
@@ -78,7 +72,6 @@ Widget buildMainMenu(BuildContext context) {
         label: 'all wines',
         labelStyle: const TextStyle(fontSize: 16.0),
         onTap: () {
-          // isDialOpen.value = false;
           goListVinPage(context);
         },
       ),
@@ -91,34 +84,32 @@ Widget buildMainMenu(BuildContext context) {
         label: 'top 10 wines',
         labelStyle: const TextStyle(fontSize: 16.0),
         onTap: () {
-          // isDialOpen.value = false;
           goHome(context);
         },
       ),
     ],
     closeManually: false,
-    // openCloseDial: isDialOpen,
     spaceBetweenChildren: 20.0,
     animationDuration: const Duration(milliseconds: 300),
     animatedIcon: AnimatedIcons.menu_close,
     backgroundColor: Colors.black,
     overlayColor: const Color.fromRGBO(36, 38, 39, 1),
-    child: const Icon(Icons.menu),
+    animatedIconTheme: const IconThemeData(color: Colors.white),
   );
 }
 
 Future<void> logout(BuildContext context) async {
   String result = await readDataString("currentUser");
-  print("result: " + result);
+  print("result: $result");
   deleteData("currentUser");
   String result1 = await readDataString("currentUser");
-  print("result apprès suprimé: " + result1);
+  print("result apprès suprimé: $result1");
   Navigator.of(context).pushReplacement(MaterialPageRoute(
     builder: (context) => const MyLoginPage(title: "login"),
   ));
 }
 
-Future<Future<int?>> photo_camera(BuildContext context) async {
+Future<Future<int?>> photoCamera(BuildContext context) async {
   late List<String> options = ["Take a photo", "Select a photo from album"];
   return showModalBottomSheet<int>(
     isScrollControlled: false,

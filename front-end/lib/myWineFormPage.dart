@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cross_file_image/cross_file_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shazam_du_vin/myListWinePage.dart';
@@ -14,28 +13,32 @@ import './services/http_service.dart';
 import 'components/fluttertoast.dart';
 import '../utils/models.dart';
 
-import 'myWinePage.dart';
 import 'services/var_global.dart';
 
 class MyWineFormPage extends StatefulWidget {
-  const MyWineFormPage(
-      {Key? key, required this.wineSelected, required this.isModif})
-      : super(key: key);
-
   final Wine wineSelected;
   final bool isModif;
 
+  const MyWineFormPage({
+    super.key,
+    required this.wineSelected,
+    required this.isModif,
+  });
+
   @override
-  _MyWineFormPageState createState() {
-    return _MyWineFormPageState(wineSelected, isModif);
-  }
+  State<MyWineFormPage> createState() => _MyWineFormPageState();
 }
 
 class _MyWineFormPageState extends State<MyWineFormPage> {
-  bool isModif;
-  Wine wineSelected;
+  late bool isModif;
+  late Wine wineSelected;
 
-  _MyWineFormPageState(this.wineSelected, this.isModif);
+  @override
+  void initState() {
+    super.initState();
+    isModif = widget.isModif;
+    wineSelected = widget.wineSelected;
+  }
 
   late final HttpService _httpService = HttpService();
 
@@ -48,7 +51,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
   String imagePath = "";
 
   var _selectedImage;
-  // var _imgBackPath;
   late String _nom;
   late String _vignoble;
   late String _cepage;
@@ -75,13 +77,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         );
       },
     ));
-    // Navigator.pushAndRemoveUntil(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => MyListVinPage(
-    //           listAllWines: _listAllWines,
-    //         )),
-    //         (route) => route == null);
   }
 
   Future<void> setListAllWine() async {
@@ -109,7 +104,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () async {
             isModif ? goBackPagePreviews() : goPageListAllWines();
-            // Navigator.pop(context, true);
           },
         ),
       ),
@@ -127,7 +121,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               ),
               buildTitleLine(),
               const SizedBox(height: 10),
-              // buildBoxAdd2Images(context),
               buildBoxImagePickerFront(context),
               const SizedBox(height: 40),
               buildWineNameTextField(),
@@ -167,6 +160,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine price!';
         }
+        return null;
       },
     );
   }
@@ -181,26 +175,30 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the alcool percent of!';
         }
+        return null;
       },
     );
   }
 
   Widget buildAddWineButton(BuildContext context) {
-    return Align(
-      child: SizedBox(
-        height: 45,
-        width: 270,
-        child: ElevatedButton(
-          style: ButtonStyle(
-              shape: MaterialStateProperty.all(const StadiumBorder(
-                  side: BorderSide(style: BorderStyle.none))),
-              backgroundColor:
-                  const MaterialStatePropertyAll<Color>(Colors.black)),
-          child: Text(isModif ? 'Confirm' : 'Add',
-              style: Theme.of(context).primaryTextTheme.headlineSmall),
-          onPressed: () async {
-            isModif ? updateModifWine() : addNewWine();
-          },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 35),
+      child: Align(
+        child: SizedBox(
+          height: 45,
+          width: 270,
+          child: ElevatedButton(
+            style: ButtonStyle(
+                shape: WidgetStateProperty.all(const StadiumBorder(
+                    side: BorderSide(style: BorderStyle.none))),
+                backgroundColor:
+                    const WidgetStatePropertyAll<Color>(Colors.black)),
+            child: Text(isModif ? 'Confirm' : 'Add',
+                style: Theme.of(context).primaryTextTheme.headlineSmall),
+            onPressed: () async {
+              isModif ? updateModifWine() : addNewWine();
+            },
+          ),
         ),
       ),
     );
@@ -218,6 +216,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine description!';
         }
+        return null;
       },
     );
   }
@@ -232,6 +231,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine year!';
         }
+        return null;
       },
     );
   }
@@ -246,6 +246,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine type!';
         }
+        return null;
       },
     );
   }
@@ -260,6 +261,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the grap variety!';
         }
+        return null;
       },
     );
   }
@@ -274,6 +276,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the vineyard!';
         }
+        return null;
       },
     );
   }
@@ -288,6 +291,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine name!';
         }
+        return null;
       },
     );
   }
@@ -302,7 +306,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               child: Container(
                 width: 230.0,
                 height: 300.0,
-                // color: const Color.fromRGBO(220, 220, 220, 1),
                 decoration: BoxDecoration(
                   border:
                       Border.all(color: const Color.fromRGBO(196, 196, 196, 1)),
@@ -315,9 +318,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
                       builder:
                           (BuildContext context, bool value, Widget? child) {
                         return Container(
-                          // child: _selectedImage == null
-                          //     ? buildButtonToAddImgFront(context)
-                          //     : buildShowImageFrontReview(context),
                           child: imagePath != "" || _selectedImage != null
                               ? buildShowImageFrontReview(context)
                               : buildButtonToAddImgFront(context),
@@ -354,9 +354,9 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
                 print(_selectedImage);
               },
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(
                       const Color.fromRGBO(135, 135, 135, 1)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(35.0),
                   ))),
@@ -376,8 +376,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
         height: 35.0,
         child: ElevatedButton(
           onPressed: () {
-            // _isSetImgFront = true;
-            // _isSetImgBack = false;
             _showBasicModalBottomSheet(context);
           },
           style: ElevatedButton.styleFrom(
@@ -499,7 +497,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
           };
           var res = await _httpService.addNewWine(newWine);
           if (res.statusCode == 200) {
-            // await setListAllWine();
             (_formKey.currentState as FormState).reset();
             _selectedImage = null;
             _isHaveImgFront.value = false;
@@ -514,7 +511,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               fontSize: 16.0,
             );
             eventBus.emit("addNewWine");
-            // Navigator.pop(context, _listAllWines);
           }
         });
       }
@@ -531,8 +527,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       print("Annee : $_annee");
       print("Description : $_description");
       print("Image : $_selectedImage");
-      // Image imgFile = Image.file(File(_selectedImage!.path));
-      // print(_selectedImage.path.runtimeType);
       String imgFilePath = "";
       if (_selectedImage != null) {
         File imgFile = File(_selectedImage.path);
@@ -571,8 +565,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       print(newWineFormated);
       var res = await _httpService.modifWine(newWineFormated);
       if (res.statusCode == 200) {
-        // await setListAllWine();
-        // (_formKey.currentState as FormState).reset();
         wineSelected.nom = _nom;
         wineSelected.vignoble = _vignoble;
         wineSelected.cepage = _cepage;
@@ -595,11 +587,6 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        // Navigator.of(context).pushReplacement(MaterialPageRoute(
-        //   builder: (context) {
-        //     return MyWinePage(wine: wineSelected);
-        //   },
-        // ));
       }
     }
   }

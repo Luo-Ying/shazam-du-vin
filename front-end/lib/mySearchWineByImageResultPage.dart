@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shazam_du_vin/utils/models.dart';
 
 import 'components/floatingActionButionMenu.dart';
@@ -13,16 +11,19 @@ class MySearchWineByImageResultPage extends StatefulWidget {
   final List<Wine> listResultWines;
 
   @override
-  _MySearchWineByImageResultPageState createState() {
-    return _MySearchWineByImageResultPageState(listResultWines);
-  }
+  State<MySearchWineByImageResultPage> createState() =>
+      _MySearchWineByImageResultPageState();
 }
 
 class _MySearchWineByImageResultPageState
     extends State<MySearchWineByImageResultPage> {
-  List<Wine> listResultWines;
+  late List<Wine> listResultWines;
 
-  _MySearchWineByImageResultPageState(this.listResultWines);
+  @override
+  void initState() {
+    super.initState();
+    listResultWines = widget.listResultWines;
+  }
 
   @override
   Widget build(BuildContext context) {

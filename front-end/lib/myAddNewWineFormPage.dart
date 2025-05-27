@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cross_file_image/cross_file_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shazam_du_vin/myListWinePage.dart';
 import 'package:shazam_du_vin/services/winesActions.dart';
 import 'package:uuid/uuid.dart';
 
@@ -32,7 +30,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
   final ValueNotifier<bool> _isHaveImgFront = ValueNotifier(false);
 
   var _selectedImage;
-  // var _imgBackPath;
   late String _nom;
   late String _vignoble;
   late String _cepage;
@@ -46,7 +43,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
   List<Wine> _listAllWines = [];
 
   Future<void> setListAllWine() async {
-    // _listAllWines = [];
     var res = await _httpService.geAllWines();
     WineActions.setListWine(1, jsonDecode(res.body));
     _listAllWines = WineActions.listAllWines;
@@ -124,6 +120,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine description!';
         }
+        return null;
       },
     );
   }
@@ -136,6 +133,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine description!';
         }
+        return null;
       },
     );
   }
@@ -147,10 +145,10 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         width: 270,
         child: ElevatedButton(
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(const StadiumBorder(
+              shape: WidgetStateProperty.all(const StadiumBorder(
                   side: BorderSide(style: BorderStyle.none))),
               backgroundColor:
-                  const MaterialStatePropertyAll<Color>(Colors.black)),
+                  const WidgetStatePropertyAll<Color>(Colors.black)),
           child: Text('Add',
               style: Theme.of(context).primaryTextTheme.headlineSmall),
           onPressed: () async {
@@ -163,7 +161,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
               print("Annee : $_annee");
               print("Description : $_description");
               print("Image : $_selectedImage");
-              // Image imgFile = Image.file(File(_selectedImage!.path));
               print(_selectedImage.path.runtimeType);
               File imgFile = File(_selectedImage.path);
               var res = await _httpService.insertImage(imgFile);
@@ -190,7 +187,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                   };
                   var res = await _httpService.addNewWine(newWine);
                   if (res.statusCode == 200) {
-                    // await setListAllWine();
                     (_formKey.currentState as FormState).reset();
                     _selectedImage = null;
                     _isHaveImgFront.value = false;
@@ -204,7 +200,6 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                       textColor: Colors.white,
                       fontSize: 16.0,
                     );
-                    // Navigator.pop(context, _listAllWines);
                   }
                 });
               }
@@ -225,6 +220,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine description!';
         }
+        return null;
       },
     );
   }
@@ -237,6 +233,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine year!';
         }
+        return null;
       },
     );
   }
@@ -249,6 +246,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine type!';
         }
+        return null;
       },
     );
   }
@@ -261,6 +259,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the grap variety!';
         }
+        return null;
       },
     );
   }
@@ -273,6 +272,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the vineyard!';
         }
+        return null;
       },
     );
   }
@@ -285,6 +285,7 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
         if (v!.isEmpty) {
           return 'Please enter the wine name!';
         }
+        return null;
       },
     );
   }
@@ -344,9 +345,9 @@ class _MyAddNewWineFormPageState extends State<MyAddNewWineFormPage> {
                 print(_selectedImage);
               },
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(
                       const Color.fromRGBO(135, 135, 135, 1)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(35.0),
                   ))),

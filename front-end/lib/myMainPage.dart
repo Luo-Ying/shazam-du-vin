@@ -1,17 +1,8 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:shake_animation_widget/shake_animation_widget.dart';
 
-import 'mySearchWineByImageResultPage.dart';
-import 'myLoginPage.dart';
 import 'services/winesActions.dart';
 import 'utils/eventBus.dart';
 
-import 'services/http_service.dart';
-import 'services/localStorage.dart';
 import 'components/floatingActionButionMenu.dart';
 import 'components/wineCard.dart';
 import 'utils/models.dart';
@@ -24,17 +15,11 @@ class MyMainPage extends StatefulWidget {
   final List<Wine> listTopWines;
 
   @override
-  _MyMainPageState createState() {
-    return _MyMainPageState(listTopWines);
-  }
+  State<MyMainPage> createState() => _MyMainPageState();
 }
 
 class _MyMainPageState extends State<MyMainPage> {
-  List<Wine> listTopWines;
-
-  _MyMainPageState(this.listTopWines);
-
-  late final HttpService _httpService = HttpService();
+  late List<Wine> listTopWines;
 
   @override
   void initState() {

@@ -26,20 +26,24 @@ class HttpService {
   }
 
   Future<http.Response> connexion(String username, String password) async {
-    final res = await http.get(
-      Uri.parse("$BASE_URL/User?username=$username&password=$password"),
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/xml"
-      },
-    );
-    if (res.statusCode == 200) {
-      print(res.body);
-    } else {
-      VarGlobal.TOASTMESSAGE = "username or password incorrect! ";
+    try {
+      final res = await http.get(
+        Uri.parse("$BASE_URL/User?username=$username&password=$password"),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/xml"
+        },
+      );
+      if (res.statusCode == 200) {
+        print(res.body);
+      } else {
+        VarGlobal.TOASTMESSAGE = "username or password incorrect! ";
+      }
+      return res;
+    } catch (e) {
+      VarGlobal.TOASTMESSAGE = "Connection refused! ";
+      return http.Response(e.toString(), 403);
     }
-    return res;
-    // TODO: les cas d'érreurs quand utilisateur entre les mauvais username ou password
   }
 
   Future<http.Response> geAllWines() async {

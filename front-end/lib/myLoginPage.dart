@@ -112,7 +112,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
               (_formKey.currentState as FormState).save();
               print('username: $_username, password: $_password');
               var res = await _httpService.connexion(_username, _password);
-              print(res.statusCode);
+              print("res status code >>>> ${res.statusCode}");
               if (res.statusCode == 200) {
                 await saveDataString("currentUser", res.body);
                 VarGlobal.currentUser = await buildCurrentUser();
@@ -126,6 +126,16 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     );
                   },
                 ));
+              } else if (res.statusCode == 403) {
+                Fluttertoast.showToast(
+                  msg: VarGlobal.TOASTMESSAGE,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2,
+                  backgroundColor: Colors.black45,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
               } else {
                 Fluttertoast.showToast(
                   msg: VarGlobal.TOASTMESSAGE,
