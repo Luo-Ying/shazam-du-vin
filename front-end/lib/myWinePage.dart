@@ -36,13 +36,17 @@ class _MyWinePageState extends State<MyWinePage> {
 
   @override
   void initState() {
+    wine = widget.wine;
+    
     eventBus.on("deleteComment", (arg) {
       setState(() {
         // wine = WineActions.updatedWine;
       });
     });
     eventBus.on("modifedWine", (arg) {
-      wine = WineActions.updatedWine;
+      setState(() {
+        wine = WineActions.updatedWine;
+      });
     });
     super.initState();
   }
@@ -518,7 +522,26 @@ class _MyWinePageState extends State<MyWinePage> {
       child: SizedBox(
         height: 450.0,
         width: 225.0,
-        child: Image.network(wine.image),
+        child: Image.network(
+          wine.getFullImageUrl(),
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              height: 450.0,
+              width: 225.0,
+              color: Colors.grey[200],
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.broken_image, color: Colors.grey, size: 48),
+                    SizedBox(height: 10),
+                    Text("Image not available", style: TextStyle(color: Colors.grey)),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:cross_file_image/cross_file_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -60,6 +61,16 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
   late String _tauxAlcool;
   late String _price;
   late String _description;
+
+  late bool _isNomValid = true;
+  late bool _isVignobleValid = true;
+  late bool _isCepageValid = true;
+  late bool _isTypeValid = true;
+  late bool _isAnneeValid = true;
+  late bool _isNoteGlobalValid = true;
+  late bool _isTauxAlcoolValid = true;
+  late bool _isPriceValid = true;
+  late bool _isDescriptionValid = true;
 
   List<Wine> _listAllWines = [];
 
@@ -154,10 +165,17 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
           wineSelected.price != 0 ? wineSelected.price.toString() : "",
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(labelText: 'Price'),
-      onChanged: (value) => setState(() => _price = value),
+      onChanged: (v) {
+        _price = v;
+        if (v.isEmpty) {
+          _isPriceValid = false;
+        } else {
+          _isPriceValid = true;
+        }
+      },
       onSaved: (v) => _price = v!,
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isPriceValid) {
           return 'Please enter the wine price!';
         }
         return null;
@@ -169,10 +187,17 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.tauxAlcool,
       decoration: const InputDecoration(labelText: 'Alcool percent'),
-      onChanged: (value) => setState(() => _tauxAlcool = value),
+      onChanged: (v) {
+        _tauxAlcool = v;
+        if (v.isEmpty) {
+          _isTauxAlcoolValid = false;
+        } else {
+          _isTauxAlcoolValid = true;
+        }
+      },
       onSaved: (v) => _tauxAlcool = v!,
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isTauxAlcoolValid) {
           return 'Please enter the alcool percent of!';
         }
         return null;
@@ -210,10 +235,17 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       keyboardType: TextInputType.multiline,
       maxLines: null,
       decoration: const InputDecoration(labelText: 'Description'),
-      onChanged: (value) => setState(() => _description = value),
+      onChanged: (v) {
+        _description = v;
+        if (v.isEmpty) {
+          _isDescriptionValid = false;
+        } else {
+          _isDescriptionValid = true;
+        }
+      },
       onSaved: (v) => _description = v!,
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isDescriptionValid) {
           return 'Please enter the wine description!';
         }
         return null;
@@ -225,10 +257,17 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.annee,
       decoration: const InputDecoration(labelText: 'Year'),
-      onChanged: (value) => setState(() => _annee = value),
+      onChanged: (v) {
+        _annee = v;
+        if (v.isEmpty) {
+          _isAnneeValid = false;
+        } else {
+          _isAnneeValid = true;
+        }
+      },
       onSaved: (v) => _annee = v!,
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isAnneeValid) {
           return 'Please enter the wine year!';
         }
         return null;
@@ -240,10 +279,17 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.type,
       decoration: const InputDecoration(labelText: 'Type'),
-      onChanged: (value) => setState(() => _type = value),
+      onChanged: (v) {
+        _type = v;
+        if (v.isEmpty) {
+          _isTypeValid = false;
+        } else {
+          _isTypeValid = true;
+        }
+      },
       onSaved: (v) => _type = v!,
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isTypeValid) {
           return 'Please enter the wine type!';
         }
         return null;
@@ -255,10 +301,17 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.cepage,
       decoration: const InputDecoration(labelText: 'Grap variety'),
-      onChanged: (value) => setState(() => _cepage = value),
+      onChanged: (v) {
+        _cepage = v;
+        if (v.isEmpty) {
+          _isCepageValid = false;
+        } else {
+          _isCepageValid = true;
+        }
+      },
       onSaved: (v) => _cepage = v!,
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isCepageValid) {
           return 'Please enter the grap variety!';
         }
         return null;
@@ -270,10 +323,17 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.vignoble,
       decoration: const InputDecoration(labelText: 'Vineyard'),
-      onChanged: (value) => setState(() => _vignoble = value),
+      onChanged: (v) {
+        _vignoble = v;
+        if (v.isEmpty) {
+          _isVignobleValid = false;
+        } else {
+          _isVignobleValid = true;
+        }
+      },
       onSaved: (v) => _vignoble = v!,
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isVignobleValid) {
           return 'Please enter the vineyard!';
         }
         return null;
@@ -285,10 +345,17 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
     return TextFormField(
       initialValue: wineSelected.nom,
       decoration: const InputDecoration(labelText: 'Wine name'),
-      onChanged: (value) => setState(() => _nom = value),
+      onChanged: (v) {
+        _nom = v;
+        if (v.isEmpty) {
+          _isNomValid = false;
+        } else {
+          _isNomValid = true;
+        }
+      },
       onSaved: (v) => _nom = v!,
       validator: (v) {
-        if (v!.isEmpty) {
+        if (v!.isEmpty && !_isNomValid) {
           return 'Please enter the wine name!';
         }
         return null;
@@ -400,33 +467,37 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
-          height: 100.0,
+          height: 150 + VarGlobal.heightBottomNavigationBar,
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    print(index);
-                    if (index == 0) {
-                      _selectedImage = await ImagePicker()
-                          .pickImage(source: ImageSource.camera);
-                      _isHaveImgFront.value = true;
-                    } else if (index == 1) {
-                      _selectedImage = await ImagePicker()
-                          .pickImage(source: ImageSource.gallery);
-                      _isHaveImgFront.value = true;
-                    }
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  child: Text(
-                    options[index],
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
+              return Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                child: SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      print(index);
+                      if (index == 0) {
+                        _selectedImage = await ImagePicker()
+                            .pickImage(source: ImageSource.camera);
+                        _isHaveImgFront.value = true;
+                      } else if (index == 1) {
+                        _selectedImage = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                        _isHaveImgFront.value = true;
+                      }
+                      print("image selected >>>>>>>>> ${_selectedImage}");
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      options[index],
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
@@ -469,14 +540,37 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
   Future<void> addNewWine() async {
     if ((_formKey.currentState as FormState).validate()) {
       (_formKey.currentState as FormState).save();
-      print(_selectedImage.path.runtimeType);
-      File imgFile = File(_selectedImage.path);
-      var res = await _httpService.insertImage(imgFile);
-      if (res.statusCode == 200) {
-        var id = uuid.v4();
-        print(id);
-        res.stream.transform(utf8.decoder).listen((value) async {
-          print(value);
+      
+      try {
+        // 显示加载中对话框
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        );
+        
+        File imgFile = File(_selectedImage.path);
+        
+        // 尝试上传图片
+        var res = await _httpService.insertImage(imgFile).timeout(
+          const Duration(seconds: 60),
+          onTimeout: () {
+            throw TimeoutException('上传图片超时，请稍后再试或选择更小的图片');
+          },
+        );
+        
+        if (res.statusCode == 200) {
+          var id = uuid.v4();
+          print(id);
+          
+          // 处理返回的图片链接
+          String imageUrl = await res.stream.transform(utf8.decoder).join();
+          print(imageUrl);
+          
           var newWine = {
             "database": "urbanisation",
             "collection": "Vin",
@@ -487,7 +581,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               "cepage": _cepage,
               "type": _type,
               "annee": _annee,
-              "image": value,
+              "image": imageUrl,
               "tauxAlcool": _tauxAlcool,
               "description": _description,
               "prix": num.parse(_price),
@@ -495,8 +589,12 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               "commentaire": [],
             }
           };
-          var res = await _httpService.addNewWine(newWine);
-          if (res.statusCode == 200) {
+          
+          // 关闭加载对话框
+          Navigator.pop(context);
+          
+          var addRes = await _httpService.addNewWine(newWine);
+          if (addRes.statusCode == 200) {
             (_formKey.currentState as FormState).reset();
             _selectedImage = null;
             _isHaveImgFront.value = false;
@@ -511,8 +609,39 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               fontSize: 16.0,
             );
             eventBus.emit("addNewWine");
+          } else {
+            Fluttertoast.showToast(
+              msg: VarGlobal.TOASTMESSAGE.isNotEmpty ? VarGlobal.TOASTMESSAGE : "Add wine failed",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+            );
           }
-        });
+        } else {
+          // 关闭加载对话框
+          Navigator.pop(context);
+          
+          Fluttertoast.showToast(
+            msg: "上传图片失败: ${res.statusCode}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        }
+      } catch (e) {
+        // 确保加载对话框被关闭
+        Navigator.of(context, rootNavigator: true).pop();
+        
+        print("error while adding wine: $e");
+        Fluttertoast.showToast(
+          msg: "error while adding wine: ${e.toString().substring(0, min(100, e.toString().length))}",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
       }
     }
   }
@@ -527,65 +656,112 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       print("Annee : $_annee");
       print("Description : $_description");
       print("Image : $_selectedImage");
-      String imgFilePath = "";
-      if (_selectedImage != null) {
-        File imgFile = File(_selectedImage.path);
-        var resImage = await _httpService.insertImage(imgFile);
-        if (resImage.statusCode == 200) {
-          resImage.stream.transform(utf8.decoder).listen((value) async {
-            print(value);
-            imgFilePath = value;
-          });
-        }
-      } else {
-        imgFilePath = wineSelected.image;
-      }
-      print(imgFilePath);
-      var newWineFormated = {
-        "id": wineSelected.id,
-        "nom": _nom,
-        "vignoble": _vignoble,
-        "cepage": _cepage,
-        "type": _type,
-        "annee": _annee,
-        "image": imgFilePath,
-        "tauxAlcool": _tauxAlcool,
-        "description": _description,
-        "prix": num.parse(_price),
-        "commentaire": [
-          for (var item in wineSelected.listCommentaire)
-            {
-              "username": item.username,
-              "text": item.text,
-              "note": item.note,
-              "date": item.date
+      
+      try {
+        // 显示加载中对话框
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        );
+        
+        String imgFilePath = "";
+        if (_selectedImage != null) {
+          // 上传新图片
+          File imgFile = File(_selectedImage.path);
+          var resImage = await _httpService.insertImage(imgFile).timeout(
+            const Duration(seconds: 60),
+            onTimeout: () {
+              throw TimeoutException('上传图片超时，请稍后再试或选择更小的图片');
             },
-        ]
-      };
-      print(newWineFormated);
-      var res = await _httpService.modifWine(newWineFormated);
-      if (res.statusCode == 200) {
-        wineSelected.nom = _nom;
-        wineSelected.vignoble = _vignoble;
-        wineSelected.cepage = _cepage;
-        wineSelected.type = _type;
-        wineSelected.annee = _annee;
-        wineSelected.image = imagePath;
-        wineSelected.tauxAlcool = _tauxAlcool;
-        wineSelected.price = num.parse(_price);
-        wineSelected.description = _description;
-        WineActions.updatedWine = wineSelected;
-        print(WineActions.updatedWine);
-        eventBus.emit("modifedWine");
+          );
+          
+          if (resImage.statusCode == 200) {
+            // 处理返回的图片链接
+            imgFilePath = await resImage.stream.transform(utf8.decoder).join();
+            print("图片上传成功: $imgFilePath");
+          } else {
+            throw Exception("上传图片失败: ${resImage.statusCode}");
+          }
+        } else {
+          imgFilePath = wineSelected.image;
+        }
+        
+        print("使用的图片路径: $imgFilePath");
+        var newWineFormated = {
+          "id": wineSelected.id,
+          "nom": _nom,
+          "vignoble": _vignoble,
+          "cepage": _cepage,
+          "type": _type,
+          "annee": _annee,
+          "image": imgFilePath,
+          "tauxAlcool": _tauxAlcool,
+          "description": _description,
+          "prix": num.parse(_price),
+          "commentaire": [
+            for (var item in wineSelected.listCommentaire)
+              {
+                "username": item.username,
+                "text": item.text,
+                "note": item.note,
+                "date": item.date
+              },
+          ]
+        };
+        
+        // 关闭加载对话框
         Navigator.pop(context);
+        
+        print("更新葡萄酒信息: $newWineFormated");
+        var res = await _httpService.modifWine(newWineFormated);
+        if (res.statusCode == 200) {
+          wineSelected.nom = _nom;
+          wineSelected.vignoble = _vignoble;
+          wineSelected.cepage = _cepage;
+          wineSelected.type = _type;
+          wineSelected.annee = _annee;
+          wineSelected.image = imgFilePath;
+          wineSelected.tauxAlcool = _tauxAlcool;
+          wineSelected.price = num.parse(_price);
+          wineSelected.description = _description;
+          WineActions.updatedWine = wineSelected;
+          print(WineActions.updatedWine);
+          eventBus.emit("modifedWine");
+          Navigator.pop(context);
+          Fluttertoast.showToast(
+            msg: VarGlobal.TOASTMESSAGE,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.black45,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: VarGlobal.TOASTMESSAGE.isNotEmpty ? VarGlobal.TOASTMESSAGE : "Update wine failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        }
+      } catch (e) {
+        // 确保加载对话框被关闭
+        Navigator.of(context, rootNavigator: true).pop();
+        
+        print("error while updating wine: $e");
         Fluttertoast.showToast(
-          msg: VarGlobal.TOASTMESSAGE,
-          toastLength: Toast.LENGTH_SHORT,
+          msg: "error while updating wine: ${e.toString().substring(0, min(100, e.toString().length))}",
+          toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.black45,
+          backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0,
         );
       }
     }

@@ -1,6 +1,7 @@
 // import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
+import 'package:shazam_du_vin/services/http_service.dart';
 
 class HttpResponse {
   late String message;
@@ -114,6 +115,13 @@ class Wine {
   List<Commentaire> get listCommentaire => _listCommentaire;
 
   String get image => _image;
+  
+  // 获取完整的图片URL
+  String getFullImageUrl() {
+    if (_image.isEmpty) return '';
+    if (_image.startsWith('http')) return _image;
+    return '${HttpService.BASE_URL}/$_image';
+  }
 
   String get annee => _annee;
 

@@ -117,18 +117,35 @@ class HttpService {
   }
 
   Future<http.StreamedResponse> insertImage(File imgFile) async {
-    print("coucou?");
+    print("开始上传图片");
     print(imgFile);
     print(imgFile.path.split("/").last);
-    var uri = Uri.parse("$BASE_URL/insertImg");
+    
+    try {
+      var uri = Uri.parse("$BASE_URL/insertImg");
 
-    var request = http.MultipartRequest("POST", uri);
-    request.files.add(http.MultipartFile.fromBytes(
-        "file", imgFile.readAsBytesSync(),
-        filename: "Photo.jpg", contentType: MediaType("image", "png")));
+      var request = http.MultipartRequest("POST", uri);
+      
+      // 读取图片文件
+      List<int> imageBytes = await imgFile.readAsBytes();
+      
+      // 添加到请求中
+      request.files.add(http.MultipartFile.fromBytes(
+          "file", imageBytes,
+          filename: "Photo.jpg", contentType: MediaType("image", "jpeg")));
 
-    var response = await request.send();
-    return response;
+      // 设置请求超时
+      var client = http.Client();
+      try {
+        var response = await request.send().timeout(const Duration(seconds: 60));
+        return response;
+      } finally {
+        client.close();
+      }
+    } catch (e) {
+      print("图片上传错误: $e");
+      throw e;
+    }
   }
 
   Future<http.Response> addNewWine(Map<String, dynamic> newWine) async {

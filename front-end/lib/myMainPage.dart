@@ -23,6 +23,7 @@ class _MyMainPageState extends State<MyMainPage> {
 
   @override
   void initState() {
+    listTopWines = widget.listTopWines;
     print("list top wines:  $listTopWines");
     print(listTopWines.length);
     eventBus.on("deleteWine", (arg) async {

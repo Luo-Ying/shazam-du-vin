@@ -28,6 +28,7 @@ class _MyListVinPageState extends State<MyListVinPage> {
 
   @override
   void initState() {
+    listAllWines = widget.listAllWines;
     eventBus.on("deleteWine", (arg) async {
       if (!mounted) {
         return;

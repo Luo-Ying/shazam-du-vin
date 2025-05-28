@@ -6,6 +6,7 @@ import 'package:shazam_du_vin/services/var_global.dart';
 import '../myWinePage.dart';
 import '../services/localStorage.dart';
 import '../services/winesActions.dart';
+import '../services/http_service.dart';
 import '../utils/models.dart';
 import 'fluttertoast.dart';
 
@@ -105,10 +106,18 @@ Widget buildWineImage(BuildContext context, Wine wine, bool isListAllWine) {
       child: Align(
           alignment: Alignment.centerRight,
           child: Image.network(
-            wine.image,
+            wine.getFullImageUrl(),
             width: isListAllWine ? 40.0 : 80.0,
             height: isListAllWine ? 100.0 : 200.0,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: isListAllWine ? 40.0 : 80.0,
+                height: isListAllWine ? 100.0 : 200.0,
+                color: Colors.grey[200],
+                child: const Icon(Icons.broken_image, color: Colors.grey),
+              );
+            },
           )));
 }
 
