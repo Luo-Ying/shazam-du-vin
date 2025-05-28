@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shazam_du_vin/mySearchWineByImageResultPage.dart';
 import 'package:shazam_du_vin/services/http_service.dart';
+import 'package:shazam_du_vin/services/var_global.dart';
 import 'package:shazam_du_vin/services/winesActions.dart';
 import 'package:shazam_du_vin/utils/models.dart';
+
+import 'components/fluttertoast.dart';
 
 class MyImagePickerWidget extends StatefulWidget {
   final XFile imageSelected;
@@ -40,7 +43,6 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
       backgroundColor: Colors.black,
       body: Stack(
         children: <Widget>[
-          // const SizedBox(height: 50.0),
           buildImageView(context),
           buildButtonsWidget(context)
         ],
@@ -66,26 +68,39 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
           },
           child: const Text(
             "Cancel",
-            style: TextStyle(fontWeight: FontWeight.w800),
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+            ),
           )),
     );
   }
 
   Future<void> _searchWineByImage() async {
-    print("coucou");
-    print(imageSelected.path.runtimeType);
     File imgFile = File(imageSelected.path);
     var res = await _httpService.searchWinesByImage(imgFile);
     if (res.statusCode == 200) {
       res.stream.transform(utf8.decoder).listen((value) async {
-        print(value);
-        print(value.runtimeType);
         await _getListResultWines(value);
         await Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
           return MySearchWineByImageResultPage(
               listResultWines: _listResultWines);
         }));
+      });
+    } else {
+      print(">>>>>>>>");
+      res.stream.transform(utf8.decoder).listen((value) async {
+        print(value);
+        Fluttertoast.showToast(
+          msg: value,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.black45,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       });
     }
   }
@@ -104,12 +119,14 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
               backgroundColor: const WidgetStatePropertyAll<Color>(
                   Color.fromRGBO(91, 98, 205, 1))),
           onPressed: () {
-            print("?????????");
             _searchWineByImage();
           },
           child: const Text(
             "Search",
-            style: TextStyle(fontWeight: FontWeight.w800),
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+            ),
           )),
     );
   }
@@ -117,25 +134,28 @@ class _MyImagePickerWidgetState extends State<MyImagePickerWidget> {
   Widget buildButtonsWidget(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
     double heightScreen = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: EdgeInsets.only(
-        left: (widthScreen - 230) / 2,
-        top: (heightScreen - 150),
-      ),
-      child: Row(
-        children: [
-          Column(
-            children: [buildButtonCancel(context)],
+    return Positioned(
+        bottom: 0,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: (widthScreen - 230) / 2,
+            // top: (heightScreen - 150 + VarGlobal.heightBottomNavigationBar),
+            bottom: VarGlobal.heightBottomNavigationBar + 15,
           ),
-          const SizedBox(width: 30.0),
-          Column(
+          child: Row(
             children: [
-              buildButtonSearch(context),
+              Column(
+                children: [buildButtonCancel(context)],
+              ),
+              const SizedBox(width: 30.0),
+              Column(
+                children: [
+                  buildButtonSearch(context),
+                ],
+              )
             ],
-          )
-        ],
-      ),
-    );
+          ),
+        ));
   }
 
   Widget buildImageView(BuildContext context) {

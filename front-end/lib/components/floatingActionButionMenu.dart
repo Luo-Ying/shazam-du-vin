@@ -13,6 +13,7 @@ import '../myListWinePage.dart';
 import '../myLoginPage.dart';
 import '../myMainPage.dart';
 import '../services/localStorage.dart';
+import '../services/var_global.dart';
 import '../utils/models.dart';
 
 final HttpService _httpService = HttpService();
@@ -116,40 +117,42 @@ Future<Future<int?>> photoCamera(BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return SizedBox(
-        height: 100.0,
+        height: 150 + VarGlobal.heightBottomNavigationBar,
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () async {
-                  print(index);
-                  if (index == 0) {
-                    _selectedImage = await ImagePicker()
-                        .pickImage(source: ImageSource.camera);
-                  } else if (index == 1) {
-                    _selectedImage = await ImagePicker()
-                        .pickImage(source: ImageSource.gallery);
-                  }
-                  // Navigator.pop(context);
-                  if (_selectedImage != null) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) {
-                        return MyImagePickerWidget(
-                          imageSelected: _selectedImage,
-                        );
-                      },
-                    ));
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                ),
-                child: Text(
-                  options[index],
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
+            return Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    print(index);
+                    if (index == 0) {
+                      _selectedImage = await ImagePicker()
+                          .pickImage(source: ImageSource.camera);
+                    } else if (index == 1) {
+                      _selectedImage = await ImagePicker()
+                          .pickImage(source: ImageSource.gallery);
+                    }
+                    if (_selectedImage != null) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) {
+                          return MyImagePickerWidget(
+                            imageSelected: _selectedImage,
+                          );
+                        },
+                      ));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  child: Text(
+                    options[index],
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),

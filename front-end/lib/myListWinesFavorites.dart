@@ -22,6 +22,8 @@ class _MyListWinesFavoritesState extends State<MyListWinesFavorites> {
 
   @override
   void initState() {
+    listWinesFavorites = widget.listWinesFavorites;
+    
     eventBus.on("addInFavoris", (arg) async {
       if (!mounted) {
         return;

@@ -64,21 +64,16 @@ class HttpService {
   }
 
   Future<http.Response> getFavorisWines(String username) async {
-    print("username??????????? $username");
     final res = await http.get(
       Uri.parse("$BASE_URL/favVin?username=$username"),
       headers: {"Content-Type": "application/json"},
     );
-    print("nique ta mère?????????");
     print(res.statusCode);
     print(res.body);
     return res;
   }
 
   Future<http.StreamedResponse> searchWinesByImage(File imgFile) async {
-    print("coucou?");
-    print(imgFile);
-    print(imgFile.path.split("/").last);
     var uri = Uri.parse("$BASE_URL/ocr");
 
     var request = http.MultipartRequest("POST", uri);
@@ -120,24 +115,24 @@ class HttpService {
     print("开始上传图片");
     print(imgFile);
     print(imgFile.path.split("/").last);
-    
+
     try {
       var uri = Uri.parse("$BASE_URL/insertImg");
 
       var request = http.MultipartRequest("POST", uri);
-      
+
       // 读取图片文件
       List<int> imageBytes = await imgFile.readAsBytes();
-      
+
       // 添加到请求中
-      request.files.add(http.MultipartFile.fromBytes(
-          "file", imageBytes,
+      request.files.add(http.MultipartFile.fromBytes("file", imageBytes,
           filename: "Photo.jpg", contentType: MediaType("image", "jpeg")));
 
       // 设置请求超时
       var client = http.Client();
       try {
-        var response = await request.send().timeout(const Duration(seconds: 60));
+        var response =
+            await request.send().timeout(const Duration(seconds: 60));
         return response;
       } finally {
         client.close();

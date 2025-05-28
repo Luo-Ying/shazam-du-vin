@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:cross_file_image/cross_file_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -245,7 +244,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       },
       onSaved: (v) => _description = v!,
       validator: (v) {
-        if (v!.isEmpty && !_isDescriptionValid) {
+        if (v!.isEmpty && _isDescriptionValid) {
           return 'Please enter the wine description!';
         }
         return null;
@@ -540,37 +539,14 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
   Future<void> addNewWine() async {
     if ((_formKey.currentState as FormState).validate()) {
       (_formKey.currentState as FormState).save();
-      
-      try {
-        // 显示加载中对话框
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        );
-        
-        File imgFile = File(_selectedImage.path);
-        
-        // 尝试上传图片
-        var res = await _httpService.insertImage(imgFile).timeout(
-          const Duration(seconds: 60),
-          onTimeout: () {
-            throw TimeoutException('上传图片超时，请稍后再试或选择更小的图片');
-          },
-        );
-        
-        if (res.statusCode == 200) {
-          var id = uuid.v4();
-          print(id);
-          
-          // 处理返回的图片链接
-          String imageUrl = await res.stream.transform(utf8.decoder).join();
-          print(imageUrl);
-          
+      print(_selectedImage.path.runtimeType);
+      File imgFile = File(_selectedImage.path);
+      var res = await _httpService.insertImage(imgFile);
+      if (res.statusCode == 200) {
+        var id = uuid.v4();
+        print(id);
+        res.stream.transform(utf8.decoder).listen((value) async {
+          print(value);
           var newWine = {
             "database": "urbanisation",
             "collection": "Vin",
@@ -581,7 +557,7 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               "cepage": _cepage,
               "type": _type,
               "annee": _annee,
-              "image": imageUrl,
+              "image": value,
               "tauxAlcool": _tauxAlcool,
               "description": _description,
               "prix": num.parse(_price),
@@ -589,12 +565,8 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               "commentaire": [],
             }
           };
-          
-          // 关闭加载对话框
-          Navigator.pop(context);
-          
-          var addRes = await _httpService.addNewWine(newWine);
-          if (addRes.statusCode == 200) {
+          var res = await _httpService.addNewWine(newWine);
+          if (res.statusCode == 200) {
             (_formKey.currentState as FormState).reset();
             _selectedImage = null;
             _isHaveImgFront.value = false;
@@ -609,39 +581,8 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
               fontSize: 16.0,
             );
             eventBus.emit("addNewWine");
-          } else {
-            Fluttertoast.showToast(
-              msg: VarGlobal.TOASTMESSAGE.isNotEmpty ? VarGlobal.TOASTMESSAGE : "Add wine failed",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-            );
           }
-        } else {
-          // 关闭加载对话框
-          Navigator.pop(context);
-          
-          Fluttertoast.showToast(
-            msg: "上传图片失败: ${res.statusCode}",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
-        }
-      } catch (e) {
-        // 确保加载对话框被关闭
-        Navigator.of(context, rootNavigator: true).pop();
-        
-        print("error while adding wine: $e");
-        Fluttertoast.showToast(
-          msg: "error while adding wine: ${e.toString().substring(0, min(100, e.toString().length))}",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-        );
+        });
       }
     }
   }
@@ -656,112 +597,65 @@ class _MyWineFormPageState extends State<MyWineFormPage> {
       print("Annee : $_annee");
       print("Description : $_description");
       print("Image : $_selectedImage");
-      
-      try {
-        // 显示加载中对话框
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        );
-        
-        String imgFilePath = "";
-        if (_selectedImage != null) {
-          // 上传新图片
-          File imgFile = File(_selectedImage.path);
-          var resImage = await _httpService.insertImage(imgFile).timeout(
-            const Duration(seconds: 60),
-            onTimeout: () {
-              throw TimeoutException('上传图片超时，请稍后再试或选择更小的图片');
+      String imgFilePath = "";
+      if (_selectedImage != null) {
+        File imgFile = File(_selectedImage.path);
+        var resImage = await _httpService.insertImage(imgFile);
+        if (resImage.statusCode == 200) {
+          resImage.stream.transform(utf8.decoder).listen((value) async {
+            print(value);
+            imgFilePath = value;
+          });
+        }
+      } else {
+        imgFilePath = wineSelected.image;
+      }
+      print(imgFilePath);
+      var newWineFormated = {
+        "id": wineSelected.id,
+        "nom": _nom,
+        "vignoble": _vignoble,
+        "cepage": _cepage,
+        "type": _type,
+        "annee": _annee,
+        "image": imgFilePath,
+        "tauxAlcool": _tauxAlcool,
+        "description": _description,
+        "prix": num.parse(_price),
+        "commentaire": [
+          for (var item in wineSelected.listCommentaire)
+            {
+              "username": item.username,
+              "text": item.text,
+              "note": item.note,
+              "date": item.date
             },
-          );
-          
-          if (resImage.statusCode == 200) {
-            // 处理返回的图片链接
-            imgFilePath = await resImage.stream.transform(utf8.decoder).join();
-            print("图片上传成功: $imgFilePath");
-          } else {
-            throw Exception("上传图片失败: ${resImage.statusCode}");
-          }
-        } else {
-          imgFilePath = wineSelected.image;
-        }
-        
-        print("使用的图片路径: $imgFilePath");
-        var newWineFormated = {
-          "id": wineSelected.id,
-          "nom": _nom,
-          "vignoble": _vignoble,
-          "cepage": _cepage,
-          "type": _type,
-          "annee": _annee,
-          "image": imgFilePath,
-          "tauxAlcool": _tauxAlcool,
-          "description": _description,
-          "prix": num.parse(_price),
-          "commentaire": [
-            for (var item in wineSelected.listCommentaire)
-              {
-                "username": item.username,
-                "text": item.text,
-                "note": item.note,
-                "date": item.date
-              },
-          ]
-        };
-        
-        // 关闭加载对话框
+        ]
+      };
+      print(newWineFormated);
+      var res = await _httpService.modifWine(newWineFormated);
+      if (res.statusCode == 200) {
+        wineSelected.nom = _nom;
+        wineSelected.vignoble = _vignoble;
+        wineSelected.cepage = _cepage;
+        wineSelected.type = _type;
+        wineSelected.annee = _annee;
+        wineSelected.image = imagePath;
+        wineSelected.tauxAlcool = _tauxAlcool;
+        wineSelected.price = num.parse(_price);
+        wineSelected.description = _description;
+        WineActions.updatedWine = wineSelected;
+        print(WineActions.updatedWine);
+        eventBus.emit("modifedWine");
         Navigator.pop(context);
-        
-        print("更新葡萄酒信息: $newWineFormated");
-        var res = await _httpService.modifWine(newWineFormated);
-        if (res.statusCode == 200) {
-          wineSelected.nom = _nom;
-          wineSelected.vignoble = _vignoble;
-          wineSelected.cepage = _cepage;
-          wineSelected.type = _type;
-          wineSelected.annee = _annee;
-          wineSelected.image = imgFilePath;
-          wineSelected.tauxAlcool = _tauxAlcool;
-          wineSelected.price = num.parse(_price);
-          wineSelected.description = _description;
-          WineActions.updatedWine = wineSelected;
-          print(WineActions.updatedWine);
-          eventBus.emit("modifedWine");
-          Navigator.pop(context);
-          Fluttertoast.showToast(
-            msg: VarGlobal.TOASTMESSAGE,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.black45,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-        } else {
-          Fluttertoast.showToast(
-            msg: VarGlobal.TOASTMESSAGE.isNotEmpty ? VarGlobal.TOASTMESSAGE : "Update wine failed",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
-        }
-      } catch (e) {
-        // 确保加载对话框被关闭
-        Navigator.of(context, rootNavigator: true).pop();
-        
-        print("error while updating wine: $e");
         Fluttertoast.showToast(
-          msg: "error while updating wine: ${e.toString().substring(0, min(100, e.toString().length))}",
-          toastLength: Toast.LENGTH_LONG,
+          msg: VarGlobal.TOASTMESSAGE,
+          toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.black45,
           textColor: Colors.white,
+          fontSize: 16.0,
         );
       }
     }

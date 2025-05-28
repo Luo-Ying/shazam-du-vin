@@ -356,123 +356,129 @@ def insert_img():
                      mimetype='application/json')
 
 # Endpoint to send dataa to AWS Rekognition
+# @app.route('/ocr', methods=['POST'])
+# def orm_endpoint():
+#     try:
+#         if 'file' not in request.files:
+#             print("Not existing file")
+#             return Response(response=json.dumps({"Error": "Not existing file"}),
+#                          status=400,
+#                          mimetype='application/json')
+        
+#         file = request.files['file']
+        
+#         if file.filename == '':
+#             print("Not selected file")
+#             return Response(response=json.dumps({"Error": "Not selected file"}),
+#                          status=400,
+#                          mimetype='application/json')
+        
+#         if file and allowed_file(file.filename):
+#             # Generate unique filename
+#             filename = str(uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
+            
+#             print(f"OCR received file: {file.filename}, saved as: {filename}")
+            
+#             # Ensure directory exists
+#             if not os.path.exists(app.config['UPLOAD_FOLDER']['ocr']):
+#                 os.makedirs(app.config['UPLOAD_FOLDER']['ocr'], exist_ok=True)
+                
+#             # Save file
+#             file_path = os.path.join(app.config['UPLOAD_FOLDER']['ocr'], filename)
+#             file.save(file_path)
+            
+#             print(f"OCR file saved to: {file_path}")
+            
+#             # Read file content for OCR recognition
+#             try:
+#                 with open(file_path, 'rb') as document:
+#                     imageBytes = bytearray(document.read())
+                
+#                 # Amazon Textract client
+#                 textract = boto3.client('textract',
+#                                        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+#                                        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
+                
+#                 # Call Amazon Textract
+#                 response = textract.detect_document_text(Document={'Bytes': imageBytes})
+                
+#                 formatedResponse = []
+#                 listVin = []
+                
+#                 # Print detected text
+#                 for item in response["Blocks"]:
+#                     if item["BlockType"] == "LINE":
+#                         print('\033[94m' + item["Text"] + '\033[0m')
+#                         formatedResponse.append(item["Text"])
+                
+#                 print(formatedResponse)
+                
+#                 for item in formatedResponse:
+#                     if item.find('vivino') != -1 or item.find('VIVINO') != -1 or item.find('Vivino') != -1:
+#                         del formatedResponse[-1]
+                
+#                 formatedResponse = [item for item in formatedResponse if len(item) > 2]
+                
+#                 decodeResponse = []
+                
+#                 for item in formatedResponse:
+#                     decodeResponse.append(unidecode(item))
+                
+#                 print(decodeResponse)
+                
+#                 for item in decodeResponse:
+#                     print(item)
+#                     data = {
+#                         "database": "urbanisation",
+#                         "collection": "Vin"
+#                     }
+#                     query = {
+#                         "nom": {
+#                             "$regex": '^.*' + item + '.*',
+#                             "$options": 'i'  # case-insensitive
+#                         }
+#                     }
+#                     obj1 = MongoAPI(data)
+#                     documents = obj1.collection.find(query)
+#                     response = [{item: data[item] for item in data if item != '_id'} for data in documents]
+#                     listVin.append(response)
+                
+#                 print(listVin)
+#                 setOfElement = []
+#                 listOfId = list()
+#                 for response in listVin:
+#                     for data in response:
+#                         if data["id"] not in listOfId:
+#                             listOfId.append(data["id"])
+#                             setOfElement.append(data)
+                
+#                 print(listOfId)
+#                 print(setOfElement)
+                
+#                 return Response(response=json.dumps(setOfElement),
+#                               status=200,
+#                               mimetype='application/json')
+#             except Exception as e:
+#                 print(f"Error while OCR: {str(e)}")
+#                 return Response(response=json.dumps({"Error": f"Error while OCR: {str(e)}"}),
+#                              status=500,
+#                              mimetype='application/json')
+#         else:
+#             print(f"Not allowed file type: {file.filename}")
+#             return Response(response=json.dumps({"Error": "Not allowed file type"}),
+#                          status=400,
+#                          mimetype='application/json')
+#     except Exception as e:
+#         print(f"Error while OCR: {str(e)}")
+#         return Response(response=json.dumps({"Error": f"Error while OCR: {str(e)}"}),
+#                      status=500,
+#                      mimetype='application/json')
+
 @app.route('/ocr', methods=['POST'])
-def orm_endpoint():
-    try:
-        if 'file' not in request.files:
-            print("Not existing file")
-            return Response(response=json.dumps({"Error": "Not existing file"}),
-                         status=400,
-                         mimetype='application/json')
-        
-        file = request.files['file']
-        
-        if file.filename == '':
-            print("Not selected file")
-            return Response(response=json.dumps({"Error": "Not selected file"}),
-                         status=400,
-                         mimetype='application/json')
-        
-        if file and allowed_file(file.filename):
-            # Generate unique filename
-            filename = str(uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
-            
-            print(f"OCR received file: {file.filename}, saved as: {filename}")
-            
-            # Ensure directory exists
-            if not os.path.exists(app.config['UPLOAD_FOLDER']['ocr']):
-                os.makedirs(app.config['UPLOAD_FOLDER']['ocr'], exist_ok=True)
-                
-            # Save file
-            file_path = os.path.join(app.config['UPLOAD_FOLDER']['ocr'], filename)
-            file.save(file_path)
-            
-            print(f"OCR file saved to: {file_path}")
-            
-            # Read file content for OCR recognition
-            try:
-                with open(file_path, 'rb') as document:
-                    imageBytes = bytearray(document.read())
-                
-                # Amazon Textract client
-                textract = boto3.client('textract',
-                                       aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-                                       aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
-                
-                # Call Amazon Textract
-                response = textract.detect_document_text(Document={'Bytes': imageBytes})
-                
-                formatedResponse = []
-                listVin = []
-                
-                # Print detected text
-                for item in response["Blocks"]:
-                    if item["BlockType"] == "LINE":
-                        print('\033[94m' + item["Text"] + '\033[0m')
-                        formatedResponse.append(item["Text"])
-                
-                print(formatedResponse)
-                
-                for item in formatedResponse:
-                    if item.find('vivino') != -1 or item.find('VIVINO') != -1 or item.find('Vivino') != -1:
-                        del formatedResponse[-1]
-                
-                formatedResponse = [item for item in formatedResponse if len(item) > 2]
-                
-                decodeResponse = []
-                
-                for item in formatedResponse:
-                    decodeResponse.append(unidecode(item))
-                
-                print(decodeResponse)
-                
-                for item in decodeResponse:
-                    print(item)
-                    data = {
-                        "database": "urbanisation",
-                        "collection": "Vin"
-                    }
-                    query = {
-                        "nom": {
-                            "$regex": '^.*' + item + '.*',
-                            "$options": 'i'  # case-insensitive
-                        }
-                    }
-                    obj1 = MongoAPI(data)
-                    documents = obj1.collection.find(query)
-                    response = [{item: data[item] for item in data if item != '_id'} for data in documents]
-                    listVin.append(response)
-                
-                print(listVin)
-                setOfElement = []
-                listOfId = list()
-                for response in listVin:
-                    for data in response:
-                        if data["id"] not in listOfId:
-                            listOfId.append(data["id"])
-                            setOfElement.append(data)
-                
-                print(listOfId)
-                print(setOfElement)
-                
-                return Response(response=json.dumps(setOfElement),
-                              status=200,
-                              mimetype='application/json')
-            except Exception as e:
-                print(f"Error while OCR: {str(e)}")
-                return Response(response=json.dumps({"Error": f"Error while OCR: {str(e)}"}),
-                             status=500,
-                             mimetype='application/json')
-        else:
-            print(f"Not allowed file type: {file.filename}")
-            return Response(response=json.dumps({"Error": "Not allowed file type"}),
-                         status=400,
-                         mimetype='application/json')
-    except Exception as e:
-        print(f"Error while OCR: {str(e)}")
-        return Response(response=json.dumps({"Error": f"Error while OCR: {str(e)}"}),
-                     status=500,
-                     mimetype='application/json')
+def ocr_endpoint():
+    return Response(response=json.dumps({"Error": "OCR functionality is not available for now."}),
+                    status=503,
+                    mimetype='application/json')
 
 
 # Some function to try to implement Levenstein search. Not usefull in the end as Mongo Atlas provide a fuzzy seach operation

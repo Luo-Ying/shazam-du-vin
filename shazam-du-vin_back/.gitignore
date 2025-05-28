@@ -6,7 +6,7 @@ venv
 /venv/lib/
 /venv/pyvenv.cfg
 /.idea
-/upload/
-./upload/*
+front-end/upload/
+front-end/upload/*
 .env
 /__pycache__/
